@@ -14,11 +14,11 @@
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/css/foundation.min.css') }}" />
 
         <!-- Site CSS -->
-        <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/css/styles.css') }}" />-->
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/css/application.css') }}" />
 
         <!-- Google Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Roboto:400,400i,500,700,900|Source+Sans+Pro:400,400i,600,700,900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,600,700&amp;display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Nunito&amp;display=swap" rel="stylesheet">
 
         <title>Apply to MakeUofT</title>
     </head>
@@ -132,7 +132,7 @@
                     <div class="cell small-12 medium-9 grid-x grid-padding-x">
                         <div class="cell small-12">
                             {{ form.how_you_hear.label }}
-                            {{ form.how_you_hear }}
+                            {{ form.how_you_hear(rows='2') }}
                         </div>
 
                         <div class="cell small-1">

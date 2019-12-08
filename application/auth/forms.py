@@ -117,7 +117,7 @@ class ApplicationForm(FlaskForm):
     )
 
     resume = FileField(
-        "Resume Temp",
+        "Upload your resume",
         validators=[Regexp(r"^.*\.(?:pdf|PDF)$", message="Resume must be a PDF")],
     )
 
