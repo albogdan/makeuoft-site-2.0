@@ -60,4 +60,4 @@ def mailinglist():
 @login_required
 def apply():
     form = ApplicationForm()
-    return render_template("auth/application_new.html", form=form)
+    return render_template("auth/application.html", form=form)
