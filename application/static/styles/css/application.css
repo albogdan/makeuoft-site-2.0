@@ -45,8 +45,25 @@ label {
 
 .is-invalid-label {
   color: #c60f13 !important;
-
 }
+
+.is-invalid-input:not(:focus) {
+  border-color: #c60f13 !important;
+  background-color: #f8e6e7 !important;
+}
+
 .form-error {
   margin-bottom: 0;
+}
+
+.select2-selection__rendered {
+  line-height: 2.4375rem !important;
+}
+
+.select2-container .select2-selection--single {
+  height: 2.4375rem !important;
+}
+
+.select2-selection__arrow {
+  height: 2.4375rem !important;
 }

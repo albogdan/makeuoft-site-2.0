@@ -60,7 +60,7 @@ def mailinglist():
 @login_required
 def apply():
     form = ApplicationForm()
-    print(form.age_confirmation.data)
+    print(form.school.data)
     if form.validate_on_submit():
         pass
 

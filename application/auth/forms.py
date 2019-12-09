@@ -95,7 +95,9 @@ class ApplicationForm(FlaskForm):
     )
     phone_number = StringField("Phone Number", validators=[DataRequired()])
 
+    # Choices from https://github.com/MLH/mlh-policies/blob/master/schools.csv
     school = StringField("What school are you from?", validators=[DataRequired()])
+
     study_level = SelectField(
         "Level of Study",
         choices=[
@@ -108,6 +110,7 @@ class ApplicationForm(FlaskForm):
         validators=[DataRequired()],
     )
     program = StringField("What program are you in?", validators=[DataRequired()])
+
     grad_year = IntegerField(
         "What is your expected graduation year?",
         validators=[
@@ -159,7 +162,7 @@ class ApplicationForm(FlaskForm):
         validators=[DataRequired()],
     )
     resume_share = BooleanField(
-        "I consent to IEEE UofT sharing my resume with event sponsors"
+        "I consent to IEEE UofT sharing my resume with event sponsors (optional)"
     )
     age_confirmation = BooleanField(
         "I confirm that I will be 18 years of age or older and studying"
