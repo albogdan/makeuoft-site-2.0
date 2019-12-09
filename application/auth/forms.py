@@ -87,11 +87,11 @@ class ApplicationForm(FlaskForm):
             ("other", "Multiple ethnicity / Other (Please Specify)"),
             ("no-answer", "Prefer not to answer"),
         ],
-        validators=[DataRequired()],
+        validators=[DataRequiredIfOtherFieldEmpty("ethnicity_other", "Please choose an option, or specify your own")],
     )
     ethnicity_other = StringField(
         "Ethnicity (Please Specify)",
-        validators=[DataRequiredIfOtherFieldEmpty("ethnicity")],
+        validators=[DataRequiredIfOtherFieldEmpty("ethnicity", "Please choose an option, or specify your own")],
     )
     phone_number = StringField("Phone Number", validators=[DataRequired()])
 
@@ -124,27 +124,47 @@ class ApplicationForm(FlaskForm):
     q1_prev_hackathon = TextAreaField(
         "Have you ever been to a hackathon/makeathon before? Tell us briefly about it",
         validators=[DataRequired()],
+        render_kw={"rows": "6"},
     )
     q2_why_participate = TextAreaField(
-        "Why do you want to participate in MakeUofT?", validators=[DataRequired()]
+        "Why do you want to participate in MakeUofT?",
+        validators=[DataRequired()],
+        render_kw={"rows": "6"},
     )
     q3_hardware_exp = TextAreaField(
         "Tell us about any experience you have with hardware!",
         validators=[DataRequired()],
+        render_kw={"rows": "6"},
     )
 
     how_you_hear = TextAreaField(
-        "How did you hear about MakeUofT?", validators=[DataRequired()]
+        "How did you hear about MakeUofT?",
+        validators=[DataRequired()],
+        render_kw={"rows": "2"},
     )
 
-    mlh_conduct = BooleanField("MLH Conduct", validators=[DataRequired()])
-    mlh_data = BooleanField("MLH Data", validators=[DataRequired()])
+    mlh_conduct = BooleanField(
+        "I have read and agree to the "
+        '<a href="https://static.mlh.io/docs/mlh-code-of-conduct.pdf">MLH Code of Conduct</a>',
+        validators=[DataRequired()],
+    )
+    mlh_data = BooleanField(
+        "I authorize IEEE to share my application/registration information for event "
+        "administration, ranking, MLH administration, pre- and post- event information emails, "
+        "and occasional messages about hackathons in-line with the "
+        '<a href="https://static.mlh.io/docs/mlh-code-of-conduct.pdf">MLH Privacy Policy</a>. '
+        "I further agree to the terms of both the "
+        '<a href="https://static.mlh.io/docs/mlh-code-of-conduct.pdf">MLH Contest Terms and Conditions</a> '
+        'and the <a href="https://static.mlh.io/docs/mlh-code-of-conduct.pdf">MLH Privary Policy</a>.',
+        validators=[DataRequired()],
+    )
     resume_share = BooleanField(
         "I consent to IEEE UofT sharing my resume with event sponsors"
     )
     age_confirmation = BooleanField(
         "I confirm that I will be 18 years of age or older and studying"
-        "at a post-secondary institution on February 15, 2020"
+        "at a post-secondary institution on February 15, 2020",
+        validators=[DataRequired()],
     )
 
     submit = SubmitField("Register for MakeUofT 2020")

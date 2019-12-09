@@ -1,3 +1,33 @@
+{% macro render_errors(field) %}
+    {% if field.errors %}
+        <span class="form-error" id="{{ field.id }}-error" style="display: inherit">
+        {% if field.errors|length == 1 %}
+            {{ field.errors[0] }}
+        {% else %}
+            <ul>
+                {% for error in field.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% else %}
+        <span class="form-error" id="{{ field.id }}-error">
+    {% endif %}
+    </span>
+{% endmacro %}
+
+{% macro render_field(field) %}
+    {% if field.errors %}
+        {{ field.label(class="is-invalid-label") }}
+        {{ render_errors(field) }}
+        {{ field(class="is-invalid-input") }}
+    {% else %}
+        {{ field.label }}
+        {{ render_errors(field) }}
+        {{ field }}
+    {% endif %}
+{% endmacro %}
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -41,7 +71,7 @@
             </div>
 
 
-            <form method="POST" novalidate>
+            <form method="POST"novalidate>
                 {{ form.hidden_tag() }}
                 <div class="grid-x grid-padding-y">
                     <div class="cell small-12 medium-3">
@@ -49,20 +79,17 @@
                     </div>
                     <div class="cell small-12 medium-9 grid-x grid-padding-x">
                         <div class="cell small-12 medium-6">
-                            {{ form.preferred_name.label }}
-                            {{ form.preferred_name() }}
+                            {{ render_field(form.preferred_name) }}
                         </div>
                         <div class="cell small-12 medium-6">
-                            {{ form.birthday.label }}
-                            {{ form.birthday }}
+                            {{ render_field(form.birthday) }}
                         </div>
                         <div class="cell small-12 medium-6">
-                            {{ form.gender.label }}
-                            {{ form.gender }}
+                            {{ render_field(form.gender) }}
                         </div>
                         <div class="cell small-12 medium-6">
-                            {{ form.ethnicity.label }}
-                            {{ form.ethnicity }}
+                            {{ render_field(form.ethnicity) }}
+                            {{ render_field(form.ethnicity_other) }}
                         </div>
                     </div>
 
@@ -71,8 +98,7 @@
                     </div>
                     <div class="cell small-12 medium-9 grid-x grid-padding-x">
                         <div class="cell small-12 medium-4">
-                            {{ form.phone_number.label }}
-                            {{ form.phone_number }}
+                            {{ render_field(form.phone_number) }}
                         </div>
                     </div>
 
@@ -81,20 +107,16 @@
                     </div>
                     <div class="cell small-12 medium-9 grid-x grid-padding-x">
                         <div class="cell small-12 medium-6">
-                            {{ form.school.label }}
-                            {{ form.school }}
+                            {{ render_field(form.school) }}
                         </div>
                         <div class="cell small-12 medium-6">
-                            {{ form.study_level.label }}
-                            {{ form.study_level }}
+                            {{ render_field(form.study_level) }}
                         </div>
                         <div class="cell small-12 medium-6">
-                            {{ form.program.label }}
-                            {{ form.program }}
+                            {{ render_field(form.program) }}
                         </div>
                         <div class="cell small-12 medium-6">
-                            {{ form.grad_year.label }}
-                            {{ form.grad_year }}
+                            {{ render_field(form.grad_year) }}
                         </div>
                     </div>
 
@@ -103,8 +125,7 @@
                     </div>
                     <div class="cell small-12 medium-9 grid-x grid-padding-x">
                         <div class="cell small-12 medium-4">
-                            {{ form.resume.label }}
-                            {{ form.resume }}
+                            {{ render_field(form.resume) }}
                         </div>
                     </div>
 
@@ -113,55 +134,48 @@
                     </div>
                     <div class="cell small-12 medium-9 grid-x grid-padding-x">
                         <div class="cell small-12">
-                           {{ form.q1_prev_hackathon.label }}
-                            {{ form.q1_prev_hackathon(rows='6') }}
+                            {{ render_field(form.q1_prev_hackathon) }}
                         </div>
                         <div class="cell small-12">
-                            {{ form.q2_why_participate.label }}
-                            {{ form.q2_why_participate(rows='6') }}
+                            {{ render_field(form.q2_why_participate) }}
                         </div>
                         <div class="cell small-12">
-                            {{ form.q3_hardware_exp.label }}
-                            {{ form.q3_hardware_exp(rows='6') }}
+                            {{ render_field(form.q3_hardware_exp) }}
                         </div>
                     </div>
+
+                    {% macro render_consent_field(field) %}
+                        <div class="cell small-1">
+                            {% if field.errors %}
+                                {{ field(class="is-invalid-input") }}
+                            {% else %}
+                                {{ field }}
+                            {% endif %}
+                        </div>
+                        <div class="cell small-11 consent-field">
+                            {% if field.errors %}
+                                {{ field.label(class="is-invalid-label") }}
+                            {% else %}
+                                {{ field.label }}
+                            {% endif %}
+                        </div>
+                    {% endmacro %}
 
                     <div class="cell small-12 medium-3">
                         <h4>One last thing</h4>
                     </div>
                     <div class="cell small-12 medium-9 grid-x grid-padding-x">
                         <div class="cell small-12">
-                            {{ form.how_you_hear.label }}
-                            {{ form.how_you_hear(rows='2') }}
+                            {{ render_field(form.how_you_hear) }}
                         </div>
 
-                        <div class="cell small-1">
-                            {{ form.mlh_conduct }}
-                        </div>
-                        <div class="cell small-11 consent-field">
-                            <label for="{{ form.mlh_conduct.id }}">I have read and agree to the <a href="https://static.mlh.io/docs/mlh-code-of-conduct.pdf">MLH Code of Conduct</a></label>
-                        </div>
+                        {{ render_consent_field(form.mlh_conduct) }}
 
-                        <div class="cell small-1">
-                            {{ form.mlh_data }}
-                        </div>
-                        <div class="cell small-11 consent-field">
-                            <label for="{{ form.mlh_data.id }}">I authorize IEEE to share my application/registration information for event administration, ranking, MLH administration, pre- and post- event information emails, and occasional messages about hackathons in-line with the <a href="https://static.mlh.io/docs/mlh-code-of-conduct.pdf">MLH Privacy Policy</a>. I further agree to the terms of both the <a href="https://static.mlh.io/docs/mlh-code-of-conduct.pdf">MLH Contest Terms and Conditions</a> and the <a href="https://static.mlh.io/docs/mlh-code-of-conduct.pdf">MLH Privary Policy</a>.</label>
-                        </div>
+                        {{ render_consent_field(form.mlh_data) }}
 
-                        <div class="cell small-1">
-                            {{ form.resume_share }}
-                        </div>
-                        <div class="cell small-11 consent-field">
-                            {{ form.resume_share.label }}
-                        </div>
+                        {{ render_consent_field(form.resume_share) }}
 
-                        <div class="cell small-1">
-                            {{ form.age_confirmation }}
-                        </div>
-                        <div class="cell small-11 consent-field">
-                            {{ form.age_confirmation.label }}
-                        </div>
+                        {{ render_consent_field(form.age_confirmation) }}
                     </div>
 
                     <div class="cell small-12" style="text-align: center;">
@@ -171,9 +185,5 @@
                 </div>
             </form>
         </div>
-
-        <script>
-            $(document).foundation();
-        </script>
     </body>
 </html>

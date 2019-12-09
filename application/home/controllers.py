@@ -56,8 +56,12 @@ def mailinglist():
     return jsonify(returnDict)
 
 
-@home.route("/apply", methods=["GET", "POST"])
+@home.route("/apply", methods=("GET", "POST"))
 @login_required
 def apply():
     form = ApplicationForm()
+    print(form.age_confirmation.data)
+    if form.validate_on_submit():
+        pass
+
     return render_template("auth/application.html", form=form)

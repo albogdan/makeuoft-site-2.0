@@ -42,3 +42,11 @@ label {
   font-weight: normal !important;
   color: #666666;
 }
+
+.is-invalid-label {
+  color: #c60f13 !important;
+
+}
+.form-error {
+  margin-bottom: 0;
+}
