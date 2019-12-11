@@ -1,3 +1,5 @@
+import datetime
+
 from wtforms.compat import string_types
 from wtforms.validators import StopValidation
 
@@ -24,3 +26,27 @@ class DataRequiredIfOtherFieldEmpty:
 
                 field.errors[:] = []
                 raise StopValidation(message)
+
+
+class OldestAllowedDate:
+    """
+    Checks that a given date field is older than the specified date
+    """
+
+    def __init__(self, date, message=None):
+        """
+        :param date: (datetime.date) Minimum allowed date
+        """
+        self.date = date
+        self.message = message
+
+    def __call__(self, form, field):
+        data = field.data
+        message = self.message
+        if message is None:
+            message = field.gettext("Date must be older than {}".format(self.date.strftime("%Y-%m-%d")))
+        if not data:
+            raise StopValidation(message)
+
+        if data > self.date:
+            raise StopValidation(message)

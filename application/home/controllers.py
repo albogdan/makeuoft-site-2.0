@@ -60,6 +60,7 @@ def mailinglist():
 @login_required
 def apply():
     form = ApplicationForm()
+    print(form.birthday.data)
     if form.validate_on_submit():
         pass
 

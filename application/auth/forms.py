@@ -1,3 +1,5 @@
+import datetime
+
 from flask_wtf import FlaskForm
 from wtforms import (
     BooleanField,
@@ -20,7 +22,7 @@ from wtforms.validators import (
     ValidationError,
 )
 from application.db_models import Users
-from application.auth.validators import DataRequiredIfOtherFieldEmpty
+from application.auth.validators import DataRequiredIfOtherFieldEmpty, OldestAllowedDate
 
 
 class LoginForm(FlaskForm):
@@ -63,7 +65,16 @@ class ApplicationForm(FlaskForm):
 
     # First and last name are redundant with an associated user - preferred name could be useful
     preferred_name = StringField("Preferred Name", validators=[DataRequired()])
-    birthday = DateField("Birthday", validators=[DataRequired()])
+    birthday = DateField(
+        "Birthday",
+        validators=[
+            DataRequired(),
+            OldestAllowedDate(
+                datetime.date(2020 - 18, 2, 15),
+                message="You must be 18 on Fubruary 15, 2020 to participate in MakeUofT.",
+            ),
+        ],
+    )
     gender = SelectField(
         "Gender",
         choices=[
@@ -87,13 +98,27 @@ class ApplicationForm(FlaskForm):
             ("other", "Multiple ethnicity / Other (Please Specify)"),
             ("no-answer", "Prefer not to answer"),
         ],
-        validators=[DataRequiredIfOtherFieldEmpty("ethnicity_other", "Please choose an option, or specify your own")],
+        validators=[
+            DataRequiredIfOtherFieldEmpty(
+                "ethnicity_other", "Please choose an option, or specify your own"
+            )
+        ],
     )
     ethnicity_other = StringField(
         "Ethnicity (Please Specify)",
-        validators=[DataRequiredIfOtherFieldEmpty("ethnicity", "Please choose an option, or specify your own")],
+        validators=[
+            DataRequiredIfOtherFieldEmpty(
+                "ethnicity", "Please choose an option, or specify your own"
+            )
+        ],
     )
-    phone_number = StringField("Phone Number", validators=[DataRequired()])
+    phone_number = StringField(
+        "Phone Number",
+        validators=[
+            DataRequired(),
+            Regexp(r"^(?:\+\d{1,2})?\s?\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$"),
+        ],
+    )
 
     # Choices from https://github.com/MLH/mlh-policies/blob/master/schools.csv
     school = StringField("What school are you from?", validators=[DataRequired()])
@@ -121,7 +146,12 @@ class ApplicationForm(FlaskForm):
 
     resume = FileField(
         "Upload your resume",
-        validators=[Regexp(r"^.*\.(?:pdf|PDF)$", message="Resume must be a PDF")],
+        validators=[
+            DataRequired(
+                "Resume is required, you can choose below whether we can share it with event sponsors."
+            ),
+            Regexp(r"^.*\.(?:pdf|PDF)$", message="Resume must be a PDF"),
+        ],
     )
 
     q1_prev_hackathon = TextAreaField(
@@ -165,7 +195,7 @@ class ApplicationForm(FlaskForm):
         "I consent to IEEE UofT sharing my resume with event sponsors (optional)"
     )
     age_confirmation = BooleanField(
-        "I confirm that I will be 18 years of age or older and studying"
+        "I confirm that I will be 18 years of age or older and studying "
         "at a post-secondary institution on February 15, 2020",
         validators=[DataRequired()],
     )

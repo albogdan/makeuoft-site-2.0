@@ -74,6 +74,16 @@
                 </div>
             </div>
 
+            {% if form.errors %}
+            <div class="callout alert" style="text-align: center" data-closable>
+                <h5>There are errors in your application</h5>
+                <hr>
+                <p>Please fix the errors indicated below before submitting your application.</p>
+                <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endif %}
 
             <form method="POST" novalidate>
                 {{ form.hidden_tag() }}
@@ -93,6 +103,7 @@
                         </div>
                         <div class="cell small-12 medium-6">
                             {{ render_field(form.ethnicity) }}
+{#                            TODO: Make this field only appear when necessary #}
                             {{ render_field(form.ethnicity_other) }}
                         </div>
                     </div>
