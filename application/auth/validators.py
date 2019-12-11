@@ -28,6 +28,33 @@ class DataRequiredIfOtherFieldEmpty:
                 raise StopValidation(message)
 
 
+class DataRequiredIfOtherFieldMatches:
+    """
+    Checks that a given field is "truthy" only if another field specified by
+    `other_field` matches a certain value
+    """
+    field_flags = ('required', )
+
+    def __init__(self, other_field, other_value, message=None):
+        self.other_field = other_field
+        self.other_value = other_value
+        self.message = message
+
+    def __call__(self, form, field):
+        other_field = getattr(form, self.other_field, None)
+        if other_field.data != self.other_value:
+            return
+
+        if not field.data or isinstance(field.data, string_types) and not field.data.strip():
+            if self.message is None:
+                message = field.gettext('This field is required.')
+            else:
+                message = self.message
+
+            field.errors[:] = []
+            raise StopValidation(message)
+
+
 class OldestAllowedDate:
     """
     Checks that a given date field is older than the specified date

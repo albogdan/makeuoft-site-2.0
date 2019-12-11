@@ -22,7 +22,11 @@ from wtforms.validators import (
     ValidationError,
 )
 from application.db_models import Users
-from application.auth.validators import DataRequiredIfOtherFieldEmpty, OldestAllowedDate
+from application.auth.validators import (
+    DataRequiredIfOtherFieldEmpty,
+    DataRequiredIfOtherFieldMatches,
+    OldestAllowedDate,
+)
 
 
 class LoginForm(FlaskForm):
@@ -107,8 +111,8 @@ class ApplicationForm(FlaskForm):
     ethnicity_other = StringField(
         "Ethnicity (Please Specify)",
         validators=[
-            DataRequiredIfOtherFieldEmpty(
-                "ethnicity", "Please choose an option, or specify your own"
+            DataRequiredIfOtherFieldMatches(
+                "ethnicity", "other", "Please choose an option, or specify your own"
             )
         ],
     )

@@ -104,7 +104,9 @@
                         <div class="cell small-12 medium-6">
                             {{ render_field(form.ethnicity) }}
 {#                            TODO: Make this field only appear when necessary #}
-                            {{ render_field(form.ethnicity_other) }}
+                            <div id="ethnicity-other-wrapper">
+                                {{ render_field(form.ethnicity_other) }}
+                            </div>
                         </div>
                     </div>
 
@@ -236,9 +238,27 @@
                 select2.data('select2').$selection.css('height', '2.4375rem');
 
                 {% if form.school.errors %}
-                    $(".select2-selection").addClass("is-invalid-input");
+                $(".select2-selection").addClass("is-invalid-input");
                 {% endif %}
+            });
 
+            function toggleEthnicityOtherVisibility() {
+                let ethnicityField = $("#{{ form.ethnicity.id }}");
+                let ethnicityOther = $("#ethnicity-other-wrapper");
+
+                if (ethnicityField.val() === "other") {
+                    ethnicityOther.show();
+                } else {
+                    ethnicityOther.hide();
+                }
+            }
+
+            $(document).ready(() => {
+                toggleEthnicityOtherVisibility();
+
+                $("#{{ form.ethnicity.id }}").change(() => {
+                    toggleEthnicityOtherVisibility();
+                });
             });
         </script>
     </body>
