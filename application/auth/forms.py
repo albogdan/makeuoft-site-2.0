@@ -79,6 +79,7 @@ class ApplicationForm(FlaskForm):
             ),
         ],
     )
+
     gender = SelectField(
         "Gender",
         choices=[
@@ -91,6 +92,7 @@ class ApplicationForm(FlaskForm):
         ],
         validators=[DataRequired()],
     )
+
     ethnicity = SelectField(
         "Ethnicity",
         choices=[
@@ -105,6 +107,7 @@ class ApplicationForm(FlaskForm):
         ],
         validators=[DataRequired()],
     )
+
     ethnicity_other = StringField(
         "Ethnicity (Please Specify)",
         validators=[
@@ -125,6 +128,7 @@ class ApplicationForm(FlaskForm):
             ("l", "L"),
             ("xl", "XL"),
         ],
+        validators=[DataRequired()],
     )
 
     dietary_restrictions = StringField(
@@ -157,6 +161,7 @@ class ApplicationForm(FlaskForm):
         ],
         validators=[DataRequired()],
     )
+
     program = StringField(
         "What program are you in?", validators=[DataRequired(), Length(max=255)]
     )
@@ -184,11 +189,13 @@ class ApplicationForm(FlaskForm):
         validators=[DataRequired(), Length(1000)],
         render_kw={"rows": "6"},
     )
+
     q2_why_participate = TextAreaField(
         "Why do you want to participate in MakeUofT?",
         validators=[DataRequired(), Length(1000)],
         render_kw={"rows": "6"},
     )
+
     q3_hardware_exp = TextAreaField(
         "Tell us about any experience you have with hardware!",
         validators=[DataRequired(), Length(1000)],
@@ -206,6 +213,7 @@ class ApplicationForm(FlaskForm):
         '<a href="https://static.mlh.io/docs/mlh-code-of-conduct.pdf">MLH Code of Conduct</a>',
         validators=[DataRequired()],
     )
+
     mlh_data = BooleanField(
         "I authorize IEEE to share my application/registration information for event "
         "administration, ranking, MLH administration, pre- and post- event information emails, "
@@ -216,9 +224,11 @@ class ApplicationForm(FlaskForm):
         'and the <a href="https://static.mlh.io/docs/mlh-code-of-conduct.pdf">MLH Privary Policy</a>.',
         validators=[DataRequired()],
     )
+
     resume_share = BooleanField(
         "I consent to IEEE UofT sharing my resume with event sponsors (optional)"
     )
+    
     age_confirmation = BooleanField(
         "I confirm that I will be 18 years of age or older and studying "
         "at a post-secondary institution on February 15, 2020",
