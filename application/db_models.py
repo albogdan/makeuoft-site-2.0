@@ -13,7 +13,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 class MailingList(db.Model):
     __tablename__ = "MailingList"
-    
+
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(255), index=True, unique=True, nullable=False)
 
@@ -38,7 +38,6 @@ class User(UserMixin, db.Model):
 
     team_id = db.Column(db.Integer, db.ForeignKey("teams.id", ondelete="SET NULL"))
     team = db.relationship("Team", backref="team_members")
-    application = db.relationship("Application", uselist=False, backref="user")
 
     def __repr__(self):
         return "<User {}>".format(self.id)
@@ -61,6 +60,7 @@ class Team(db.Model):
 class Application(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), unique=True)
+    user = db.relationship("User", foreign_keys=(user_id,), uselist=False, backref="application")
 
     # User submitted fields
     preferred_name = db.Column(db.String(255), nullable=False)
@@ -87,9 +87,10 @@ class Application(db.Model):
 
     # Reviewer fields
     status = db.Column(db.String(64), default=None, nullable=True)
-    evaluator = db.Column(
+    evaluator_id = db.Column(
         db.Integer, db.ForeignKey("users.id"), default=None, nullable=True
     )
+    evaluator = db.relationship("User", foreign_keys=(evaluator_id,))
     evaluator_comments = db.Column(db.Text(255), nullable=True)
     experience = db.Column(db.Integer, nullable=True)
     interest = db.Column(db.Integer, nullable=True)
@@ -102,5 +103,5 @@ class Application(db.Model):
 
 
 @login_manager.user_loader
-def load_user(id):
-    return User.query.get(int(id))
+def load_user(user_id):
+    return User.query.get(int(user_id))

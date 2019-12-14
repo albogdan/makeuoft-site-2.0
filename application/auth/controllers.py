@@ -33,7 +33,7 @@ def login():
         return redirect(url_for("home.index"))
     form = LoginForm()
     if form.validate_on_submit():
-        user = Users.query.filter_by(email=form.email.data).first()
+        user = User.query.filter_by(email=form.email.data).first()
 
         if user is None or not user.check_password(form.password.data):
             flash("Invalid username or password")
@@ -63,7 +63,7 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         print("Submission successful")
-        user = Users(
+        user = User(
             first_name=form.first_name.data,
             last_name=form.last_name.data,
             email=form.email.data,
