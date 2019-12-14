@@ -102,11 +102,7 @@ class ApplicationForm(FlaskForm):
             ("other", "Multiple ethnicity / Other (Please Specify)"),
             ("no-answer", "Prefer not to answer"),
         ],
-        validators=[
-            DataRequiredIfOtherFieldEmpty(
-                "ethnicity_other", "Please choose an option, or specify your own"
-            )
-        ],
+        validators=[DataRequired()],
     )
     ethnicity_other = StringField(
         "Ethnicity (Please Specify)",
