@@ -710,18 +710,32 @@ font-weight: bold;
 /*round button css*/
 button.radius, .button.radius {
     border-radius: 3px; }
-  button.round, .button.round {
-    border-radius: 1000px; }
+button.round, .button.round {
+  border-radius: 1000px; }
+
+#section-sponsors {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.sponsors-graphic {
+  width: 90%;
+  max-width: 600px;
+  margin: auto;
+}
 
 
-#section-sponsors .sponsors-graphic {
+
+/* #section-sponsors .sponsors-graphic {
   width: 100%; }
 #section-sponsors .mlh-logo {
-  height: 100px; }
+  height: 100px; } */
 
 @media screen and (min-width: 75em) {
-  #section-sponsors .sponsors-graphic {
-    width: 70%; } }
+  /* #section-sponsors .sponsors-graphic {
+    width: 70%; } } */
 #applyModal .form-error {
   display: block; }
 #applyModal .form-success {
