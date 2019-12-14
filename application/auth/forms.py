@@ -20,10 +20,10 @@ from wtforms.validators import (
     NumberRange,
     Regexp,
     ValidationError,
+    Length,
 )
-from application.db_models import Users
+from application.db_models import User
 from application.auth.validators import (
-    DataRequiredIfOtherFieldEmpty,
     DataRequiredIfOtherFieldMatches,
     OldestAllowedDate,
 )
@@ -56,7 +56,7 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField("Register")
 
     def validate_email(self, email):
-        search_email = Users.query.filter_by(email=email.data).first()
+        search_email = User.query.filter_by(email=email.data).first()
         if search_email is not None:
             raise ValidationError("Please use a different email address.")
 
@@ -85,6 +85,7 @@ class ApplicationForm(FlaskForm):
             ("", ""),
             ("male", "Male"),
             ("female", "Female"),
+            ("nonbinary", "Non-binary"),
             ("other", "Other"),
             ("no-answer", "Prefer not to answer"),
         ],
@@ -109,19 +110,41 @@ class ApplicationForm(FlaskForm):
         validators=[
             DataRequiredIfOtherFieldMatches(
                 "ethnicity", "other", "Please choose an option, or specify your own"
-            )
+            ),
+            Length(max=255),
         ],
     )
+
+    tshirt_size = SelectField(
+        "What is your T-shirt size?",
+        choices=[
+            ("", ""),
+            ("xs", "XS"),
+            ("s", "S"),
+            ("m", "M"),
+            ("l", "L"),
+            ("xl", "XL"),
+        ],
+    )
+
+    dietary_restrictions = StringField(
+        "Do you have any dietary restrictions? Leave blank for no.",
+        validators=[Length(max=255)],
+    )
+
     phone_number = StringField(
         "Phone Number",
         validators=[
             DataRequired(),
             Regexp(r"^(?:\+\d{1,2})?\s?\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$"),
+            Length(max=20),
         ],
     )
 
     # Choices from https://github.com/MLH/mlh-policies/blob/master/schools.csv
-    school = StringField("What school are you from?", validators=[DataRequired()])
+    school = StringField(
+        "What school are you from?", validators=[DataRequired(), Length(max=255)]
+    )
 
     study_level = SelectField(
         "Level of Study",
@@ -134,7 +157,9 @@ class ApplicationForm(FlaskForm):
         ],
         validators=[DataRequired()],
     )
-    program = StringField("What program are you in?", validators=[DataRequired()])
+    program = StringField(
+        "What program are you in?", validators=[DataRequired(), Length(max=255)]
+    )
 
     grad_year = IntegerField(
         "What is your expected graduation year?",
@@ -156,23 +181,23 @@ class ApplicationForm(FlaskForm):
 
     q1_prev_hackathon = TextAreaField(
         "Have you ever been to a hackathon/makeathon before? Tell us briefly about it.",
-        validators=[DataRequired()],
+        validators=[DataRequired(), Length(1000)],
         render_kw={"rows": "6"},
     )
     q2_why_participate = TextAreaField(
         "Why do you want to participate in MakeUofT?",
-        validators=[DataRequired()],
+        validators=[DataRequired(), Length(1000)],
         render_kw={"rows": "6"},
     )
     q3_hardware_exp = TextAreaField(
         "Tell us about any experience you have with hardware!",
-        validators=[DataRequired()],
+        validators=[DataRequired(), Length(1000)],
         render_kw={"rows": "6"},
     )
 
     how_you_hear = TextAreaField(
         "How did you hear about MakeUofT?",
-        validators=[DataRequired()],
+        validators=[DataRequired(), Length(255)],
         render_kw={"rows": "2"},
     )
 
