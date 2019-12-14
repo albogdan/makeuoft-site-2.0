@@ -10,8 +10,8 @@ services:
       ports:
          - "8181:8181"
       volumes:
-         - ./application:/application
          - /var/run/mysqld/mysqld.sock:/run/mysqld/mysqld.sock
+         - /var/www/makeuoft/resumes:/var/resumes
       environment:
          - DB_USER_NAME=${DB_CREDENTIALS_USR}
          - DB_USER_PW=${DB_CREDENTIALS_PSW}

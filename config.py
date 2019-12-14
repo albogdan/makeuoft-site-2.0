@@ -7,6 +7,7 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 # Load the environment file
 load_dotenv(os.path.join(BASE_DIR, ".flaskenv"))
 
+
 # DevelopmentConfig
 class DevelopmentConfig(object):
     DEBUG = True
@@ -23,6 +24,9 @@ class DevelopmentConfig(object):
     MAIL_USE_SSL = True
     MAIL_DEFAULT_SENDER = "makeuoft@gmail.com"
     MAIL_USE_TLS = False
+    UPLOAD_FOLDER = "resumes/"
+    ALLOWED_EXTENSIONS = {"pdf"}
+    MAX_CONTENT_LENGTH = 50 * 1024 * 1024  # 50 MB
 
 
 # ProductionConfig class to encapsulate the config varaibles
@@ -74,6 +78,11 @@ class ProductionConfig(object):
 
     # Publishable key for Stripe Payment API (note that if the env. variable is not found, it will use the other default value)
     # STRIPE_PUBLISHABLE_KEY =  os.environ.get('STRIPE_PUBLISHABLE_KEY') or
+
+    # File upload settings
+    UPLOAD_FOLDER = "/var/resumes/"
+    ALLOWED_EXTENSIONS = {"pdf"}
+    MAX_CONTENT_LENGTH = 50 * 1024 * 1024  # 50 MB
 
 
 # ReverseProxied Configurations for app mounting to subdomain (i.e., /makeuoft)
