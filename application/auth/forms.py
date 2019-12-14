@@ -155,7 +155,7 @@ class ApplicationForm(FlaskForm):
     )
 
     q1_prev_hackathon = TextAreaField(
-        "Have you ever been to a hackathon/makeathon before? Tell us briefly about it",
+        "Have you ever been to a hackathon/makeathon before? Tell us briefly about it.",
         validators=[DataRequired()],
         render_kw={"rows": "6"},
     )

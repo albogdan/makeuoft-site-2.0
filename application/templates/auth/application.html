@@ -28,6 +28,23 @@
     {% endif %}
 {% endmacro %}
 
+{% macro render_consent_field(field) %}
+    <div class="cell small-1">
+        {% if field.errors %}
+            {{ field(class="is-invalid-input") }}
+        {% else %}
+            {{ field }}
+        {% endif %}
+    </div>
+    <div class="cell small-11 consent-field">
+        {% if field.errors %}
+            {{ field.label(class="is-invalid-label") }}
+        {% else %}
+            {{ field.label }}
+        {% endif %}
+    </div>
+{% endmacro %}
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -113,7 +130,7 @@
                         <h4>Contact</h4>
                     </div>
                     <div class="cell small-12 medium-9 grid-x grid-padding-x">
-                        <div class="cell small-12 medium-4">
+                        <div class="cell small-12 medium-6 large-4">
                             {{ render_field(form.phone_number) }}
                         </div>
                     </div>
@@ -153,9 +170,10 @@
                         <h4>Resume</h4>
                     </div>
                     <div class="cell small-12 medium-9 grid-x grid-padding-x">
-                        <div class="cell small-12 medium-4">
+                        <div class="cell small-12">
                             {{ render_field(form.resume) }}
                         </div>
+                        {{ render_consent_field(form.resume_share) }}
                     </div>
 
                     <div class="cell small-12 medium-3">
@@ -173,23 +191,6 @@
                         </div>
                     </div>
 
-                    {% macro render_consent_field(field) %}
-                        <div class="cell small-1">
-                            {% if field.errors %}
-                                {{ field(class="is-invalid-input") }}
-                            {% else %}
-                                {{ field }}
-                            {% endif %}
-                        </div>
-                        <div class="cell small-11 consent-field">
-                            {% if field.errors %}
-                                {{ field.label(class="is-invalid-label") }}
-                            {% else %}
-                                {{ field.label }}
-                            {% endif %}
-                        </div>
-                    {% endmacro %}
-
                     <div class="cell small-12 medium-3">
                         <h4>One last thing</h4>
                     </div>
@@ -201,8 +202,6 @@
                         {{ render_consent_field(form.mlh_conduct) }}
 
                         {{ render_consent_field(form.mlh_data) }}
-
-                        {{ render_consent_field(form.resume_share) }}
 
                         {{ render_consent_field(form.age_confirmation) }}
                     </div>
@@ -217,7 +216,7 @@
 
         <script>
             // Get the list of MLH recognized schools
-            $.get('https://raw.githubusercontent.com/MLH/mlh-policies/master/schools.csv', data => {
+            $.get('https://raw.githubusercontent.com/MLH/mlh-policies/master/schools.csv', (data) => {
                 let schools = data.split("\n").slice(1);
                 let select2Data = [];
 
@@ -231,7 +230,8 @@
                 let select2Elem = $("#{{ form.school.id }}");
 
                 let select2 = select2Elem.select2({
-                    data: select2Data
+                    data: select2Data,
+                    width: '100%'
                 });
 
                 select2.data('select2').$selection.css('height', '2.4375rem');

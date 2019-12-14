@@ -19,7 +19,7 @@ h1 {
 }
 
 h4 {
-  text-align: right;
+  text-align: left;
   font-size: 1.25rem;
   padding-right: 1rem;
 }
@@ -27,6 +27,8 @@ h4 {
 label {
   font-size: 1rem;
   font-weight: bold;
+  line-height: 1.15;
+  margin: 0.5rem 0;
 }
 
 #application-form-wrapper {
@@ -66,4 +68,10 @@ label {
 
 .select2-selection__arrow {
   height: 2.4375rem !important;
+}
+
+@media screen and (min-width: 40em) {
+  h4 {
+    text-align: right;
+  }
 }
