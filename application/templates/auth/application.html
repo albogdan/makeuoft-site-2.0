@@ -1,197 +1,270 @@
+{% macro render_errors(field) %}
+    {% if field.errors %}
+        <span class="form-error" id="{{ field.id }}-error" style="display: inherit">
+        {% if field.errors|length == 1 %}
+            {{ field.errors[0] }}
+        {% else %}
+            <ul>
+                {% for error in field.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% else %}
+        <span class="form-error" id="{{ field.id }}-error">
+    {% endif %}
+    </span>
+{% endmacro %}
+
+{% macro render_field(field) %}
+    {% if field.errors %}
+        {{ field.label(class="is-invalid-label") }}
+        {{ render_errors(field) }}
+        {{ field(class="is-invalid-input") }}
+    {% else %}
+        {{ field.label }}
+        {{ render_errors(field) }}
+        {{ field }}
+    {% endif %}
+{% endmacro %}
+
+{% macro render_consent_field(field) %}
+    <div class="cell small-1">
+        {% if field.errors %}
+            {{ field(class="is-invalid-input") }}
+        {% else %}
+            {{ field }}
+        {% endif %}
+    </div>
+    <div class="cell small-11 consent-field">
+        {% if field.errors %}
+            {{ field.label(class="is-invalid-label") }}
+        {% else %}
+            {{ field.label }}
+        {% endif %}
+    </div>
+{% endmacro %}
+
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/css/styles.css') }}" />
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Roboto:400,400i,500,700,900|Source+Sans+Pro:400,400i,600,700,900&display=swap" rel="stylesheet">
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <!-- Foundation JS -->
+        <script src="{{ url_for('static', filename='js/foundation.min.js') }}">d</script>
 
+        <!-- Foundation CSS -->
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/css/foundation.min.css') }}" />
 
-    <title>User Application</title>
-</head>
-<body class="application-body">
-    <header class="form-header">
-        <a href="/makeuoft/"><img class="form-header-logo" src="{{ url_for('static', filename='img/CubeyBoi.svg') }}"/></a>
-    </header>
+        <!-- select2 -->
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/js/select2.min.js"></script>
 
-    <div class="application-form-div">
-        <h1>Application</h1>
-        <!-- <div class="form-container"> -->
-        <form class="login-form application-form" id="application-form" method="POST" novalidate>
-            {{ form.hidden_tag() }}
+        <!-- Site CSS -->
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/css/application.css') }}" />
 
-            <div class="application-div">
-                <h2>Personal</h2>
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,600,700&amp;display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Nunito&amp;display=swap" rel="stylesheet">
 
-                <div class="application-div-inputs">
-                    <div class="input-div input-width-third">
-                        <label for="firstName">First Name</label>
-                        {{ form.first_name(type="text", id="firstName") }}
-                    </div>
-
-                    <div class="input-div input-width-third">
-                        <label for="lastName">Last Name</label>
-                        {{ form.last_name(type="text", id="lastName") }}
-                    </div>
-
-                    <div class="input-div input-width-third">
-                        <label for="birthday">Birthday</label>
-                        {{ form.birthday(type="date", id="birthday") }}
-                    </div>
-
-                    <div class="input-div input-width-third">
-                        <label for="gender">Gender</label>
-                        {{ form.gender(type="text", id="gender", class="select") }}
-                        <div class="arrow-down"></div>
-                    </div>
-                    <div class="input-div input-width-full">
-                        <label for="ethnicity">Ethnicity</label>
-                        <div class="form-checkbox-div">
-                            <label for="confirm18">American Indian or Alaskan Native</label>
-                            <input type="checkbox" id="confirm18">
-                        </div>
-                        <div class="form-checkbox-div">
-                            <label for="confirm18">Asian / Pacific Islander</label>
-                            <input type="checkbox" id="confirm18">
-                        </div>
-                        <div class="form-checkbox-div">
-                            <label for="confirm18">Black or African American</label>
-                            <input type="checkbox" id="confirm18">
-                        </div>
-                        <div class="form-checkbox-div">
-                            <label for="confirm18">Hispanic</label>
-                            <input type="checkbox" id="confirm18">
-                        </div>
-                        <div class="form-checkbox-div">
-                            <label for="confirm18">White / Caucasian</label>
-                            <input type="checkbox" id="confirm18">
-                        </div>
-                        <div class="form-checkbox-div">
-                            <label for="confirm18">Other</label>
-                            <input type="checkbox" id="confirm18">
-                        </div>
-                        <div class="form-checkbox-div">
-                            <label for="confirm18">Prefer not to answer</label>
-                            <input type="checkbox" id="confirm18">
-                        </div>
+        <title>Apply to MakeUofT</title>
+    </head>
+    <body>
+        <header>
+            <a href="../">
+                <img class="header-logo" src="{{ url_for('static', filename='img/CubeyBoi.svg') }}" alt="MakeUofT">
+            </a>
+        </header>
 
 
-                        <!-- {{ form.ethnicity(type="text", id="ethnicity") }} -->
-                    </div>
+        <div class="grid-container" id="application-form-wrapper">
+            <div class="grid-x grid-padding-x">
+                <div class="cell small-12">
+                    <h1>Apply to MakeUofT!</h1>
+                </div>
+                <div class="cell small-12" style="text-align: center">
+                    <p>In order to provide the best hackathon experience we can, we'd like to get to know you a little bit better. While we would love to welcome everyone to the hackathon, space is finite and we will not be able to accommodate everyone. We're only collecting data for admissions purposes, and to help IEEE UofT and MLH improve the event in the future.</p>
                 </div>
             </div>
 
-            <div class="application-div">
-                <h2>Contact</h2>
+            {% if form.errors %}
+            <div class="callout alert" style="text-align: center" data-closable>
+                <h5>There are errors in your application</h5>
+                <hr>
+                <p>Please fix the errors indicated below before submitting your application.</p>
+                <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endif %}
 
-                <div class="application-div-inputs">
-                    <div class="input-div input-width-half">
-                        <label for="email">Email</label>
-                        {{ form.email(type="email", id="email") }}
+            <form method="POST" novalidate>
+                {{ form.hidden_tag() }}
+                <div class="grid-x grid-padding-y">
+                    <div class="cell small-12 medium-3">
+                        <h4>Personal</h4>
+                    </div>
+                    <div class="cell small-12 medium-9 grid-x grid-padding-x">
+                        <div class="cell small-12 medium-6">
+                            {{ render_field(form.preferred_name) }}
+                        </div>
+                        <div class="cell small-12 medium-6">
+                            {{ render_field(form.birthday) }}
+                        </div>
+                        <div class="cell small-12 medium-6">
+                            {{ render_field(form.gender) }}
+                        </div>
+                        <div class="cell small-12 medium-6">
+                            {{ render_field(form.ethnicity) }}
+                            <div id="ethnicity-other-wrapper">
+                                {{ render_field(form.ethnicity_other) }}
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-6">
+                            {{ render_field(form.tshirt_size) }}
+                        </div>
+                        <div class="cell small-12 medium-6">
+                            {{ render_field(form.dietary_restrictions) }}
+                        </div>
                     </div>
 
-                    <div class="input-div input-width-third">
-                        <label for="phoneNumber">Phone Number</label>
-                        {{ form.phone_number(type="text", id="phoneNumber") }}
+                    <div class="cell small-12 medium-3">
+                        <h4>Contact</h4>
                     </div>
+                    <div class="cell small-12 medium-9 grid-x grid-padding-x">
+                        <div class="cell small-12 medium-6 large-4">
+                            {{ render_field(form.phone_number) }}
+                        </div>
+                    </div>
+
+                    <div class="cell small-12 medium-3">
+                        <h4>Education</h4>
+                    </div>
+                    <div class="cell small-12 medium-9 grid-x grid-padding-x">
+                        <div class="cell small-12 medium-6">
+                            {% if form.school.errors %}
+                                {{ form.school.label(class="is-invalid-label") }}
+                            {% else %}
+                                {{ form.school.label }}
+                            {% endif %}
+                            {{ render_errors(form.school) }}
+                            <select id="{{ form.school.id }}" class="select2-school-select" name="{{ form.school.name }}">
+                                {% if form.school.data %}
+                                    <option value="{{ form.school.data }}">{{ form.school.data }}</option>
+                                {% else %}
+                                    <option value=""></option>
+                                {% endif %}
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="cell small-12 medium-6">
+                            {{ render_field(form.study_level) }}
+                        </div>
+                        <div class="cell small-12 medium-6">
+                            {{ render_field(form.program) }}
+                        </div>
+                        <div class="cell small-12 medium-6">
+                            {{ render_field(form.grad_year) }}
+                        </div>
+                    </div>
+
+                    <div class="cell small-12 medium-3">
+                        <h4>Resume</h4>
+                    </div>
+                    <div class="cell small-12 medium-9 grid-x grid-padding-x">
+                        <div class="cell small-12">
+                            {{ render_field(form.resume) }}
+                        </div>
+                        {{ render_consent_field(form.resume_share) }}
+                    </div>
+
+                    <div class="cell small-12 medium-3">
+                        <h4>Questions</h4>
+                    </div>
+                    <div class="cell small-12 medium-9 grid-x grid-padding-x">
+                        <div class="cell small-12">
+                            {{ render_field(form.q1_prev_hackathon) }}
+                        </div>
+                        <div class="cell small-12">
+                            {{ render_field(form.q2_why_participate) }}
+                        </div>
+                        <div class="cell small-12">
+                            {{ render_field(form.q3_hardware_exp) }}
+                        </div>
+                    </div>
+
+                    <div class="cell small-12 medium-3">
+                        <h4>One last thing</h4>
+                    </div>
+                    <div class="cell small-12 medium-9 grid-x grid-padding-x">
+                        <div class="cell small-12">
+                            {{ render_field(form.how_you_hear) }}
+                        </div>
+
+                        {{ render_consent_field(form.mlh_conduct) }}
+
+                        {{ render_consent_field(form.mlh_data) }}
+
+                        {{ render_consent_field(form.age_confirmation) }}
+                    </div>
+
+                    <div class="cell small-12" style="text-align: center;">
+                        {{ form.submit(class='button') }}
+                    </div>
+
                 </div>
-            </div>
+            </form>
+        </div>
 
-            <div class="application-div">
-                <h2>Education</h2>
+        <script>
+            // Get the list of MLH recognized schools
+            $.get('https://raw.githubusercontent.com/MLH/mlh-policies/master/schools.csv', (data) => {
+                let schools = data.split("\n").slice(1);
+                let select2Data = [];
 
-                <div class="application-div-inputs">
-                    <div class="input-div input-width-60">
-                        <label for="school">School</label>
-                        {{ form.school(type="text", id="school") }}
-                    </div>
+                for (let i=0; i<schools.length; i++) {
+                    select2Data.push({
+                        id: schools[i].trim(),
+                        text: schools[i].trim()
+                    });
+                }
 
-                    <div class="input-div input-width-third">
-                        <label for="graduation">Expected Graduation Year</label>
-                        {{ form.grad_year(type="text", id="graduation") }}
-                    </div>
+                let select2Elem = $("#{{ form.school.id }}");
 
-                    <div class="input-div input-width-half">
-                        <label for="program">Program of Study</label>
-                        {{ form.program(type="text", id="program") }}
-                    </div>
+                let select2 = select2Elem.select2({
+                    data: select2Data,
+                    width: '100%'
+                });
 
-                    
-                </div>
-            </div>
+                select2.data('select2').$selection.css('height', '2.4375rem');
 
-            <div class="application-div">
-                <h2>Resume</h2>
+                {% if form.school.errors %}
+                $(".select2-selection").addClass("is-invalid-input");
+                {% endif %}
+            });
 
-                <div class="application-div-inputs">
-                    <div class="input-div input-width-full">
-                        <label for="resume">Resume</label>
-                        {{ form.resume(type="resume", id="resume") }}
-                    </div>
-                </div>
-            </div>
+            function toggleEthnicityOtherVisibility() {
+                let ethnicityField = $("#{{ form.ethnicity.id }}");
+                let ethnicityOther = $("#ethnicity-other-wrapper");
 
-            <div class="application-div">
-                <h2>Questions</h2>
+                if (ethnicityField.val() === "other") {
+                    ethnicityOther.show();
+                } else {
+                    ethnicityOther.hide();
+                }
+            }
 
-                <div class="application-div-inputs">
-                    <div class="input-div input-width-full">
-                        <label for="q1">Have you ever been to a hackathon/makeathon before? Tell us briefly about it.</label>
-                        {{ form.q1_prev_hackathon(type="text", id="q1", class="text-area") }}
-                    </div>
+            $(document).ready(() => {
+                toggleEthnicityOtherVisibility();
 
-                    <div class="input-div input-width-full">
-                        <label for="q2">Why do you want to participate at MakeUofT?</label>
-                        {{ form.q2_why_participate(type="text", id="q2", class="text-area") }}
-                    </div>
-
-                    <div class="input-div input-width-full">
-                        <label for="q3">Tell us about your experience with hardware! </label>
-                        {{ form.q3_hardware_exp(type="text", id="q3", class="text-area") }}
-                    </div>
-                </div>
-            </div>
-
-            <div class="application-div">
-                <h2>Last Thing</h2>
-
-                <div class="application-div-inputs">
-                    <div class="input-div">
-                        <label for="howDidYouHear">How did you hear about MakeUofT?</label>
-                        {{ form.how_you_hear(type="text", id="howDidYouHear") }}
-                    </div>
-
-                    <div class="form-checkbox-div">
-                        <label for="conduct">I have read and agree to the <a href="https://static.mlh.io/docs/mlh-code-of-conduct.pdf">MLH Code of Conduct</a></label>
-                        <input type="checkbox" id="conduct">
-                    </div>
-
-                    <div class="form-checkbox-div">
-                        <label for="shareApplication">I authorize IEEE to share my application/registration information for event administration, ranking, MLH administration, pre- and post- event information emails, and occasional messages about hackathons in-line with the <a href="https://static.mlh.io/docs/mlh-code-of-conduct.pdf">MLH Privacy Policy</a>. I further agree to the terms of both the <a href="https://static.mlh.io/docs/mlh-code-of-conduct.pdf">MLH Contest Terms and Conditions</a> and the <a href="https://static.mlh.io/docs/mlh-code-of-conduct.pdf">MLH Privary Policy</a>.</label>
-                        <input type="checkbox" id="shareApplication">
-                    </div>
-                    <div class="form-checkbox-div">
-                        <label for="shareResume">I consent to IEEE UofT sharing my resume with event sponsors</label>
-                        <input type="checkbox" id="shareResume">
-                    </div>
-
-                    <div class="form-checkbox-div">
-                        <label for="confirm18">I confirm that I will be 18 years of age or older and studying at a post-secondary institution on February 16, 2020</label>
-                        <input type="checkbox" id="confirm18">
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-btn-div">
-                <button class="submit black-outline-btn">Save</button>
-                <button class="submit pink-btn">Submit Application</button>
-            </div>
-
-        </form>
-    </div>
-
-</body>
+                $("#{{ form.ethnicity.id }}").change(() => {
+                    toggleEthnicityOtherVisibility();
+                });
+            });
+        </script>
+    </body>
 </html>

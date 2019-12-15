@@ -1,46 +1,77 @@
 body {
-  background-color: #BFD4E6; }
+  background: linear-gradient(130.14deg, #48A0AF 9.68%, #3386BA 87.5%);
+}
 
-@media screen and (min-width: 64em) {
-  .top-bar-right {
-    margin-right: calc(3em) !important; } }
-#application-landing {
-  text-align: center;
-  justify-content: center;
+header {
   width: 100%;
-  height: 100%; }
-  #application-landing h1 {
-    color: #00639c;
-    margin: 0; }
-  #application-landing h2 {
-    color: #00639c; }
-  #application-landing h3 {
-    color: #00639c; }
-  #application-landing h4 {
-    color: #00639c; }
-  #application-landing p {
-    color: #00639c;
-    font-size: 20px; }
-  #application-landing .alert p {
-    color: red; }
-  #application-landing .grid-x {
-    padding: 15px; }
-  #application-landing a {
-    color: #2CA0AF;
-    text-decoration: underline; }
+  height: 60px;
+  padding: 10px 20px;
+}
 
-.button {
-  font-size: 18px;
-  border-radius: 10px;
-  color: #FFF !important; }
+.header-logo {
+  height: 100%;
+}
 
-textarea {
-  border-radius: 10px; }
+h1 {
+  font-family: "Montserrat", sans-serif !important;
+  text-align: center;
+  font-weight: bold;
+}
 
-input {
-  border-radius: 10px !important; }
+h4 {
+  text-align: left;
+  font-size: 1.25rem;
+  padding-right: 1rem;
+}
 
-select {
-  border-radius: 10px; }
+label {
+  font-size: 1rem;
+  font-weight: bold;
+  line-height: 1.15;
+  margin: 0.5rem 0;
+}
 
-/*# sourceMappingURL=application.css.map */
+#application-form-wrapper {
+  background-color: white;
+  max-width: 1000px;
+}
+
+#application-form-wrapper h1 {
+  padding: 1rem 0;
+}
+
+.consent-field label {
+  font-weight: normal !important;
+  color: #666666;
+}
+
+.is-invalid-label {
+  color: #c60f13 !important;
+}
+
+.is-invalid-input:not(:focus) {
+  border-color: #c60f13 !important;
+  background-color: #f8e6e7 !important;
+}
+
+.form-error {
+  margin-bottom: 0;
+}
+
+.select2-selection__rendered {
+  line-height: 2.4375rem !important;
+}
+
+.select2-container .select2-selection--single {
+  height: 2.4375rem !important;
+}
+
+.select2-selection__arrow {
+  height: 2.4375rem !important;
+}
+
+@media screen and (min-width: 40em) {
+  h4 {
+    text-align: right;
+  }
+}
