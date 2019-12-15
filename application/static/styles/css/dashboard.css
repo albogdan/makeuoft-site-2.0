@@ -31,12 +31,12 @@ label {
   margin: 0.5rem 0;
 }
 
-#application-form-wrapper {
+#wrapper {
   background-color: white;
   max-width: 1000px;
 }
 
-#application-form-wrapper h1 {
+#wrapper h1 {
   padding: 1rem 0;
 }
 

@@ -1,4 +1,4 @@
-{% extends "apply/base.html" %}
+{% extends "users/base.html" %}
 
 {% macro render_errors(field) %}
     {% if field.errors %}
@@ -58,11 +58,11 @@ Apply to MakeUofT
 <script src="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/js/select2.min.js"></script>
 
 <!-- Site CSS -->
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/css/application.css') }}" />
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/css/dashboard.css') }}" />
 {% endblock %}
 
 {% block content %}
-<div class="grid-container" id="application-form-wrapper">
+<div class="grid-container" id="wrapper">
     <div class="grid-x grid-padding-x">
         <div class="cell small-12">
             <h1>Apply to MakeUofT!</h1>
