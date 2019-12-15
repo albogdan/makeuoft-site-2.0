@@ -1,5 +1,6 @@
 from application import db
 import datetime
+import uuid
 from sqlalchemy import DateTime
 from sqlalchemy.sql import func
 
@@ -9,6 +10,10 @@ from application import login_manager
 
 # Import class to create and check password hashes
 from werkzeug.security import generate_password_hash, check_password_hash
+
+
+def _generate_uuid():
+    return uuid.uuid4().hex
 
 
 class MailingList(db.Model):
@@ -27,9 +32,11 @@ class User(UserMixin, db.Model):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
+    uuid = db.Column(db.String(32), index=True, nullable=False, unique=True, default=_generate_uuid)
     first_name = db.Column(db.String(255), index=True, nullable=False)
     last_name = db.Column(db.String(255), index=True, nullable=False)
     email = db.Column(db.String(255), index=True, unique=True, nullable=False)
+    is_active = db.Column(db.Boolean(), nullable=False, default=False)
     password_hash = db.Column(db.String(128))
     created_date = db.Column(
         DateTime(), server_default=func.now()
@@ -58,8 +65,10 @@ class Team(db.Model):
 
 
 class Application(db.Model):
+    __tablename__ = "applications"
+
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), unique=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), unique=True, nullable=False)
     user = db.relationship("User", foreign_keys=(user_id,), uselist=False, backref="application")
 
     # User submitted fields
