@@ -22,7 +22,7 @@ from wtforms.validators import (
     ValidationError,
     Length,
 )
-from application.db_models import User
+from application.db_models import Users
 from application.auth.validators import (
     DataRequiredIfOtherFieldMatches,
     OldestAllowedDate,
@@ -56,7 +56,7 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField("Register")
 
     def validate_email(self, email):
-        search_email = User.query.filter_by(email=email.data).first()
+        search_email = Users.query.filter_by(email=email.data).first()
         if search_email is not None:
             raise ValidationError("Please use a different email address.")
 
