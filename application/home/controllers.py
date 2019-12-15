@@ -62,6 +62,10 @@ def mailinglist():
 @home.route("/apply", methods=("GET", "POST"))
 @login_required
 def apply():
+    has_submitted = db.session.query(Application.id).filter_by(user_id=current_user.id).count() > 0
+    if has_submitted:
+        return redirect(url_for("home.dashboard"))
+
     form = ApplicationForm()
 
     if form.validate_on_submit():
@@ -101,3 +105,9 @@ def apply():
         db.session.commit()
 
     return render_template("users/application.html", form=form)
+
+
+@home.route("/dashboard", methods=("GET",))
+@login_required
+def dashboard():
+    return render_template("users/dashboard.html")
