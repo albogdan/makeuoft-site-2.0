@@ -100,4 +100,4 @@ def apply():
         db.session.add(application)
         db.session.commit()
 
-    return render_template("auth/application.html", form=form)
+    return render_template("apply/application.html", form=form)
