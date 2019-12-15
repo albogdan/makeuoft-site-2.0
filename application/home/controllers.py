@@ -104,6 +104,8 @@ def apply():
         db.session.add(application)
         db.session.commit()
 
+        return redirect(url_for("home.dashboard"))
+
     return render_template("users/application.html", form=form)
 
 
