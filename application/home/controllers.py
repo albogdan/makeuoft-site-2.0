@@ -75,6 +75,7 @@ def apply():
         resume.save(resume_path)
 
         application = Application(
+            user_id=current_user.id,
             preferred_name=form.preferred_name.data,
             birthday=form.birthday.data,
             gender=form.gender.data,
