@@ -27,7 +27,7 @@ class DevelopmentConfig(object):
     UPLOAD_FOLDER = "resumes/"
     ALLOWED_EXTENSIONS = {"pdf"}
     MAX_CONTENT_LENGTH = 50 * 1024 * 1024  # 50 MB
-
+    FLASK_ADMIN_SWATCH = 'cerulean'
 
 # ProductionConfig class to encapsulate the config varaibles
 class ProductionConfig(object):
@@ -56,6 +56,7 @@ class ProductionConfig(object):
     # operations using the other.
     THREADS_PER_PAGE = 2
 
+
     # Enable protection agains *Cross-site Request Forgery (CSRF)*
     CSRF_ENABLED = True
 
@@ -83,7 +84,7 @@ class ProductionConfig(object):
     UPLOAD_FOLDER = "/var/resumes/"
     ALLOWED_EXTENSIONS = {"pdf"}
     MAX_CONTENT_LENGTH = 50 * 1024 * 1024  # 50 MB
-
+    FLASK_ADMIN_SWATCH = 'cerulean'
 
 # ReverseProxied Configurations for app mounting to subdomain (i.e., /makeuoft)
 class ReverseProxied(object):

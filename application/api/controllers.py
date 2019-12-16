@@ -11,10 +11,13 @@ import json
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 
+from application import roles_required
+
 from flask_cors import cross_origin
 
 @api.route('/test', methods=['GET','POST'])
 @login_required
+@roles_required(['admin'])
 def api_main():
     print("success")
     return jsonify({'message': 'User registration'})
@@ -23,6 +26,7 @@ def api_main():
 @api.route('/inventory', methods=['GET', 'POST'])
 @cross_origin()
 @login_required
+@roles_required(['admin'])
 def inventoryAll():
     partsList = PartsAvailable.query.all()
     partsJSON = []
@@ -37,6 +41,7 @@ def inventoryAll():
 @api.route('/teamlist', methods=['GET','POST'])
 @cross_origin()
 @login_required
+@roles_required(['admin'])
 def teamsAll():
     # Get a list of all the teams
     teamList = Team.query.all()
@@ -61,6 +66,7 @@ def teamsAll():
 @api.route('/taglist', methods=['GET','POST'])
 @cross_origin()
 @login_required
+@roles_required(['admin'])
 def tagsAll():
     # Get a list of all the teams
     tagList = Tag.query.all()
@@ -78,6 +84,7 @@ def tagsAll():
 @api.route('/teamscheckout', methods=['GET','POST'])
 @cross_origin()
 @login_required
+@roles_required(['admin'])
 def teamsCheckout():
     # Get a list of all the teams
     teamList = Team.query.all()
@@ -94,6 +101,7 @@ def teamsCheckout():
 @api.route('/info', methods=['GET','POST'])
 @cross_origin()
 @login_required
+@roles_required(['admin'])
 def info():
     # Get a count of all the teams
     teamCount = len(Team.query.all())
@@ -117,6 +125,7 @@ def info():
 @api.route('/checkoutitems', methods=['POST'])
 @cross_origin()
 @login_required
+@roles_required(['admin'])
 def itemCheckout():
     data = json.loads(request.data)
     print("Request for team {0}".format(data['team']))
@@ -148,6 +157,7 @@ def itemCheckout():
 @api.route('/manageteams/getparticipants', methods=['GET', 'POST'])
 @cross_origin()
 @login_required
+@roles_required(['admin'])
 def usersNotOnTeam():
     users_no_team = User.query.filter(Users.team==None).all()
     usersJSON = []
@@ -162,6 +172,7 @@ def usersNotOnTeam():
 @api.route('/manageteams/addrecord', methods=['GET', 'POST'])
 @cross_origin()
 @login_required
+@roles_required(['admin'])
 def addrecord():
     data = json.loads(request.data)
     newTeam = Team()
@@ -178,6 +189,7 @@ def addrecord():
 @api.route('/manageteams/getmembers', methods=['GET', 'POST'])
 @cross_origin()
 @login_required
+@roles_required(['admin'])
 def getMembers():
     data = json.loads(request.data)
     teamNumber = data['teamNumber']
@@ -194,6 +206,7 @@ def getMembers():
 @api.route('/manageteams/deleteteam', methods=['POST'])
 @cross_origin()
 @login_required
+@roles_required(['admin'])
 def deleteTeam():
     data = json.loads(request.data)
     teamNumber = data['teamNumber']

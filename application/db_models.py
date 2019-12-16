@@ -66,6 +66,18 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+    def is_allowed(self, page_role):
+        if(type(page_role) == list):
+            for r in page_role:
+                for available_role in self.roles:
+                    if(r == available_role.name):
+                        return True
+        else:
+            for available_role in self.roles:
+                if(page_role == available_role.name):
+                    return True
+        return False
+
 
 class UserRoles(db.Model):
     __tablename__ = "user_roles"
