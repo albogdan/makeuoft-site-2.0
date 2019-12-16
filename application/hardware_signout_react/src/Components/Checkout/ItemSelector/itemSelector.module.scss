@@ -1,0 +1,12 @@
+@import './../../../Assets/Abstracts/variables';
+@import './../../../Assets/Abstracts/mixins.scss';
+
+.quantity {
+    width: 140px !important;
+    margin-left: 15px;
+}
+
+.component, .team {
+    width: 100%;
+}
+

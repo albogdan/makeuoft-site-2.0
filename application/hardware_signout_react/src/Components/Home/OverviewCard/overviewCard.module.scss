@@ -1,0 +1,41 @@
+@import './../../../Assets/Abstracts/variables';
+@import './../../../Assets/Abstracts/mixins.scss';
+
+.overview {
+    @include flexPosition(center, center);
+    border-radius: 4px;
+    flex: 1;
+    margin: 7px;
+    font-size: size(lg);
+    font-weight: bold;
+    height: 10rem;
+    text-align: center;
+    padding: 2rem;
+
+    p {
+        color: inherit;
+    }
+}
+
+.orange {
+    // background: rgba(255, 174, 73, 0.7);
+    background: linear-gradient(147.31deg, #E9BD7E 9.68%, #FF8888 87.5%);
+    // color: color(yellow);
+    color: rgba(255,255,255,.85);
+}
+
+.purple {
+    // background: rgba(123, 122, 251, 0.5);
+    background: linear-gradient(147.31deg, #9AADDC 9.68%, #7774FF 87.5%);
+    // color: color(purple);
+    color: rgba(255,255,255,.85);
+}
+
+.blue {
+    background: linear-gradient(147.31deg, #48A0AF 9.68%, #3386BA 87.5%);
+    // color: color(blue);
+    color: rgba(255,255,255,.85);
+}
+
+// @include response()
+

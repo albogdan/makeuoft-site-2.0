@@ -1,0 +1,80 @@
+@import './../../../Assets/Abstracts/variables';
+@import './../../../Assets/Abstracts/mixins.scss';
+
+.component {
+    background: #FFFFFF;
+    border: 1px solid color(borderGrey);
+    border-radius: 4px;
+    position: relative;
+    margin: 7px;
+    cursor: pointer;
+    width: 174px;
+    flex: 1;
+    height: 248px;
+
+    @include flexPosition(flex-start, center);
+    flex-direction: column;
+
+    @include response(lg/md) {
+        height: 222px;
+    }
+
+    img {
+        border-radius: 4px 4px 0 0;
+        height: 17rem;
+        object-fit: cover;
+        width: 17rem;
+    }
+
+    &Div {
+        @include flexPosition(center, center);
+        flex-direction: column;
+        width: 100%;
+        padding: .8rem 1rem;
+        background: #FFFFFF;
+        transition: all .2s;
+        height: 76px;
+
+        &Name {
+            font-weight: 600;
+            font-size: size(xxs) + 2px;
+            line-height: 18px;
+            text-align: center;
+            color: color(dark);
+            margin-bottom: 4px;
+        }
+
+        &Stock {
+            text-align: center;
+            font-size: size(xxs);
+            color: color(dark);
+        }
+
+    }
+    &:hover {
+        .componentDiv {
+            background-color: color(lightgrey);
+        }
+        
+    }
+}
+
+.checkout {
+    border-width: 0;
+    cursor: default;
+    margin: 0;
+    background: color(lightgrey) !important;
+
+    img {
+        border-radius: 4px;
+    }
+
+    .componentDiv {
+        background: color(lightgrey) !important;
+
+        &:hover {
+            background: color(lightgrey) !important;
+        }
+    }
+    
+}

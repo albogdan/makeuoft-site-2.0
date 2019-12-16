@@ -1,0 +1,30 @@
+@import './../../../Assets/Abstracts/variables';
+@import './../../../Assets/Abstracts/mixins.scss';
+
+
+.basketItem {
+    width: 100%;
+    @include flexPosition;
+    margin-bottom: 1rem; 
+    
+    &Item {
+        @include flexPosition;
+
+        p {
+            font-size: size(xs);
+            margin-left: 2rem;
+        }
+
+        img {
+            height: 7rem;
+            width: 7rem;
+            border: 1px solid color(lightgrey);
+            object-fit: cover;
+        }
+    }
+    &Quantity {
+        font-size: size(xs);
+        text-align: center;
+        margin-right: 1.5rem;
+    }
+}

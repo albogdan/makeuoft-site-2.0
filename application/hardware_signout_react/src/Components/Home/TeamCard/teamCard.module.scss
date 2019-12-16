@@ -1,0 +1,105 @@
+@import './../../../Assets/Abstracts/variables';
+@import './../../../Assets/Abstracts/mixins.scss';
+
+.card {
+    background: #FFFFFF;
+    border-radius: 4px;
+    padding-top: 1rem;
+    margin: 7px;
+    border: 1px solid color(borderGrey);
+    flex: 1;
+    min-width: 20rem;
+    max-width: 26rem;
+    height: 164px;
+    position: relative;
+    
+    &Title {
+        @include flexPosition;
+        margin: 0 1.2rem;
+
+        p {
+            font-size: size(xs);
+            color: color(black);
+            font-weight: 600;
+        }
+
+        svg {
+            width: size(sm);
+            height: size(sm);
+            fill: #979797;
+            cursor: pointer;
+            transition: fill .2s;
+
+            &:hover {
+                fill: color(blue)
+            }
+        }
+    }
+
+    &Members {
+        @include flexPosition(flex-start, flex-start,);
+        flex-direction: column;
+        margin: 5px 1.2rem 12px;
+
+        &Name {
+            @include flexPosition(flex-start, center);
+    
+            p {
+                font-size: 14px;
+                margin-right: 5px;
+                margin-bottom: 2px;
+            }
+        }
+    }
+
+    &Button {
+        border-top: 1px solid rgba(151, 151, 151, 0.5);
+        height: 35px;
+        width: 100%;
+        bottom: 0;
+        position: absolute;
+
+        button {
+            height: 100%;
+            border: none;
+            background: color(white);
+            outline: none;
+            transition: all .2s;
+            font-weight: 500;
+            font-size: size(xxs);
+            
+            &:hover {
+                background: color(lightgrey);
+            }
+        }
+
+        &1 {
+            width: 60%;
+            border-right: 1px solid rgba(151, 151, 151, 0.5) !important;
+            border-radius: 0 0 0 4px;
+        }
+
+        &2 {
+            width: 40%;
+            border-radius: 0 0 4px 0;
+        }
+    }
+}
+
+.addCard {
+    height: 164px;
+    @include flexPosition(center, center);
+    flex-direction: column;
+    cursor: pointer;
+    transition: all .2s;
+
+    p {
+        font-size: size(xs);
+        text-align: center;
+        margin-top: 22px;
+    }
+
+    &:hover {
+        background: color(lightgrey);
+    }
+}

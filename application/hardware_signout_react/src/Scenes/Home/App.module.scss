@@ -1,0 +1,44 @@
+@import './../../Assets/Abstracts/mixins.scss';
+@import './../../Assets/Abstracts/variables.scss';
+
+.home {
+    position: relative;
+    width: 80%;
+    margin: 25px auto;
+
+    @include response(xl) {
+        width: 100%;
+        padding: 0 6rem;   
+    }
+}
+
+.overview {
+    @include flexPosition(flex-start,flex-start);
+    flex-direction: column;
+    width: 100%;
+
+    h2 {
+        margin: 17px 0 0 7px; 
+    }
+}
+
+.team {
+    @include flexPosition(flex-start,flex-start);
+    flex-direction: column;
+    width: 100%;
+
+    h2 {
+        margin: 17px 0 5px 7px; 
+    }
+    
+    &List {
+        @include flexPosition(flex-start, flex-start);
+        flex-wrap: wrap;
+        width: 100%;
+
+        // display: flex;
+        // grid-template-columns: repeat(4, 25%);
+        // grid-gap: 14px;
+
+    }
+}

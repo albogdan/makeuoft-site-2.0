@@ -1,0 +1,96 @@
+@mixin flexPosition ($jusCon: space-between, $alIte: center) {
+    display: flex;
+    justify-content: $jusCon;
+    align-items: $alIte;
+}
+
+@mixin btnFilled($color: green) {
+    color: color(white);
+    padding: .8rem 1.5rem;
+    border-radius: 100px;
+    font-size: size(xs);
+    background: color($color);
+    border: 1px solid color($color);
+    margin: 1.5rem 0;
+    transition: all .2s;
+    font-weight: 500;
+
+    &:hover {
+        background: darken(color($color), 10%);
+        border: 1px solid darken(color($color), 10%);
+    }
+}
+
+@mixin btnOutline($color: blue) {
+    color: color(dark);
+    padding: .7rem 1.5rem;
+    border-radius: 100px;
+    font-size: size(xxs);
+    background: color(white);
+    border: 1px solid color($color);
+    margin: 1.5rem 0;
+    transition: all .2s;
+    font-weight: 500;
+
+    &:hover {
+        background: color($color);
+        color: color(white);
+    }
+}
+
+@mixin xIcon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: size(sm);
+    height: size(sm);
+    cursor: pointer;
+    fill: color(grey);
+    transition: fill .2s;
+
+    &:hover {
+        fill: lighten(color(grey), 20%);
+    }
+}
+
+
+@mixin grid-row-col($row, $col) {
+    grid-row: $row;
+    grid-column: $col;
+}
+
+@mixin response($breakpoint) {
+    @if($breakpoint == xl) {
+        @media(max-width: 1200px) {
+            @content;
+        }
+    }
+    @if($breakpoint == lg) {
+        @media(max-width: 1000px) {
+            @content;
+        }
+    }
+
+    @if($breakpoint == lg/md) {
+        @media(max-width: 800px) {
+            @content;
+        }
+    }
+
+    @if($breakpoint == md) {
+        @media(max-width: 600px) {
+            @content;
+        }
+    }
+
+    @if($breakpoint == sm) {
+        @media(max-width: 465px) {
+            @content;
+        }
+    }
+    @if($breakpoint == xs) {
+        @media(max-width: 350px) {
+            @content;
+        }
+    }
+}

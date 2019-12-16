@@ -84,11 +84,18 @@ def create_app():
     from application.home import home as home_module
     from application.auth import auth as auth_module
 
+    from application.hardware_signout import hardware_signout as hs_module
+    from application.api import api as api_module
+
     # Register blueprint(s) - connects each module to the main flask application
     # app.register_blueprint(xyz_module)
 
     flask_app.register_blueprint(home_module)
     flask_app.register_blueprint(auth_module)
+    flask_app.register_blueprint(hs_module)
+    flask_app.register_blueprint(api_module)
+
+
 
     return flask_app
 

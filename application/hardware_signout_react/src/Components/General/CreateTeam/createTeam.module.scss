@@ -1,0 +1,100 @@
+@import './../../../Assets/Abstracts/variables';
+@import './../../../Assets/Abstracts/mixins.scss';
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    @include flexPosition(center, center);
+    width: 100vw;
+    height: 100vh;
+    z-index: 8;
+}
+
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 10rem;
+    z-index: 9;
+    background: rgba(0, 0, 0, 0.5);
+    @include flexPosition(center, center);
+    cursor: pointer;
+
+    &Card {
+        background: #FFFFFF;
+        border-radius: 4px;
+        width: 100%;
+        max-width: 60rem;
+        @include flexPosition;
+        flex-direction: column;
+        padding: 3rem;
+        position: relative;
+        z-index: 10;
+
+        &Close {
+            @include xIcon;
+        }
+
+        &Msg {
+            font-size: size(xs);
+            margin-bottom: 1.5rem;
+            color: #666666;
+        }
+
+        &Heading {
+            font-size: size(sm) !important;
+            color: color(black);
+            margin-bottom: 1rem;
+        }
+
+        &Member {
+            @include flexPosition(flex-start, center);
+            width: 100%;
+            margin-bottom: 1rem;
+            max-width: 48rem;
+
+            label {
+                font-size: size(xs);
+                color: color(black);
+                margin-right: 8px;
+            }
+
+            &Label {
+                width: 10rem;
+            }
+            &IDLabel {
+                margin: 0 8px 0 15px;
+            }
+        }
+
+        &Btn {
+            @include btnFilled(yellow);
+            margin-bottom: 0;
+        }
+    }
+}
+
+.alert {
+    color: color(red);
+}
+
+.deleteTeamBtn {
+    color: color(white);
+    padding: .6rem 1.2rem;
+    border-radius: 100px;
+    font-size: size(xxs);
+    font-weight: bold;
+    background: color(red);
+    border: 1px solid color(red);
+    margin-top: 1rem;
+    transition: all .2s;
+    align-self: flex-end;
+
+    &:hover {
+        background: darken(color(red), 10%);
+        border: 1px solid darken(color(red), 10%);
+    }
+}
