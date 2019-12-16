@@ -24,6 +24,13 @@ class MailingList(db.Model):
         return "<Email {}>".format(self.id)
 
 
+class Role(db.Model):
+    __tablename__ = "roles"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True, nullable=False)
+
+
 class User(UserMixin, db.Model):
     # Define the columns of the table, including primary keys, unique, and
     # indexed fields, which makes searching faster
@@ -48,6 +55,8 @@ class User(UserMixin, db.Model):
 
     id_provided = db.Column(db.Boolean, default=False)
 
+    roles = db.relationship("Role", secondary="user_roles", backref="users")
+
     def __repr__(self):
         return "<User {}>".format(self.id)
 
@@ -56,6 +65,14 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+
+class UserRoles(db.Model):
+    __tablename__ = "user_roles"
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id", ondelete="CASCADE"))
+    role_id = db.Column(db.Integer, db.ForeignKey("roles.id", ondelete="CASCADE"))
 
 
 def _generate_team_code():
