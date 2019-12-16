@@ -14,6 +14,6 @@ from application.hardware_signout import hardware_signout
 
 @hardware_signout.route('/')
 @hardware_signout.route('/index', methods=['GET', 'POST'])
-#@login_required
+@login_required
 def index():
     return render_template('hardware_signout/index.html')

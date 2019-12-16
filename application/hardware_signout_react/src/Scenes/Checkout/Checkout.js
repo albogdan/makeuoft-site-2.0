@@ -23,7 +23,7 @@ export default class Checkout extends PureComponent {
     this.getSelectedHardware = this.getSelectedHardware.bind(this);
     this.changeQuantity = this.changeQuantity.bind(this);
     this.deleteCheckoutField = this.deleteCheckoutField.bind(this);
-    fetch('http://localhost:8282/api/teamscheckout')
+    fetch('http://localhost:8181/api/teamscheckout', {credentials: 'include'})
       .then(response => response.json())
       .then(teams => this.setState({ teams }));
   }
@@ -137,7 +137,7 @@ export default class Checkout extends PureComponent {
     if (selectedTeam === null) {
       this.setState({ alertNoTeam: true })
       return;
-    } 
+    }
     var itemList = [];
     for(var i=0; i<basketHardwares.length; i++){
       itemList.push({"name": basketHardwares[i].name,
@@ -150,7 +150,7 @@ export default class Checkout extends PureComponent {
     }
     console.log("DATA", data);
 
-    fetch('http://localhost:8282/api/checkoutitems', {
+    fetch('http://localhost:8181/api/checkoutitems', {
       method: "POST",
       body:JSON.stringify(data)
     })
@@ -162,7 +162,7 @@ export default class Checkout extends PureComponent {
     });
 
     // This refreshes the page so all the fields reset
-    window.location.reload(false); 
+    window.location.reload(false);
   }
 
   render() {

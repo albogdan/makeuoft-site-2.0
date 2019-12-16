@@ -9,10 +9,10 @@ export default class Inventory extends PureComponent {
     super(props);
     this.state = { active: 0, popup: false, popupComponent: null,
                    components: null, showComponents: [], tagBtns: null}
-    fetch('http://localhost:8282/api/inventory')
+    fetch('http://localhost:8181/api/inventory')
       .then(response => response.json())
       .then(components => this.setState({ components }));
-    fetch('http://localhost:8282/api/taglist')
+    fetch('http://localhost:8181/api/taglist')
       .then(response => response.json())
       .then(tagBtns => this.setState({ tagBtns }));
   }

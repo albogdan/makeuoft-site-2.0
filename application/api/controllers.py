@@ -22,7 +22,7 @@ def api_main():
 # Inventory.js
 @api.route('/inventory', methods=['GET', 'POST'])
 @cross_origin()
-#@login_required
+@login_required
 def inventoryAll():
     partsList = PartsAvailable.query.all()
     partsJSON = []
@@ -36,11 +36,12 @@ def inventoryAll():
 # App.js
 @api.route('/teamlist', methods=['GET','POST'])
 @cross_origin()
-#@login_required
+@login_required
 def teamsAll():
     # Get a list of all the teams
     teamList = Team.query.all()
     teamsJSON = []
+    print("IT WORKSDFSAFSD")
     # For each team:
     for team in teamList:
         teamDict = {}
@@ -59,7 +60,7 @@ def teamsAll():
 # Inventory.js
 @api.route('/taglist', methods=['GET','POST'])
 @cross_origin()
-#@login_required
+@login_required
 def tagsAll():
     # Get a list of all the teams
     tagList = Tag.query.all()
@@ -76,7 +77,7 @@ def tagsAll():
 # Checkout.js
 @api.route('/teamscheckout', methods=['GET','POST'])
 @cross_origin()
-#@login_required
+@login_required
 def teamsCheckout():
     # Get a list of all the teams
     teamList = Team.query.all()
@@ -92,7 +93,7 @@ def teamsCheckout():
 # App.js
 @api.route('/info', methods=['GET','POST'])
 @cross_origin()
-#@login_required
+@login_required
 def info():
     # Get a count of all the teams
     teamCount = len(Team.query.all())
@@ -115,7 +116,7 @@ def info():
 # Checkout.js
 @api.route('/checkoutitems', methods=['POST'])
 @cross_origin()
-#@login_required
+@login_required
 def itemCheckout():
     data = json.loads(request.data)
     print("Request for team {0}".format(data['team']))
@@ -146,7 +147,7 @@ def itemCheckout():
 # AddTeamSelector.js
 @api.route('/manageteams/getparticipants', methods=['GET', 'POST'])
 @cross_origin()
-#@login_required
+@login_required
 def usersNotOnTeam():
     users_no_team = User.query.filter(Users.team==None).all()
     usersJSON = []
@@ -160,7 +161,7 @@ def usersNotOnTeam():
 # CreateTeam.js
 @api.route('/manageteams/addrecord', methods=['GET', 'POST'])
 @cross_origin()
-#@login_required
+@login_required
 def addrecord():
     data = json.loads(request.data)
     newTeam = Team()
@@ -176,7 +177,7 @@ def addrecord():
 # EditTeam.js
 @api.route('/manageteams/getmembers', methods=['GET', 'POST'])
 @cross_origin()
-#@login_required
+@login_required
 def getMembers():
     data = json.loads(request.data)
     teamNumber = data['teamNumber']
@@ -192,7 +193,7 @@ def getMembers():
 # EditTeam.js
 @api.route('/manageteams/deleteteam', methods=['POST'])
 @cross_origin()
-#@login_required
+@login_required
 def deleteTeam():
     data = json.loads(request.data)
     teamNumber = data['teamNumber']

@@ -17,10 +17,10 @@ export default class App extends PureComponent {
       teams: null,
       info: null
     };
-    fetch('http://localhost:8282/api/teamlist')
+    fetch('http://localhost:8181/api/teamlist')
       .then(response => response.json())
       .then(teams => this.setState({ teams }));
-    fetch('http://localhost:8282/api/info')
+    fetch('http://localhost:8181/api/info')
       .then(response => response.json())
       .then(info => this.setState({ info }));
   }

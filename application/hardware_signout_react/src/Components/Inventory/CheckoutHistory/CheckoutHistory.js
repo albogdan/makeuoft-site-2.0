@@ -9,7 +9,7 @@ export default class CheckoutHistory extends PureComponent {
     constructor(props) {
         super(props);
         this.state = { components: null}
-        fetch('http://localhost:8282/api/inventory')
+        fetch('http://localhost:8181/api/inventory')
           .then(response => response.json())
           .then(components => this.setState({ components }));
     }
