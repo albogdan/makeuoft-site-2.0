@@ -7,14 +7,17 @@ from flask import (
     redirect,
     url_for,
     jsonify,
+    current_app
 )
-from flask_login import login_required
+from flask_login import login_required, current_user
 from datetime import datetime
 
+from application.db_models import *
 from application.auth.forms import ApplicationForm
 
-from application.db_models import *
-
+from hashlib import md5
+import re
+import os
 import json
 
 # Import forms
@@ -59,9 +62,54 @@ def mailinglist():
 @home.route("/apply", methods=("GET", "POST"))
 @login_required
 def apply():
+    has_submitted = db.session.query(Application.id).filter_by(user_id=current_user.id).count() > 0
+    if has_submitted:
+        return redirect(url_for("home.dashboard"))
+
     form = ApplicationForm()
 
     if form.validate_on_submit():
-        pass
+        resume = form.resume.data
 
-    return render_template("auth/application.html", form=form)
+        if not os.path.isdir(current_app.config["UPLOAD_FOLDER"]):
+            os.makedirs(current_app.config["UPLOAD_FOLDER"])
+
+        filename = "{}.pdf".format(md5(current_user.email.encode()).hexdigest())
+        resume_path = os.path.join(current_app.config["UPLOAD_FOLDER"], filename)
+        resume.save(resume_path)
+
+        application = Application(
+            user_id=current_user.id,
+            preferred_name=form.preferred_name.data,
+            birthday=form.birthday.data,
+            gender=form.gender.data,
+            ethnicity=(form.ethnicity_other.data if form.ethnicity.data == "other" else form.ethnicity.data),
+            tshirt_size=form.tshirt_size.data,
+            dietary_restrictions=form.dietary_restrictions.data,
+            phone_number=re.sub(r"[^0-9]", "", form.phone_number.data),
+            school=form.school.data,
+            study_level=form.study_level.data,
+            program=form.program.data,
+            graduation_year=form.grad_year.data,
+            resume_path=resume_path,
+            q1_prev_hackathon=form.q1_prev_hackathon.data,
+            q2_why_participate=form.q2_why_participate.data,
+            q3_hardware_exp=form.q3_hardware_exp.data,
+            referral_source=form.how_you_hear.data,
+            mlh_conduct_agree=form.mlh_conduct.data,
+            mlh_data_agree=form.mlh_data.data,
+            resume_sharing=form.resume_share.data,
+            age_confirmation=form.age_confirmation.data,
+        )
+        db.session.add(application)
+        db.session.commit()
+
+        return redirect(url_for("home.dashboard"))
+
+    return render_template("users/application.html", form=form)
+
+
+@home.route("/dashboard", methods=("GET",))
+@login_required
+def dashboard():
+    return render_template("users/dashboard.html")

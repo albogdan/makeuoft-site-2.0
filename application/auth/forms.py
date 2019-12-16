@@ -1,9 +1,11 @@
 import datetime
 
 from flask_wtf import FlaskForm
+
+from flask_wtf.file import FileField, FileRequired, FileAllowed
+
 from wtforms import (
     BooleanField,
-    FileField,
     IntegerField,
     PasswordField,
     SelectField,
@@ -12,7 +14,7 @@ from wtforms import (
     TextAreaField,
 )
 from wtforms.fields.html5 import DateField
-from wtforms.widgets import ListWidget, CheckboxInput
+
 from wtforms.validators import (
     DataRequired,
     Email,
@@ -22,10 +24,11 @@ from wtforms.validators import (
     ValidationError,
     Length,
 )
-from application.db_models import Users
+from application.db_models import User
 from application.auth.validators import (
     DataRequiredIfOtherFieldMatches,
     OldestAllowedDate,
+    FileSize,
 )
 
 
@@ -56,7 +59,7 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField("Register")
 
     def validate_email(self, email):
-        search_email = Users.query.filter_by(email=email.data).first()
+        search_email = User.query.filter_by(email=email.data).first()
         if search_email is not None:
             raise ValidationError("Please use a different email address.")
 
@@ -177,34 +180,35 @@ class ApplicationForm(FlaskForm):
     resume = FileField(
         "Upload your resume",
         validators=[
-            DataRequired(
+            FileRequired(
                 "Resume is required, you can choose below whether we can share it with event sponsors."
             ),
-            Regexp(r"^.*\.(?:pdf|PDF)$", message="Resume must be a PDF"),
+            FileAllowed({"pdf"}, message="Resume must be a PDF"),
+            FileSize(max_size=20 * 1024 * 1024, message="File must not exceed 20 MB"),
         ],
     )
 
     q1_prev_hackathon = TextAreaField(
         "Have you ever been to a hackathon/makeathon before? Tell us briefly about it.",
-        validators=[DataRequired(), Length(1000)],
+        validators=[DataRequired(), Length(max=1000)],
         render_kw={"rows": "6"},
     )
 
     q2_why_participate = TextAreaField(
         "Why do you want to participate in MakeUofT?",
-        validators=[DataRequired(), Length(1000)],
+        validators=[DataRequired(), Length(max=1000)],
         render_kw={"rows": "6"},
     )
 
     q3_hardware_exp = TextAreaField(
         "Tell us about any experience you have with hardware!",
-        validators=[DataRequired(), Length(1000)],
+        validators=[DataRequired(), Length(max=1000)],
         render_kw={"rows": "6"},
     )
 
     how_you_hear = TextAreaField(
         "How did you hear about MakeUofT?",
-        validators=[DataRequired(), Length(255)],
+        validators=[DataRequired(), Length(max=255)],
         render_kw={"rows": "2"},
     )
 
@@ -228,7 +232,7 @@ class ApplicationForm(FlaskForm):
     resume_share = BooleanField(
         "I consent to IEEE UofT sharing my resume with event sponsors (optional)"
     )
-    
+
     age_confirmation = BooleanField(
         "I confirm that I will be 18 years of age or older and studying "
         "at a post-secondary institution on February 15, 2020",

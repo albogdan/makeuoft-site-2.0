@@ -21,14 +21,25 @@ pipeline {
         branch "master"
       }
       steps {
-//          #Copy static files
-          sh 'rm -r /var/www/makeuoft/public_html/static/'
-          sh 'cp -r application/static /var/www/makeuoft/public_html/static'
-//          #Bring down the old container
-          sh 'docker-compose -f deployment/docker-compose.yml down'
-//          #Bring up the new container
-          sh 'docker-compose -f deployment/docker-compose.yml -p makeuoft up -d'
+        sh '''
+          #!/bin/bash
+          # Copy static files
+          rm -r /var/www/makeuoft/public_html/static/
+          cp -r application/static /var/www/makeuoft/public_html/static
+          '''
 
+        sh '''
+          #!/bin/bash
+          # Bring down the old container
+          docker-compose -f deployment/docker-compose.yml down
+          '''
+
+        sh '''
+          #!/bin/bash
+          # Migrate and bring up the new container
+          docker-compose -f deployment/docker-compose.yml run --rm --entrypoint "" web flask db upgrade
+          docker-compose -f deployment/docker-compose.yml -p makeuoft up -d
+          '''
       }
     }
   }

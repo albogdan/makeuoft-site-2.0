@@ -1,0 +1,250 @@
+{% extends "users/base.html" %}
+
+{% macro render_errors(field) %}
+    {% if field.errors %}
+        <span class="form-error" id="{{ field.id }}-error" style="display: inherit">
+        {% if field.errors|length == 1 %}
+            {{ field.errors[0] }}
+        {% else %}
+            <ul>
+                {% for error in field.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% else %}
+        <span class="form-error" id="{{ field.id }}-error">
+    {% endif %}
+    </span>
+{% endmacro %}
+
+{% macro render_field(field) %}
+    {% if field.errors %}
+        {{ field.label(class="is-invalid-label") }}
+        {{ render_errors(field) }}
+        {{ field(class="is-invalid-input") }}
+    {% else %}
+        {{ field.label }}
+        {{ render_errors(field) }}
+        {{ field }}
+    {% endif %}
+{% endmacro %}
+
+{% macro render_consent_field(field) %}
+    <div class="cell small-1">
+        {% if field.errors %}
+            {{ field(class="is-invalid-input") }}
+        {% else %}
+            {{ field }}
+        {% endif %}
+    </div>
+    <div class="cell small-11 consent-field">
+        {% if field.errors %}
+            {{ field.label(class="is-invalid-label") }}
+        {% else %}
+            {{ field.label }}
+        {% endif %}
+    </div>
+{% endmacro %}
+
+
+{% block title %}
+Apply to MakeUofT
+{% endblock %}
+
+{% block head_extends %}
+<!-- select2 -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/js/select2.min.js"></script>
+
+<!-- Site CSS -->
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/css/dashboard.css') }}" />
+{% endblock %}
+
+{% block content %}
+<div class="grid-container" id="wrapper">
+    <div class="grid-x grid-padding-x">
+        <div class="cell small-12">
+            <h1>Apply to MakeUofT!</h1>
+        </div>
+        <div class="cell small-12" style="text-align: center">
+            <p>In order to provide the best hackathon experience we can, we'd like to get to know you a little bit better. While we would love to welcome everyone to the hackathon, space is finite and we will not be able to accommodate everyone. We're only collecting data for admissions purposes, and to help IEEE UofT and MLH improve the event in the future.</p>
+        </div>
+    </div>
+
+    {% if form.errors %}
+    <div class="callout alert" style="text-align: center" data-closable>
+        <h5>There are errors in your application</h5>
+        <hr>
+        <p>Please fix the errors indicated below before submitting your application.</p>
+        <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data" novalidate>
+        {{ form.hidden_tag() }}
+        <div class="grid-x grid-padding-y">
+            <div class="cell small-12 medium-3">
+                <h4>Personal</h4>
+            </div>
+            <div class="cell small-12 medium-9 grid-x grid-padding-x">
+                <div class="cell small-12 medium-6">
+                    {{ render_field(form.preferred_name) }}
+                </div>
+                <div class="cell small-12 medium-6">
+                    {{ render_field(form.birthday) }}
+                </div>
+                <div class="cell small-12 medium-6">
+                    {{ render_field(form.gender) }}
+                </div>
+                <div class="cell small-12 medium-6">
+                    {{ render_field(form.ethnicity) }}
+                    <div id="ethnicity-other-wrapper">
+                        {{ render_field(form.ethnicity_other) }}
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6">
+                    {{ render_field(form.tshirt_size) }}
+                </div>
+                <div class="cell small-12 medium-6">
+                    {{ render_field(form.dietary_restrictions) }}
+                </div>
+            </div>
+
+            <div class="cell small-12 medium-3">
+                <h4>Contact</h4>
+            </div>
+            <div class="cell small-12 medium-9 grid-x grid-padding-x">
+                <div class="cell small-12 medium-6 large-4">
+                    {{ render_field(form.phone_number) }}
+                </div>
+            </div>
+
+            <div class="cell small-12 medium-3">
+                <h4>Education</h4>
+            </div>
+            <div class="cell small-12 medium-9 grid-x grid-padding-x">
+                <div class="cell small-12 medium-6">
+                    {% if form.school.errors %}
+                        {{ form.school.label(class="is-invalid-label") }}
+                    {% else %}
+                        {{ form.school.label }}
+                    {% endif %}
+                    {{ render_errors(form.school) }}
+                    <select id="{{ form.school.id }}" class="select2-school-select" name="{{ form.school.name }}">
+                        {% if form.school.data %}
+                            <option value="{{ form.school.data }}">{{ form.school.data }}</option>
+                        {% else %}
+                            <option value=""></option>
+                        {% endif %}
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="cell small-12 medium-6">
+                    {{ render_field(form.study_level) }}
+                </div>
+                <div class="cell small-12 medium-6">
+                    {{ render_field(form.program) }}
+                </div>
+                <div class="cell small-12 medium-6">
+                    {{ render_field(form.grad_year) }}
+                </div>
+            </div>
+
+            <div class="cell small-12 medium-3">
+                <h4>Resume</h4>
+            </div>
+            <div class="cell small-12 medium-9 grid-x grid-padding-x">
+                <div class="cell small-12">
+                    {{ render_field(form.resume) }}
+                </div>
+                {{ render_consent_field(form.resume_share) }}
+            </div>
+
+            <div class="cell small-12 medium-3">
+                <h4>Questions</h4>
+            </div>
+            <div class="cell small-12 medium-9 grid-x grid-padding-x">
+                <div class="cell small-12">
+                    {{ render_field(form.q1_prev_hackathon) }}
+                </div>
+                <div class="cell small-12">
+                    {{ render_field(form.q2_why_participate) }}
+                </div>
+                <div class="cell small-12">
+                    {{ render_field(form.q3_hardware_exp) }}
+                </div>
+            </div>
+
+            <div class="cell small-12 medium-3">
+                <h4>One last thing</h4>
+            </div>
+            <div class="cell small-12 medium-9 grid-x grid-padding-x">
+                <div class="cell small-12">
+                    {{ render_field(form.how_you_hear) }}
+                </div>
+
+                {{ render_consent_field(form.mlh_conduct) }}
+
+                {{ render_consent_field(form.mlh_data) }}
+
+                {{ render_consent_field(form.age_confirmation) }}
+            </div>
+
+            <div class="cell small-12" style="text-align: center;">
+                {{ form.submit(class='button') }}
+            </div>
+
+        </div>
+    </form>
+</div>
+
+<script>
+    // Get the list of MLH recognized schools
+    $.get('https://raw.githubusercontent.com/MLH/mlh-policies/master/schools.csv', (data) => {
+        let schools = data.split("\n").slice(1);
+        let select2Data = [];
+
+        for (let i=0; i<schools.length; i++) {
+            select2Data.push({
+                id: schools[i].trim(),
+                text: schools[i].trim()
+            });
+        }
+
+        let select2Elem = $("#{{ form.school.id }}");
+
+        let select2 = select2Elem.select2({
+            data: select2Data,
+            width: '100%'
+        });
+
+        select2.data('select2').$selection.css('height', '2.4375rem');
+
+        {% if form.school.errors %}
+        $(".select2-selection").addClass("is-invalid-input");
+        {% endif %}
+    });
+
+    function toggleEthnicityOtherVisibility() {
+        let ethnicityField = $("#{{ form.ethnicity.id }}");
+        let ethnicityOther = $("#ethnicity-other-wrapper");
+
+        if (ethnicityField.val() === "other") {
+            ethnicityOther.show();
+        } else {
+            ethnicityOther.hide();
+        }
+    }
+
+    $(document).ready(() => {
+        toggleEthnicityOtherVisibility();
+
+        $("#{{ form.ethnicity.id }}").change(() => {
+            toggleEthnicityOtherVisibility();
+        });
+    });
+</script>
+{% endblock %}
