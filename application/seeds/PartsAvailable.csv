@@ -1,0 +1,119 @@
+Raspberry Pi,Canakit,Model 3B+,12,MCU
+Photon Board,Particle,,28,MCU
+Arduino,,Uno,48,MCU
+NodeMCU,Amico,ESP8266,8,MCU
+LaunchPad,Texas Instruments,MSP430F5529,11,MCU
+Electron,Particle,SARA-U260,8,MCU
+Controller Shield,keyestudio,PN532 NFC/RFID,5,Shields and Breakout Boards
+Gyroscope,olimex,Mod-mpu6050,41,Shields and Breakout Boards
+Bluetooth Wireless Module,Adafruit,Bluefruit LE shield,18,Shields and Breakout Boards
+AVR,Atmel,ATmega328p,4,Shields and Breakout Boards
+Inertial Sensor Module,Atmel,A08-0809rev6,23,Sensors
+Force Sensor,Interlink,,22,Sensors
+Ambient Light Sensor,,,0,Sensors
+Ultrasonic Sensor,R,TJP16527BH2,60,Sensors
+Water Sensor,,,0,Sensors
+Distance Sensor,,TSOP38238,1,Sensors
+Break Beam,,TSOP4856,1,Sensors
+Temp Sensor,,SM-S43034,5,Sensors
+Vibration Sensor,,,4,Sensors
+Sensor Kit 1,,,1,Sensors
+Sensor Kit 2,,,1,Sensors
+Rpi Camera,,Rev 1.3,7,Computer Peripherals
+Small Speaker,,,6,Acuators and speakers
+Big Speaker,,,22,Acuators and speakers
+AA Alkaline Batteries,,,61,Power Supply
+AA Rechargeable Batteries,,,8,Power Supply
+AA Battery Charger,,,2,Power Supply
+Battery Holder (3),,,1,Power Supply
+Battery Holder (4),,,24,Power Supply
+Battery Holder (6),,,24,Power Supply
+Battery Connect Snap,,,7,Power Supply
+Mini Breadboard,,,0,Passive
+Protoboard,,,0,Passive
+Potentiometer,BI,P160KN241,91,Passive
+Piezo Buzzer,,5x0230,23,Passive
+3V Coin Battery,Eunicell,CR1220,16,Passive
+8-Bit Counter,,SN74HC590,22,Passive
+Op Amp,,LM348,13,Passive
+RTC,,PCF8523,46,Passive
+Line Driver,,SN74HC540N,12,Passive
+Shaft Encoder,,,41,Passive
+Binary Counter,,SN74HC 164N,119,Passive
+I_O Expander,Sparkfun,SX1509,1,Passive
+IR LED Black,,,26,Passive
+D-Type Flip Flops,,SN74AC574N,18,Passive
+Decade Counter,,CD4017,25,Passive
+Small ZipTie,,,49,Passive
+555 timer,TI,NE555P,45,Passive
+NPN Transistor,,,100,Passive
+1 MHz Inductor,,,26,Passive
+PNP Transistor,,TIP32AG,193,Passive
+Microphone,,,28,Passive
+Microphone Board,Adafruit,SPW2430,1,Passive
+1.2 kohm,,,2,Passive
+Diode,,,82,Passive
+51 ohm,,,12,Passive
+Water Sensor,,,0,Passive
+Toggle Switch,,TS203,25,Passive
+Headers (3-pin),,,229,Passive
+Other Headers,,,7,Passive
+Push Button,,,79,Passive
+Push Switch,,,12,Passive
+SR Latch,TI,CD4044,28,Passive
+Potentiometer,Bourns,PV36,24,Passive
+AND Gates,TI,SN74HC11N,40,Passive
+Op Amp,,HCP6242,90,Passive
+DIP-2 Switch,Creatron,SWDIP-000002,18,Passive
+DIP-3 Switch,Creatron,SWDIP-000003,7,Passive
+Shift Register,TI,SN74HC164N,5,Passive
+NOR Gates,TI,SN74HC540N & LM348N,77,Passive
+TEMP Breakout,,TMP102,16,Passive
+7 Seg Disp,,,41,Passive
+LASER,,,1,Passive
+H Bridge,,L298N,6,Passive
+Transceiver,,,110,Passive
+Motor Driver,,HW-95,3,Passive
+PNP Transistor,,PN2907,24,Passive
+High Speed Diodes,,,19,Passive
+Stepper Motor,,2PH64011A,10,Passive
+LED Matrix,,YSM-2088CR3G2C,12,Passive
+Capacitive Touch Sensor,Sparkfun,AT42QT1010,1,Passive
+Small Solenoid,,,0,Passive
+TSL14S-LF,,,20,Passive
+Diode,,,0,Passive
+IR LED (big),,,37,Passive
+IR LED (small),,,20,Passive
+Stepper Motor,,,0,Passive
+PN222,,,0,Passive
+Yellow LED,,,53,Passive
+Green LED,,,8,Passive
+Red LED,,,5,Passive
+Blue LED,,,20,Passive
+Photodiode,,,20,Passive
+100 ohm resistor,,,70,Passive
+150 ohm resistor,,,155,Passive
+220 ohm resistor,,,12,Passive
+330 ohm resistor,,,219,Passive
+470 ohm resistor,,,151,Passive
+1K ohm resistor,,,471,Passive
+4.7K ohm resistor,,,68,Passive
+47K ohm resistor,,,150,Passive
+470K ohm resistor,,,4,Passive
+10 uF caps,,,54,Passive
+100 nF caps,,,272,Passive
+1 uF caps,,,40,Passive
+1 nF caps ceramic,,,100,Passive
+100 uF caps,,,70,Passive
+10 nF caps ceramic,,,200,Passive
+68K ohm resistor,,,120,Passive
+100K ohm resistor,,,250,Passive
+470K ohm resistor,,,130,Passive
+1M ohm resistor,,,150,Passive
+2N 3904 Transistor,,,140,Passive
+Phototransistor,,,26,Passive
+Photoresistor,,,25,Passive
+Voltage Regulator,,,9,Passive
+Socket,,,11,Passive
+Relay,,,2,Passive
+Big Switches,Omron,D3V-162-1A4,24,Mechanical

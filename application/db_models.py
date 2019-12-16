@@ -46,6 +46,8 @@ class User(UserMixin, db.Model):
     team_id = db.Column(db.Integer, db.ForeignKey("teams.id", ondelete="SET NULL"))
     team = db.relationship("Team", backref="team_members")
 
+    id_provided = db.Column(db.Boolean, default=False)
+
     def __repr__(self):
         return "<User {}>".format(self.id)
 
@@ -61,8 +63,20 @@ class Team(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     team_code = db.Column(db.String(5), index=True, nullable=False)
+    team_name = db.Column(db.String(255))
     created_time = db.Column(DateTime(), server_default=func.now())
 
+    max_members = 4
+    parts_used = db.relationship('PartsSignedOut', backref='teams', lazy='dynamic')
+
+    def __repr__(self):
+        return '<Team {}>'.format(self.id) #prints <Team 'id'>
+
+
+tags = db.Table('tags',
+    db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'), primary_key=True),
+    db.Column('part_id', db.Integer, db.ForeignKey('parts_available.id'), primary_key=True)
+)
 
 class Application(db.Model):
     __tablename__ = "applications"
@@ -110,6 +124,52 @@ class Application(db.Model):
             self.id, self.user.first_name, self.user.last_name
         )
 
+class PartsAvailable(db.Model):
+    #__tablename__ = 'parts_available'
+    id = db.Column(db.Integer, primary_key=True)
+    part_name = db.Column(db.String(255), index=True, nullable=False)
+    part_manufacturer = db.Column(db.String(255), index=True)
+    quantity_available = db.Column(db.Integer)
+    quantity_remaining = db.Column(db.Integer)
+    serial_number = db.Column(db.String(255))
+    # ** Add tags relationship **
+    # ** Add parts signed out relationship **
+    parts_signed_out = db.relationship('PartsSignedOut', backref='partsavailable', lazy=True)
+
+    # Tags
+    tag_list = db.relationship('Tag', secondary=tags, lazy='dynamic',
+        backref=db.backref('partsavailable', lazy='dynamic'))
+    # __repr__ method describes how objects of this class are printed
+    # (useful for debugging)
+
+
+
+    def __repr__(self):
+        return '<Part {}>'.format(self.id) #prints <Part 'id'>
+
+class PartsSignedOut(db.Model):
+    #__tablename__ = 'parts_signed_out'
+    id = db.Column(db.Integer, primary_key=True)
+    part_returned = db.Column(db.Boolean, default=False)
+    part_healthy = db.Column(db.Boolean, default=False)
+    created_date = db.Column(DateTime(), server_default=func.now()) #func.now() tells the db to calculate the timestamp itself rather than letting the application do it
+    # ** Add PartsAvailable relationship **
+    team = db.Column(db.Integer, db.ForeignKey('teams.id'))
+    # ** Add teams relationship **
+    part = db.Column(db.Integer, db.ForeignKey('parts_available.id'))
+
+
+    # __repr__ method describes how objects of this class are printed
+    # (useful for debugging)
+    def __repr__(self):
+        return '<Part {}>'.format(self.id) #prints <Part 'id'>
+
+class Tag(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    tag_name = db.Column(db.String(255), index=True, nullable=False)
+
+# Many 2 many:
+# https://www.reddit.com/r/flask/comments/6p359d/flask_sqlalchemy_many_to_many_xpost_rlearnpython/
 
 @login_manager.user_loader
 def load_user(user_id):
