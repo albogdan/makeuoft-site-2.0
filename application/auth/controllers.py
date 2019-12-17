@@ -84,11 +84,9 @@ def activate():
     if not request.uuid:
         return "Missing uuid", 400
 
-    user = db.session.query(User).filter_by(uuid=uuid).first()
-    if not user:
-        return "Invalid uuid", 404
-
+    user = User.query.filter_by(uuid=uuid).first_or_404("Invalid uuid")
     user.is_active = True
+
     db.session.add(user)
     db.session.commit()
 
