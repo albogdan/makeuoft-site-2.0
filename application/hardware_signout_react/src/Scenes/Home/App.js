@@ -17,10 +17,10 @@ export default class App extends PureComponent {
       teams: null,
       info: null
     };
-    fetch('http://ieee.utoronto.ca/makeuoft/api/teamlist')
+    fetch('https://ieee.utoronto.ca/makeuoft/api/teamlist')
       .then(response => response.json())
       .then(teams => this.setState({ teams }));
-    fetch('http://ieee.utoronto.ca/makeuoft/api/info')
+    fetch('https://ieee.utoronto.ca/makeuoft/api/info')
       .then(response => response.json())
       .then(info => this.setState({ info }));
   }

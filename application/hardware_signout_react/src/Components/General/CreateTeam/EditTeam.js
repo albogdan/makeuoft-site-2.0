@@ -7,7 +7,7 @@ export default class CreateTeam extends PureComponent {
     constructor(props) {
       super(props);
       this.state = { teamMembers: null, deleteConfirm: false }
-      fetch('http://ieee.utoronto.ca/makeuoft/api/manageteams/getmembers', {
+      fetch('https://ieee.utoronto.ca/makeuoft/api/manageteams/getmembers', {
           method: "POST",
           body: JSON.stringify({"teamNumber": this.props.teamNumber})
         })
@@ -21,7 +21,7 @@ export default class CreateTeam extends PureComponent {
     }
 
     deleteTeamLayerTwo() {
-      fetch('http://ieee.utoronto.ca/makeuoft/api/manageteams/deleteteam', {
+      fetch('https://ieee.utoronto.ca/makeuoft/api/manageteams/deleteteam', {
           method: "POST",
           body: JSON.stringify({"teamNumber":this.props.teamNumber})
       })

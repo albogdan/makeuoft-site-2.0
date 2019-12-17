@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/makeuoft/precache-manifest.74f302e46d689da152fcd53f3849dbd7.js"
+  "/makeuoft/precache-manifest.64d628c4b8f6296e3fa3d4481703ba5a.js"
 );
 
 self.addEventListener('message', (event) => {

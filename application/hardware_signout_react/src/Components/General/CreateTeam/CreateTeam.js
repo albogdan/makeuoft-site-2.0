@@ -26,7 +26,7 @@ export default class CreateTeam extends PureComponent {
         } else if (addTeamMembers.length < 2) {
             this.setState({ alertStyle: styles.alert, idAlert: false });
         } else {
-            fetch('http://ieee.utoronto.ca/makeuoft/api/manageteams/addrecord', {
+            fetch('https://ieee.utoronto.ca/makeuoft/api/manageteams/addrecord', {
                 method: "POST",
                 body: JSON.stringify(addTeamMembers)
             })

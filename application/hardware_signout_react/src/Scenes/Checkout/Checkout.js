@@ -23,7 +23,7 @@ export default class Checkout extends PureComponent {
     this.getSelectedHardware = this.getSelectedHardware.bind(this);
     this.changeQuantity = this.changeQuantity.bind(this);
     this.deleteCheckoutField = this.deleteCheckoutField.bind(this);
-    fetch('http://ieee.utoronto.ca/makeuoft/api/teamscheckout', {credentials: 'include'})
+    fetch('https://ieee.utoronto.ca/makeuoft/api/teamscheckout', {credentials: 'include'})
       .then(response => response.json())
       .then(teams => this.setState({ teams }));
   }
@@ -150,7 +150,7 @@ export default class Checkout extends PureComponent {
     }
     console.log("DATA", data);
 
-    fetch('http://ieee.utoronto.ca/makeuoft/api/checkoutitems', {
+    fetch('https://ieee.utoronto.ca/makeuoft/api/checkoutitems', {
       method: "POST",
       body:JSON.stringify(data)
     })

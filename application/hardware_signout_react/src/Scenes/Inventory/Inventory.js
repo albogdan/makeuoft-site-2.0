@@ -9,10 +9,10 @@ export default class Inventory extends PureComponent {
     super(props);
     this.state = { active: 0, popup: false, popupComponent: null,
                    components: null, showComponents: [], tagBtns: null}
-    fetch('http://ieee.utoronto.ca/makeuoft/api/inventory')
+    fetch('https://ieee.utoronto.ca/makeuoft/api/inventory')
       .then(response => response.json())
       .then(components => this.setState({ components }));
-    fetch('http://ieee.utoronto.ca/makeuoft/api/taglist')
+    fetch('https://ieee.utoronto.ca/makeuoft/api/taglist')
       .then(response => response.json())
       .then(tagBtns => this.setState({ tagBtns }));
   }

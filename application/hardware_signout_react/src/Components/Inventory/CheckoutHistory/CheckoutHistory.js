@@ -9,7 +9,7 @@ export default class CheckoutHistory extends PureComponent {
     constructor(props) {
         super(props);
         this.state = { components: null}
-        fetch('http://ieee.utoronto.ca/makeuoft/api/inventory')
+        fetch('https://ieee.utoronto.ca/makeuoft/api/inventory')
           .then(response => response.json())
           .then(components => this.setState({ components }));
     }

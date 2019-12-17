@@ -8,7 +8,7 @@ export default class ItemSelector extends PureComponent {
         super(props);
         this.state = { selectedOption: null, participants:null}
         this.handleChange = this.handleChange.bind(this)
-        fetch('http://ieee.utoronto.ca/makeuoft/api/manageteams/getparticipants',{
+        fetch('https://ieee.utoronto.ca/makeuoft/api/manageteams/getparticipants',{
           method: "POST"
         })
           .then(response => response.json())

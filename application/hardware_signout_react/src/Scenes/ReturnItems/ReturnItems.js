@@ -18,7 +18,7 @@ export default class ReturnItems extends PureComponent {
     this.getSelectedHardware = this.getSelectedHardware.bind(this);
     this.changeQuantity = this.changeQuantity.bind(this);
     this.deleteCheckoutField = this.deleteCheckoutField.bind(this);
-    fetch('http://ieee.utoronto.ca/makeuoft/api/teamscheckout')
+    fetch('https://ieee.utoronto.ca/makeuoft/api/teamscheckout')
       .then(response => response.json())
       .then(teams => this.setState({ teams }));
   }
@@ -136,7 +136,7 @@ export default class ReturnItems extends PureComponent {
     }
     console.log("DATA", data);
 
-    fetch('http://ieee.utoronto.ca/makeuoft/api/checkoutitems', {
+    fetch('https://ieee.utoronto.ca/makeuoft/api/checkoutitems', {
       method: "POST",
       body:JSON.stringify(data)
     })
