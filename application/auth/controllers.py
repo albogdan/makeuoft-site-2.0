@@ -78,6 +78,23 @@ def register():
     return render_template("auth/register.html", form=form)
 
 
+@auth.route("/activate", methods=("GET",))
+def activate():
+    uuid = request.args.get("uuid", None)
+    if not request.uuid:
+        return "Missing uuid", 400
+
+    user = db.session.query(User).filter_by(uuid=uuid).first()
+    if not user:
+        return "Invalid uuid", 404
+
+    user.is_active = True
+    db.session.add(user)
+    db.session.commit()
+
+    return redirect(url_for("home.dashboard"))
+
+
 @auth.route("/passwordupdated", methods=["GET", "POST"])
 def passwordChangeComplete():
     return render_template("auth/forgotPasswordChangeComplete.html")
