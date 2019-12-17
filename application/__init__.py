@@ -127,7 +127,7 @@ def create_app():
     migrate.init_app(flask_app, db)
     mail.init_app(flask_app)
     admin.init_app(flask_app)
-    admin.add_link(MenuLink(name='Logout', category='', url=url_for("home.dashboard")))
+    admin.add_link(MenuLink(name='Logout', category='', url="makeuoft/auth/logout"))
 
 
     # Create a LoginManager instance
