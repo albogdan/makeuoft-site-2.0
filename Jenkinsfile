@@ -6,6 +6,7 @@ pipeline {
     DB_SERVER = credentials('DB_SERVER_MAKEUOFT')
     SECRET_KEY = credentials('SECRET_KEY_MAKEUOFT')
     ENVIRONMENT = credentials('ENVIRONMENT')
+    EMAIL_SENDER = credentials('EMAIL_SENDER_MAKEUOFT')
   }
   stages {
     stage('Build') {
