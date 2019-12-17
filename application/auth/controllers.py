@@ -87,7 +87,7 @@ def activate():
     user = User.query.filter_by(uuid=uuid).first_or_404("Invalid uuid")
     user.is_active = True
 
-    db.session.add(user)
+    #db.session.add(user)
     db.session.commit()
 
     return redirect(url_for("home.dashboard"))
