@@ -12,6 +12,12 @@ from flask_login import LoginManager, login_required
 # Import the flask_mail app
 from flask_mail import Mail
 
+# Admin site functionality
+from flask_admin import Admin, AdminIndexView, expose, babel
+from flask_admin.base import MenuLink
+
+
+from flask_admin.contrib.sqla import ModelView
 # Initialize pymysql for mysql support in deployment
 import pymysql
 
@@ -28,17 +34,69 @@ migrate = Migrate()
 # Initialize the login instance
 login_manager = LoginManager()
 
+
 # Initialize the mail instance
 # NOTE IF MAIL GIVES A RECURSION ERROR YOU MAY HAVE INSTALLED THE NEW FLASK MAIL VERSION WHICH IS CURRENTLY BUGGED
 # TRY ROLLING BACK TO flask_mail version 0.9.0 instructions can be found in README
 mail = Mail()
 
 """
+New roles_required decorator for different site roles
+"""
+from functools import wraps
+from flask import url_for, request, redirect, session
+
+
+# Custom roles_required decorator
+def roles_required(possible_roles):
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            user_id = int(session.get('user_id'))
+            user = db_models.User.query.filter_by(id=user_id).first()
+            access_granted = user.is_allowed(possible_roles)
+
+            if(not access_granted):
+                return redirect(url_for('home.index'))
+
+            return f(*args, **kwargs)
+        return decorated_function
+    return decorator
+
+
+"""
+Initialize the admin site instance
+"""
+class HomeView(AdminIndexView):
+    def __init__(self, name=None, category=None,
+                 endpoint=None, url=None,
+                 template='admin/index.html',
+                 menu_class_name=None,
+                 menu_icon_type=None,
+                 menu_icon_value=None):
+        super(AdminIndexView, self).__init__(name or babel.lazy_gettext('Home'),
+                                             category,
+                                             endpoint or 'admin',
+                                             '/admin' if url is None else url,
+                                             'static',
+                                             menu_class_name=menu_class_name,
+                                             menu_icon_type=menu_icon_type,
+                                             menu_icon_value=menu_icon_value)
+        self._template = template
+    @login_required
+    @roles_required('admin')
+    @expose()
+    def index(self):
+        return self.render(self._template)
+admin = Admin(template_mode='bootstrap3', index_view=HomeView())
+
+
+
+
+"""
  Encapsulate the app in a function in order to be able to initialize it with
  various environment variables for  testing as well as versatility
 """
-
-
 def create_app():
     # Define the application object
 
@@ -68,6 +126,9 @@ def create_app():
     db.init_app(flask_app)
     migrate.init_app(flask_app, db)
     mail.init_app(flask_app)
+    admin.init_app(flask_app)
+    admin.add_link(MenuLink(name='Logout', category='', url="/auth/logout"))
+
 
     # Create a LoginManager instance
     login_manager.init_app(flask_app)
@@ -84,11 +145,24 @@ def create_app():
     from application.home import home as home_module
     from application.auth import auth as auth_module
 
+    from application.hardware_signout import hardware_signout as hs_module
+    from application.api import api as api_module
+
     # Register blueprint(s) - connects each module to the main flask application
     # app.register_blueprint(xyz_module)
 
     flask_app.register_blueprint(home_module)
     flask_app.register_blueprint(auth_module)
+    flask_app.register_blueprint(hs_module)
+    flask_app.register_blueprint(api_module)
+
+
+
+    # Add views for the admin site
+    admin.add_view(ModelView(db_models.User, db.session))
+    admin.add_view(ModelView(db_models.Role, db.session))
+
+
 
     return flask_app
 

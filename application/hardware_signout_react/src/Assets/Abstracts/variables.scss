@@ -1,0 +1,37 @@
+$colors: (
+    grey: #4A4A4A,
+    lightgrey: #E1ECEE,
+    borderGrey: #E6E6E6,
+    black: #181818,
+    white: #fff,
+    green: #48A0AF,
+    blue: #3386BA,
+    red: #FF6161,
+    yellow: #FFAE49,
+    purple: #8684FF
+);
+
+$fonts: (
+    source: 'Source Sans Pro'
+);
+
+$font-sizes: (
+    xl: 4.2rem,
+    lg: 3rem,
+    md: 2.4rem,
+    sm: 2rem,
+    xs: 1.6rem,
+    xxs: 12px
+);
+
+@function color($color-name) {
+    @return map-get($colors, $color-name); //(name of map, key)
+}
+
+@function font($fonts-name) {
+    @return map-get($fonts, $fonts-name); //(name of map, key)
+}
+
+@function size($size) {
+    @return map-get($font-sizes, $size); //(name of map, key)
+}

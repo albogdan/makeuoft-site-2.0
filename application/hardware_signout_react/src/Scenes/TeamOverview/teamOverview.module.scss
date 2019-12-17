@@ -1,0 +1,97 @@
+@import './../../Assets/Abstracts/mixins.scss';
+@import './../../Assets/Abstracts/variables.scss';
+
+.overview {
+    position: relative;
+    width: 80%;
+    margin: 25px auto;
+    @include flexPosition(flex-start, center);
+    flex-direction: column;
+
+    h2 {
+        align-self: flex-start;
+    }
+
+    button {
+        @include btnFilled;
+        margin: 0;
+        font-size: size(xxs);
+        padding: .7rem 1.5rem;
+    }
+
+    &Team {
+        @include flexPosition(flex-start, center);
+        width: 100%;
+        border: 1px solid color(borderGrey);
+        border-radius: 2px;
+        background-color: color(white);
+        font-size: size(xs);
+        padding: 1.2rem 1.5rem;
+        margin: 2rem 0 1.5rem;
+
+        span+span:before {
+            color: color(dark);
+            content: ",\00a0";
+        }
+    }
+}
+
+.checkoutTable {
+    width: 100%;
+    @include flexPosition;
+    font-weight: 600;
+    font-size: size(xxs);
+    color: color(blue);
+    margin: 1.5rem 0;
+    padding: 4px 0;
+    border-bottom: 1px solid #C3C3C3;
+
+    p:nth-child(1){
+        width: 100%;
+    }
+    p:nth-child(2){
+        width: 6rem;
+        padding-left: 1.5rem;
+    }
+}
+
+
+.historyRightTable {
+    font-size: size(xxs);
+    color: color(blue);
+    font-weight: 600;
+    @include flexPosition;
+    width: 100%;
+    padding: .5rem 0;
+    margin-top: .5rem;
+
+    p:nth-child(1) {
+        width: 100%;
+        padding-left: 1rem;
+    }
+
+    p:nth-child(2) {
+        width: 4.5rem;
+        padding: .1rem;
+        text-align: center;
+    }
+    p:nth-child(3) {
+        width: 24rem;
+        text-align: right;
+        padding-right: 1rem;
+    }
+    border-bottom: 1px solid #C3C3C3;
+}
+
+.accordion {
+    border: 1px solid color(borderGrey);
+    border-radius: 2px;
+    width: 100%;
+    margin: 0 auto 30rem;
+    z-index: 1;
+    background-color: color(white);
+
+    @include response(sm) {
+        margin-bottom: 16rem;
+    }
+}

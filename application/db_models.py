@@ -30,6 +30,9 @@ class Role(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True, nullable=False)
 
+    def __repr__(self):
+        return "<Role {} | {}>".format(self.id, self.name)
+
 
 class User(UserMixin, db.Model):
     # Define the columns of the table, including primary keys, unique, and
@@ -58,13 +61,25 @@ class User(UserMixin, db.Model):
     roles = db.relationship("Role", secondary="user_roles", backref="users")
 
     def __repr__(self):
-        return "<User {}>".format(self.id)
+        return "<User {} | {} {}>".format(self.id, self.first_name, self.last_name)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def is_allowed(self, page_role):
+        if type(page_role) == list:
+            for r in page_role:
+                for available_role in self.roles:
+                    if r == available_role.name:
+                        return True
+        else:
+            for available_role in self.roles:
+                if page_role == available_role.name:
+                    return True
+        return False
 
 
 class UserRoles(db.Model):
@@ -97,7 +112,7 @@ class Team(db.Model):
     parts_used = db.relationship("PartsSignedOut", backref="team", lazy="dynamic")
 
     def __repr__(self):
-        return "<Team {}>".format(self.id)
+        return "<Team {} | {}>".format(self.id, self.team_code)
 
 
 class Application(db.Model):
@@ -183,7 +198,7 @@ class PartsAvailable(db.Model):
     )
 
     def __repr__(self):
-        return "<Part {}>".format(self.id)
+        return "<Part {} | {}>".format(self.id, self.part_name)
 
 
 class PartsSignedOut(db.Model):

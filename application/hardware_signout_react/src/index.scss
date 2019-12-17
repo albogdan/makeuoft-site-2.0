@@ -1,0 +1,64 @@
+@import './Assets/Abstracts/mixins.scss';
+@import './Assets/Abstracts/variables.scss';
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+button, a, input, select, textarea {
+  cursor: pointer;
+  outline: none;
+}
+
+html {
+  font-size: 62.5%; 
+  height: 100%;
+
+  @include response(lg/md) {
+      font-size: 50%; 
+  }
+}
+
+body {
+  font-family: font(source);
+  height: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #F6F6F6;
+  color: color(grey);
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+.indexContainer {
+  width: calc(100vw - 43px);
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100vh;
+  overflow-y: scroll;
+}
+
+h1 {
+  font-weight: 600;
+  font-size: size(md);
+  text-align: center;
+  letter-spacing: 1px;
+}
+h2 {
+  font-size: size(md);
+  color: color(black);
+  font-weight: normal;
+  letter-spacing: 2px;
+}
+
+h3 {
+  font-size: size(sm);
+  color: color(black);
+  font-weight: normal;
+}

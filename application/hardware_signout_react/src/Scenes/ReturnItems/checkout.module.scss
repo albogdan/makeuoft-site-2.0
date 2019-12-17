@@ -1,0 +1,83 @@
+@import './../../Assets/Abstracts/mixins.scss';
+@import './../../Assets/Abstracts/variables.scss';
+
+.checkout {
+    @include flexPosition;
+
+    &Div {
+        width: 50%;
+    }
+
+    &Table {
+        width: 100%;
+        @include flexPosition;
+        font-weight: 600;
+        font-size: size(xxs);
+        color: color(blue);
+        margin-top: 1.5rem;
+        padding: 4px 0;
+        border-bottom: 1px solid #C3C3C3;
+
+        p:nth-child(1){
+            width: 100%;
+        }
+        p:nth-child(2){
+            width: 6rem;
+            padding-left: 1.5rem;
+        }
+    }
+
+    &TableDiv {
+        @include flexPosition(flex-start, center);
+        flex-direction: column;
+        width: 100%;
+        margin-top: 1.5rem;
+
+        &Item {
+            @include flexPosition;
+            width: 100%;
+            margin-bottom: 1rem;
+
+            &Close {
+                @include xIcon;
+                position: relative;
+                top: 0;
+            }
+        }
+    }
+    
+    &List {
+        background: color(white);
+        padding: 3rem;
+        height: 100vh;
+        overflow-y: scroll;
+        @include flexPosition(flex-start, center);
+        flex-direction: column;
+
+        .btnOutline {
+            @include btnOutline;
+        }
+        .btnFilled {
+            @include btnFilled;
+            align-self: flex-end;
+        }
+    }
+
+    &Basket {
+        padding: 3rem;
+        height: 100vh;
+        overflow-y: scroll;
+
+        h2 {
+            font-size: size(md);
+            text-align: center;
+            letter-spacing: 2.4px;
+        }
+    }
+
+
+}
+
+    
+
+    
