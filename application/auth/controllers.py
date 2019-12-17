@@ -2,27 +2,23 @@ from flask import (
     request,
     render_template,
     flash,
-    session,
     redirect,
     url_for,
-    jsonify,
-    make_response,
 )
 from application.db_models import *
 from application.auth.forms import (
     RegistrationForm,
     LoginForm,
-    ApplicationForm,
     ForgotPasswordEmailForm,
 )
+
+from application import mail
+from flask_mail import Message
 
 # Import the admin Blueprint from admin/__init__.py
 from application.auth import auth
 from application import db
-from sqlalchemy.sql import func
-from sqlalchemy.orm import load_only
-import json
-from flask_login import current_user, login_user, logout_user, login_required
+from flask_login import current_user, login_user, logout_user
 from werkzeug.urls import url_parse
 
 
@@ -71,8 +67,14 @@ def register():
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
-        flash("Congratulations, you have successfully registered!")
-        return redirect(url_for("auth.login"))
+
+        # Send the verification email
+        msg = Message("Activate your account for MakeUofT", recipients=[user.email])
+        msg.html = render_template("mails/email-verification.html", user=user)
+        mail.send(msg)
+
+        return redirect(url_for("home.dashboard"))
+
     return render_template("auth/register.html", form=form)
 
 

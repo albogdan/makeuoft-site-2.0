@@ -112,4 +112,7 @@ def apply():
 @home.route("/dashboard", methods=("GET",))
 @login_required
 def dashboard():
+    if not current_user.is_active:
+        return render_template("users/activation_required.html")
+
     return render_template("users/dashboard.html")
