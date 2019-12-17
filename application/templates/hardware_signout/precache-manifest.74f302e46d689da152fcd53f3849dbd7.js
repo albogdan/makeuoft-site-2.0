@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "9b5edcca49ecc3afff35c063a9138f42",
+    "revision": "a00de7081fbd55dda0cf893aaf3f37c5",
     "url": "/makeuoft/index.html"
   },
   {
-    "revision": "b5c27d6c10cf9c960e91",
+    "revision": "ad6807c9f57b1be24f6f",
     "url": "/makeuoft/static/css/main.fddbb08c.chunk.css"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/makeuoft/static/js/2.56de7a66.chunk.js"
   },
   {
-    "revision": "b5c27d6c10cf9c960e91",
-    "url": "/makeuoft/static/js/main.59198a7c.chunk.js"
+    "revision": "ad6807c9f57b1be24f6f",
+    "url": "/makeuoft/static/js/main.b4364f5d.chunk.js"
   },
   {
     "revision": "8a9cc77b069383cb9bff",
