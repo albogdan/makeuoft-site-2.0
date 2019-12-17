@@ -81,7 +81,7 @@ def register():
 @auth.route("/activate", methods=("GET",))
 def activate():
     uuid = request.args.get("uuid", None)
-    if not request.uuid:
+    if not uuid:
         return "Missing uuid", 400
 
     user = User.query.filter_by(uuid=uuid).first_or_404("Invalid uuid")
