@@ -112,4 +112,11 @@ def apply():
 @home.route("/dashboard", methods=("GET",))
 @login_required
 def dashboard():
+    if not current_user.is_active:
+        return render_template("users/activation_required.html")
+
+    application = db.session.query(Application).filter(User==current_user).first()
+    if not application:
+        return redirect(url_for("home.apply"))
+
     return render_template("users/dashboard.html")

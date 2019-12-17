@@ -19,3 +19,5 @@ services:
          - SECRET_KEY=${SECRET_KEY}
          - DB_SERVER=${DB_SERVER}
          - ENVIRONMENT=${ENVIRONMENT}
+         - EMAIL_SENDER_USR=${EMAIL_SENDER_USR}
+         - EMAIL_SENDER_PSW=${EMAIL_SENDER_PSW}

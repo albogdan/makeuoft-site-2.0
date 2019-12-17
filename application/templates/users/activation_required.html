@@ -1,0 +1,20 @@
+{% extends "users/base.html" %}
+
+{% block title %}Thanks for Registering{% endblock %}
+
+{% block head_extends %}
+<!-- Site CSS -->
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/css/dashboard.css') }}" />
+{% endblock %}
+
+{% block content %}
+    <div class="grid-container" id="wrapper">
+        <h1>Thanks for Registering!</h1>
+        <h2>Please activate your account</h2>
+        <div class="grid-padding-x">
+            <div class="cell small-12">
+                <p>In order to continue with your application, we first need to verify your email. Please check your email for a welcome message from <a href="mailto:makeuoft@gmail.com">makeuoft@gmail.com</a>, with more instructions to activate your account. Once you've completed those steps, visit this page to continue with your application!</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
