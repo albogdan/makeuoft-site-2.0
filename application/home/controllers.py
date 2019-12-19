@@ -118,7 +118,7 @@ def dashboard():
     if not current_user.is_active:
         return render_template("users/activation_required.html")
 
-    application = db.session.query(Application).filter(User==current_user).first()
+    application = db.session.query(Application).filter_by(user_id=current_user.id).first()
     if not application:
         return redirect(url_for("home.apply"))
 
