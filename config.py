@@ -77,7 +77,7 @@ class ProductionConfig(object):
     MAIL_PASSWORD = os.environ.get("EMAIL_SENDER_PSW")
     MAIL_PORT = 465
     MAIL_USE_SSL = True
-    MAIL_DEFAULT_SENDER = os.environ.get("EMAIL_SENDER_USR")
+    MAIL_DEFAULT_SENDER = ("MakeUofT Team", os.environ.get("EMAIL_SENDER_USR"))
     MAIL_USE_TLS = False
 
 

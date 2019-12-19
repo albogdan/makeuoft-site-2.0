@@ -35,11 +35,13 @@ def login():
             flash("Invalid username or password")
             return redirect(url_for("auth.login"))
 
-        login_user(user, remember=form.remember_me.data)
+        # We set the `is_active` flag after email verification - force login prior to that
+        # so that they can see pages saying to confirm their email
+        login_user(user, remember=form.remember_me.data, force=True)
         next_page = request.args.get("next")
 
         if not next_page or url_parse(next_page).netloc != "":
-            next_page = url_for("home.index")
+            next_page = url_for("home.dashboard")
 
         return redirect(next_page)
 
@@ -87,7 +89,6 @@ def activate():
     user = User.query.filter_by(uuid=uuid).first_or_404("Invalid uuid")
     user.is_active = True
 
-    #db.session.add(user)
     db.session.commit()
 
     return redirect(url_for("home.dashboard"))

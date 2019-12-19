@@ -62,6 +62,9 @@ def mailinglist():
 @home.route("/apply", methods=("GET", "POST"))
 @login_required
 def apply():
+    if not current_user.is_active:
+        return render_template("users/activation_required.html")
+
     has_submitted = db.session.query(Application.id).filter_by(user_id=current_user.id).count() > 0
     if has_submitted:
         return redirect(url_for("home.dashboard"))
@@ -115,7 +118,7 @@ def dashboard():
     if not current_user.is_active:
         return render_template("users/activation_required.html")
 
-    application = db.session.query(Application).filter(User==current_user).first()
+    application = db.session.query(Application).filter_by(user_id=current_user.id).first()
     if not application:
         return redirect(url_for("home.apply"))
 
