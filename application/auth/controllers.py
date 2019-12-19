@@ -44,7 +44,9 @@ def login():
             next_page = url_for("home.dashboard")
 
         return redirect(next_page)
-
+    else:
+        flash("Invalid username or password")
+        
     return render_template("auth/login.html", form=form)
 
 
@@ -60,7 +62,6 @@ def register():
         return redirect(url_for("home.index"))
     form = RegistrationForm()
     if form.validate_on_submit():
-        print("Submission successful")
         user = User(
             first_name=form.first_name.data,
             last_name=form.last_name.data,
