@@ -748,6 +748,7 @@ button.round, .button.round {
 #loginModal .user-login-error {
   color: red;
   text-align: center; }
+}
 
 /*# sourceMappingURL=styles.css.map */
 
@@ -958,6 +959,11 @@ button.round, .button.round {
 
 .btn-yellow:hover {
   background-color: #C3791D;
+}
+
+@media screen and (max-width: 520px) {
+  #remember_me {
+    width: auto !important;}
 }
 
 /* START OF REGISTER PAGE FORM */
@@ -1182,6 +1188,7 @@ input[type=date]::-webkit-calendar-picker-indicator {
   }
   .login-form {
     min-width: 0;
+    padding: 0 20px;
   }
 }
 
