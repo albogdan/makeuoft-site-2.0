@@ -23,7 +23,6 @@ from werkzeug.urls import url_parse
 
 
 @auth.route("/login", methods=["GET", "POST"])
-# ADD FLASH MESSAGES WHEN THEY GET INCORRECT LOGIN
 def login():
     if current_user.is_authenticated:
         return redirect(url_for("home.index"))
@@ -44,9 +43,7 @@ def login():
             next_page = url_for("home.dashboard")
 
         return redirect(next_page)
-    else:
-        flash("Invalid username or password")
-        
+
     return render_template("auth/login.html", form=form)
 
 
