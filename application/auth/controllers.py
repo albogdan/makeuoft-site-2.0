@@ -89,6 +89,8 @@ def activate():
 
     db.session.commit()
 
+    login_user(user, force=True)
+
     return redirect(url_for("home.dashboard"))
 
 
