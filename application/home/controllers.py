@@ -77,7 +77,7 @@ def apply():
         if not os.path.isdir(current_app.config["UPLOAD_FOLDER"]):
             os.makedirs(current_app.config["UPLOAD_FOLDER"])
 
-        filename = "{}.pdf".format(md5(current_user.email.encode()).hexdigest())
+        filename = "{}.pdf".format(current_user.uuid)
         resume_path = os.path.join(current_app.config["UPLOAD_FOLDER"], filename)
         resume.save(resume_path)
 
