@@ -125,7 +125,6 @@ class ApplicationForm(FlaskForm):
         "What is your T-shirt size?",
         choices=[
             ("", ""),
-            ("xs", "XS"),
             ("s", "S"),
             ("m", "M"),
             ("l", "L"),
@@ -157,7 +156,6 @@ class ApplicationForm(FlaskForm):
         "Level of Study",
         choices=[
             ("", ""),
-            ("highschool", "High School"),
             ("undergraduate", "Undergraduate"),
             ("gradschool", "Graduate School"),
             ("other", "Other"),

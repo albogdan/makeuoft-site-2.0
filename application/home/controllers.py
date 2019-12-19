@@ -62,6 +62,9 @@ def mailinglist():
 @home.route("/apply", methods=("GET", "POST"))
 @login_required
 def apply():
+    if not current_user.is_active:
+        return render_template("users/activation_required.html")
+
     has_submitted = db.session.query(Application.id).filter_by(user_id=current_user.id).count() > 0
     if has_submitted:
         return redirect(url_for("home.dashboard"))
@@ -74,7 +77,7 @@ def apply():
         if not os.path.isdir(current_app.config["UPLOAD_FOLDER"]):
             os.makedirs(current_app.config["UPLOAD_FOLDER"])
 
-        filename = "{}.pdf".format(md5(current_user.email.encode()).hexdigest())
+        filename = "{}.pdf".format(current_user.uuid)
         resume_path = os.path.join(current_app.config["UPLOAD_FOLDER"], filename)
         resume.save(resume_path)
 
@@ -115,7 +118,7 @@ def dashboard():
     if not current_user.is_active:
         return render_template("users/activation_required.html")
 
-    application = db.session.query(Application).filter(User==current_user).first()
+    application = db.session.query(Application).filter_by(user_id=current_user.id).first()
     if not application:
         return redirect(url_for("home.apply"))
 
