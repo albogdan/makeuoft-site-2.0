@@ -106,13 +106,3 @@ def forgotPassword():
 @auth.route("/newpassword", methods=["GET", "POST"])
 def newPassword():
     return render_template("auth/forgotPasswordEnterNewPassword.html")
-
-
-@auth.route("/confirmemail", methods=["GET", "POST"])
-def confirmEmail():
-    return render_template("auth/signupEmailToConfirm.html")
-
-
-@auth.route("/emailconfirmed", methods=["GET", "POST"])
-def emailConfirmed():
-    return render_template("auth/signupEmailConfirmed.html")
