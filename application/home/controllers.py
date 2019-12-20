@@ -33,7 +33,8 @@ from application.home import home
 @home.route("/")
 @home.route("/index", methods=["GET", "POST"])
 def index():
-    return render_template("home/index.html")
+    logged_in = not current_user.is_anonymous
+    return render_template("home/index.html", logged_in=logged_in)
 
 
 @home.route("mailinglist", methods=["POST"])

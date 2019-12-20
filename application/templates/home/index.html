@@ -57,9 +57,11 @@
                         <!--li id="schedule-a"><a href="#section-schedule">Schedule</a></li-->
                         <li id="about-a"><a href="#section-about">About</a></li>
                         <li id="faq-a"><a href="#section-faq">FAQ</a></li>
-                        <!--li id="sponsors-a"><a href="#section-sponsors">Sponsorship</a></li-->
                         <li id="contact-a"><a href="#footer">Contact</a></li>
-                        <!--li id="printing-a"><a class="apply-button" href="https://goo.gl/forms/UJ8BlCMVfOoR5OYA2">3D Printing</a></li-->
+                        {% if logged_in %}
+                        <li id="dashboard-a"><a href="{{ url_for('home.dashboard') }}">Dashboard</a></li>
+                        <li id="logout-a"><a href="{{ url_for('auth.logout') }}">Logout</a></li>
+                        {% endif %}
 
                     </ul>
                 </nav>
