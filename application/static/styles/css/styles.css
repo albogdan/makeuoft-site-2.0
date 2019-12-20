@@ -239,35 +239,6 @@ a.anchor {
     font-size: 1rem; }
 }
 
-
-
-#registration-open { display: none;}
-
-@media only screen and (max-width: 1023px) {
-    
-  #registration-open {
-    display: block;
-    width: 80%;
-    margin:auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-
-  #registration-open .apply-button {
-    background-color: #00639c;
-    color: #fff;
-    border-radius: 10px;
-    padding: 0.8rem 1rem;
-    max-width: 133px;
-    text-align: center;
-    align-self: center;}
-
-  #registration-open .apply-button:hover {
-    border-bottom: none;
-    background-color: #0485Ba;
-    color: #fff; }
-}
 /* End of COUNTDOWN */
 
 /* Start of WANT TO SPONSOR US? */
