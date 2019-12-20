@@ -1,5 +1,4 @@
 from application import db
-import datetime
 import uuid
 from sqlalchemy import DateTime
 from sqlalchemy.sql import func

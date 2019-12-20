@@ -10,18 +10,12 @@ from flask import (
     current_app
 )
 from flask_login import login_required, current_user
-from datetime import datetime
 
 from application.db_models import *
 from application.auth.forms import ApplicationForm
 
-from hashlib import md5
 import re
 import os
-import json
-
-# Import forms
-from application.home.forms import MailingListForm
 
 # Email Validation
 from validate_email import validate_email
@@ -29,12 +23,15 @@ from validate_email import validate_email
 # Import the homepage Blueprint from home/__init__.py
 from application.home import home
 
+from datetime import datetime
 
 @home.route("/")
 @home.route("/index", methods=["GET", "POST"])
 def index():
     logged_in = not current_user.is_anonymous
-    return render_template("home/index.html", logged_in=logged_in)
+    registration_starts = datetime(2019, 12, 20, 9, 0, 0)
+    registration_open = datetime.now() > registration_starts
+    return render_template("home/index.html", logged_in=logged_in, registration_open=registration_open)
 
 
 @home.route("mailinglist", methods=["POST"])

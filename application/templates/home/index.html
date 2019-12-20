@@ -61,6 +61,8 @@
                         {% if logged_in %}
                         <li id="dashboard-a"><a href="{{ url_for('home.dashboard') }}">Dashboard</a></li>
                         <li id="logout-a"><a href="{{ url_for('auth.logout') }}">Logout</a></li>
+                        {% elif registration_open %}
+                        <li id="apply-a"><a href="{{ url_for('auth.register') }}" class="apply-button">Apply!</a></li>
                         {% endif %}
 
                     </ul>
