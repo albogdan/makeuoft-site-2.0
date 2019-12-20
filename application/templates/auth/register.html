@@ -69,6 +69,7 @@
                     {{ form.password2(type="password", id="reenterPassword") }}
                     {{ render_errors(form.password2) }}
                 </div>
+                <span>Something wrong? <a href="mailto:makeuoft@gmail.com">Contact us</a>.</span>
                 <button type="submit" form="register-form" class="submit-btn btn-yellow">Sign Up</button>
                 <span class="form-links">
                     <a href="{{ url_for('auth.login')}}" class="forgot-pw">Log in</a>

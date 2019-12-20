@@ -763,6 +763,7 @@ button.round, .button.round {
 }
 .remember-me input {
   margin-right: 15px;
+  width: auto !important;
 }
 
 .login-form label {
