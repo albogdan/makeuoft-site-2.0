@@ -73,6 +73,8 @@ def register():
         msg.html = render_template("mails/email-verification.html", user=user)
         mail.send(msg)
 
+        login_user(user, force=True)
+
         return redirect(url_for("home.dashboard"))
 
     return render_template("auth/register.html", form=form)
