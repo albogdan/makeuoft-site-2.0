@@ -18,18 +18,44 @@
         <link href="https://fonts.googleapis.com/css?family=Montserrat:400,600,700&amp;display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Nunito&amp;display=swap" rel="stylesheet">
 
+        <!-- Site CSS -->
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/css/dashboard.css') }}" />
+
+        <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+
         <title>{% block title %}Apply to MakeUofT{% endblock %}</title>
         {% block head_extends %}{% endblock %}
         {% endblock %}
     </head>
     <body>
         <header>
-            <a href="..">
-                <img class="header-logo" src="{{ url_for('static', filename='img/CubeyBoi.svg') }}" alt="MakeUofT">
-            </a>
+           <!-- Navbar -->
+            <div class="title-bar" data-responsive-toggle="top-bar" data-hide-for="large">
+                <button class="menu-icon" type="button" data-toggle="top-bar"></button>
+                <div class="title-bar-title"><a href="{{ url_for("home.index") }}"><img id="title-bar-logo" src="{{ url_for('static', filename='img/CubeyBoi.svg') }}" alt="home"/></a></div>
+            </div>
+
+            <div class="top-bar-container" id="top-bar">
+                <div class="top-bar">
+                    <div class="top-bar-left">
+                        <ul class="menu">
+                            <li><a href="{{ url_for("home.index") }}"><img src="{{ url_for('static', filename='img/CubeyBoi.svg') }}"  alt="home"/></a></li>
+                        </ul>
+                    </div>
+                    <nav class="top-bar-right">
+                        <ul class="menu">
+                            <li id="home-a"><a href="{{ url_for("home.index") }}">Home</a></li>
+                            <li id="logout-a"><a href="{{ url_for("auth.logout") }}">Log Out</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
         </header>
 
         {% block content %}
         {% endblock %}
+        <script>
+            $(document).foundation();
+        </script>
     </body>
 </html>
