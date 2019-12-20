@@ -23,7 +23,6 @@ from werkzeug.urls import url_parse
 
 
 @auth.route("/login", methods=["GET", "POST"])
-# ADD FLASH MESSAGES WHEN THEY GET INCORRECT LOGIN
 def login():
     if current_user.is_authenticated:
         return redirect(url_for("home.index"))
@@ -60,7 +59,6 @@ def register():
         return redirect(url_for("home.index"))
     form = RegistrationForm()
     if form.validate_on_submit():
-        print("Submission successful")
         user = User(
             first_name=form.first_name.data,
             last_name=form.last_name.data,
@@ -91,6 +89,8 @@ def activate():
 
     db.session.commit()
 
+    login_user(user, force=True)
+
     return redirect(url_for("home.dashboard"))
 
 
@@ -108,13 +108,3 @@ def forgotPassword():
 @auth.route("/newpassword", methods=["GET", "POST"])
 def newPassword():
     return render_template("auth/forgotPasswordEnterNewPassword.html")
-
-
-@auth.route("/confirmemail", methods=["GET", "POST"])
-def confirmEmail():
-    return render_template("auth/signupEmailToConfirm.html")
-
-
-@auth.route("/emailconfirmed", methods=["GET", "POST"])
-def emailConfirmed():
-    return render_template("auth/signupEmailConfirmed.html")

@@ -57,9 +57,13 @@
                         <!--li id="schedule-a"><a href="#section-schedule">Schedule</a></li-->
                         <li id="about-a"><a href="#section-about">About</a></li>
                         <li id="faq-a"><a href="#section-faq">FAQ</a></li>
-                        <!--li id="sponsors-a"><a href="#section-sponsors">Sponsorship</a></li-->
                         <li id="contact-a"><a href="#footer">Contact</a></li>
-                        <!--li id="printing-a"><a class="apply-button" href="https://goo.gl/forms/UJ8BlCMVfOoR5OYA2">3D Printing</a></li-->
+                        {% if logged_in %}
+                        <li id="dashboard-a"><a href="{{ url_for('home.dashboard') }}">Dashboard</a></li>
+                        <li id="logout-a"><a href="{{ url_for('auth.logout') }}">Logout</a></li>
+                        {% elif registration_open %}
+                        <li id="apply-a"><a href="{{ url_for('auth.register') }}" class="apply-button">Apply!</a></li>
+                        {% endif %}
 
                     </ul>
                 </nav>
@@ -150,28 +154,6 @@
                     <div class="cell auto"><h2>Minutes</h2></div>
                     <div class="cell auto"><h2>Seconds</h2></div>
                 </div>
-            </div>
-        </section>
-
-        <a name="moments" class="anchor"></a>
-        <section class="section" id="section-moments">
-            <div class="updatedAlignment img-container">
-               <h2 class="section-headings">Moments from Last Year</h2><br><br>
-               <div class="container img-container" style="flex-direction: row-reverse">
-                    <img src="{{ url_for('static', filename='img/lastyear/lastyear10.jpg') }}" alt="" class="hover-img">
-                    <img src="{{ url_for('static', filename='img/lastyear/lastyear1.jpg') }}" alt="" class="hover-img">
-                    <img src="{{ url_for('static', filename='img/lastyear/lastyear2.jpg') }}" alt="" class="hover-img">
-                    <img src="{{ url_for('static', filename='img/lastyear/lastyear3.jpg') }}" alt="" class="hover-img">
-                    <!-- <img src="static/img/lastyear/lastyear4.jpg" alt="" class="hover-img"> -->
-                    <img src="{{ url_for('static', filename='img/lastyear/lastyear5.jpg') }}" alt="" class="hover-img">
-                    <!-- <img src="static/img/lastyear/lastyear6.jpg" alt="" class="hover-img"> -->
-                    <!-- <img src="static/img/lastyear/lastyear7.jpg" alt="" class="hover-img"> -->
-                    <!-- <img src="static/img/lastyear/lastyear8.jpg" alt="" class="hover-img"> -->
-                    <img src="{{ url_for('static', filename='img/lastyear/lastyear12.jpg') }}" alt="" class="hover-img">
-                    <img src="{{ url_for('static', filename='img/lastyear/lastyear13.jpg') }}" alt="" class="hover-img">
-                    <img src="{{ url_for('static', filename='img/lastyear/lastyear11.jpg') }}" alt="" class="hover-img">
-                    <img src="{{ url_for('static', filename='img/lastyear/lastyear9.jpg') }}" alt="" class="hover-img left">
-               </div>
             </div>
         </section>
 
@@ -291,7 +273,7 @@
                 <a href="https://www.instagram.com/makeuoft/"><img src="{{ url_for('static', filename='img/Instagram-Logo.svg') }}"></a>
             </div>
             <a href="/"><img src="{{ url_for('static', filename='img/IEEELogo_Update_18-19_Vector_White.svg') }}" class="ieee-logo"></a>
-            <p>Copyright &#169 2019 IEEE University of Toronto Student Branch</p>
+            <p>Copyright &#169 2019-2020 IEEE University of Toronto Student Branch</p>
             <p style="margin-top: 1.5rem;">As an MLH member event, we expect all event participants and organizers to abide by the <a href="https://static.mlh.io/docs/mlh-code-of-conduct.pdf" style="color:#FFD096" target="_blank">MLH Code of Conduct</a>.</p>
         </div>
 

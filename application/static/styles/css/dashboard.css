@@ -5,8 +5,7 @@ body {
 
 header {
   width: 100%;
-  height: 60px;
-  padding: 10px 20px;
+  height: 70px;
 }
 
 .header-logo {
@@ -79,4 +78,123 @@ label {
   h4 {
     text-align: right;
   }
+}
+
+/* This is all basically duplicated from styles.css */
+.top-bar-container {
+  width: 100%;
+  background-color: transparent;
+}
+
+.title-bar {
+  background-color: #fff;
+  justify-content: space-between;
+  flex-direction: row-reverse;
+  padding: 6px 30px;
+}
+
+.title-bar .menu-icon::after {
+  background-color: #00639c;
+  box-shadow: 0 7px 0 #00639c, 0 14px 0 #00639c;
+}
+
+.title-bar #title-bar-logo {
+  height: 50px;
+  margin-right: 1em; }
+
+.top-bar {
+  background-color: transparent;
+  width: 100%;
+  padding: 0;
+  color: #fff;
+  font-family: "Montserrat", sans-serif;
+  -webkit-transition: all ease-out .15s;
+  -moz-transition: all ease-out .15s;
+  -o-transition: all ease-out .15s;
+  transition: all ease-out .15s;
+}
+
+.top-bar ul {
+  background-color:inherit;
+}
+
+@media screen and (max-width: 1024px) {
+  .top-bar ul {
+    background: linear-gradient(351.94deg, #3F95B4 -11.6%, #479FB0 17.52%, #48A0AF 65.87%, #3386BA 95.18%);
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1px;
+  }
+}
+
+.top-bar li {
+  margin: 0 0.25em;
+}
+
+.top-bar img {
+  max-height: 100%;
+  max-width: 100%;
+  height: 3em;
+  min-width: 136px;
+}
+
+.top-bar .top-bar-left {
+  display: none;
+}
+
+.top-bar .top-bar-right {
+  margin: auto;
+}
+
+.menu {
+  margin-right: 2rem;
+}
+
+.top-bar .top-bar-right li {
+  margin: 0.5em;
+}
+
+@media screen and (max-width: 64em) {
+  .top-bar .top-bar-right li {
+    width: auto;
+    text-align: center;
+  }
+}
+
+.top-bar .top-bar-right a {
+  padding: 0.75em 0.75em;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 3px;
+  color: inherit;
+}
+
+.top-bar .top-bar-right a:hover {
+  border-bottom: 3px solid #ffa21b;
+  color: #ffa21b;
+  margin-bottom: 0;
+}
+
+.top-bar .top-bar-right .section-active {
+  color: #ffa21b;
+}
+
+.top-bar .top-bar-right .apply-button {
+  background-color: #00639c;
+  color: #fff;
+  border-radius: 10px;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+.top-bar .top-bar-right .apply-button:hover {
+  border-bottom: none;
+  background-color: #0485Ba;
+  color: #fff;
+}
+
+@media screen and (min-width: 64em) {
+  .top-bar-left { display: block !important; }
 }
