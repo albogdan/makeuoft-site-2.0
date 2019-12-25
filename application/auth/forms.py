@@ -72,15 +72,17 @@ class ApplicationForm(FlaskForm):
 
     # First and last name are redundant with an associated user - preferred name could be useful
     preferred_name = StringField("Preferred Name", validators=[DataRequired()])
+
     birthday = DateField(
         "Birthday",
         validators=[
-            DataRequired(),
+            DataRequired(message="Required, must be in YYYY-MM-DD format"),
             OldestAllowedDate(
                 datetime.date(2020 - 18, 2, 15),
                 message="You must be 18 on Fubruary 15, 2020 to participate in MakeUofT.",
             ),
         ],
+        render_kw={"placeholder": "YYYY-MM-DD"},
     )
 
     gender = SelectField(
