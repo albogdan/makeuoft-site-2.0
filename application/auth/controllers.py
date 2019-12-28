@@ -109,9 +109,9 @@ def change_password():
         user.set_password(form.password.data)
         db.session.commit()
 
-        return redirect(url_for("home.dashboard"))
+        return render_template("auth/password_change_complete.html")
 
-    return render_template("auth/update_password.html", form=form)
+    return render_template("auth/update_password_form.html", form=form)
 
 
 @auth.route("/forgotpassword", methods=["GET", "POST"])
@@ -136,26 +136,23 @@ def forgot_password():
             db.session.commit()
 
             # Send the verification email
-            print(f"Password reset for {user.email}: {token}")
-            # msg = Message("MakeUofT Account Password Reset", recipients=[user.email])
-            # msg.html = render_template(
-            #     "mails/reset-password.html", user=user, token=token
-            # )
-            # mail.send(msg)
+            msg = Message("MakeUofT Account Password Reset", recipients=[user.email])
+            msg.html = render_template(
+                "mails/reset-password.html", user=user, token=token
+            )
+            mail.send(msg)
 
         return render_template("auth/forgot_password_email_sent.html", email=form.email.data)
 
     return render_template("auth/forgotPasswordEnterEmail.html", form=form)
 
 
-"""
-User has received a password reset link from the forgot_password() function
-takes them here
-"""
-
-
 @auth.route("/resetpassword", methods=["GET"])
 def reset_password():
+    """
+    User has received a password reset link from the forgot_password() function
+    takes them here
+    """
     token = request.args.get("token")
     if not token:
         return "Missing token", 400
@@ -167,16 +164,7 @@ def reset_password():
     if reset_request is not None and reset_request.expiration > datetime.now():
         login_user(reset_request.user, force=True)
         reset_request.expiration = datetime.now()
+        db.session.commit()
         return redirect(url_for("auth.change_password"))
 
     return redirect(url_for("home.index"))
-
-
-@auth.route("/passwordupdated", methods=["GET", "POST"])
-def passwordChangeComplete():
-    return render_template("auth/forgotPasswordChangeComplete.html")
-
-
-@auth.route("/newpassword", methods=["GET", "POST"])
-def newPassword():
-    return render_template("auth/change_password_form.html")
