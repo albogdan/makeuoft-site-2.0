@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 1066305fee13
+Revision ID: f5b12ea5a02c
 Revises: 0660f862c5c5
-Create Date: 2019-12-28 15:30:58.039688
+Create Date: 2019-12-28 16:07:59.684340
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '1066305fee13'
+revision = 'f5b12ea5a02c'
 down_revision = '0660f862c5c5'
 branch_labels = None
 depends_on = None
@@ -21,7 +21,7 @@ def upgrade():
     op.create_table('password_resets',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=True),
-    sa.Column('token', sa.String(length=255), nullable=False),
+    sa.Column('token', sa.String(length=32), nullable=False),
     sa.Column('expiration', sa.DateTime(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')

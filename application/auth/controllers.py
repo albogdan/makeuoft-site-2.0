@@ -126,7 +126,7 @@ def forgot_password():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user is not None:
-            token = secrets.token_urlsafe(25)  # Generate token
+            token = secrets.token_urlsafe(32)  # Generate token
             reset_request = PasswordResets(
                 user=user,
                 token=token,
