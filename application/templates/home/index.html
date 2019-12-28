@@ -41,14 +41,14 @@
         <!-- Navbar -->
         <div class="title-bar" data-responsive-toggle="top-bar" data-hide-for="large">
             <button class="menu-icon" type="button" data-toggle="top-bar"></button>
-            <div class="title-bar-title"><a href="/makeuoft"><img id="title-bar-logo" src="{{ url_for('static', filename='img/CubeyBoi.svg') }}"/></a></div>
+            <div class="title-bar-title"><a href="{{ url_for("home.index") }}"><img id="title-bar-logo" src="{{ url_for('static', filename='img/CubeyBoi.svg') }}"/></a></div>
         </div>
 
         <div class="top-bar-container" id="top-bar" data-sticky-container>
             <div class="sticky top-bar" data-sticky data-options="marginTop: 0;" data-top-anchor="1">
                 <div class="top-bar-left">
                     <ul class="menu">
-                        <li><a href="/makeuoft/"><img src="{{ url_for('static', filename='img/CubeyBoi.svg') }}" /></a></li>
+                        <li><a href="{{ url_for("home.index") }}"><img src="{{ url_for('static', filename='img/CubeyBoi.svg') }}" /></a></li>
                     </ul>
                 </div>
                 <nav class="top-bar-right">
@@ -61,7 +61,10 @@
                         {% if logged_in %}
                         <li id="dashboard-a"><a href="{{ url_for('home.dashboard') }}">Dashboard</a></li>
                         <li id="logout-a"><a href="{{ url_for('auth.logout') }}">Logout</a></li>
-                        {% elif registration_open %}
+                        {% else %}
+                        <li id="login-a"><a href="{{ url_for('auth.login') }}">Login</a></li>
+                        {% endif %}
+                        {% if registration_open and not logged_in%}
                         <li id="apply-a"><a href="{{ url_for('auth.register') }}" class="apply-button">Apply!</a></li>
                         {% endif %}
 
