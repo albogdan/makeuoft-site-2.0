@@ -103,7 +103,6 @@ def change_password():
     """
     For when user is logged in and needs to change their password
     """
-    # Should we ask them for their old password here?
     form = ChangePasswordForm()
     if form.validate_on_submit():
         user = User.query.filter_by(id=current_user.id).first()
@@ -112,7 +111,7 @@ def change_password():
 
         return redirect(url_for("home.dashboard"))
 
-    return render_template("auth/updatepassword.html", form=form)
+    return render_template("auth/update_password.html", form=form)
 
 
 @auth.route("/forgotpassword", methods=["GET", "POST"])
@@ -137,11 +136,12 @@ def forgot_password():
             db.session.commit()
 
             # Send the verification email
-            msg = Message("MakeUofT Account Password Reset", recipients=[user.email])
-            msg.html = render_template(
-                "mails/reset-password.html", user=user, token=token
-            )
-            mail.send(msg)
+            print(f"Password reset for {user.email}: {token}")
+            # msg = Message("MakeUofT Account Password Reset", recipients=[user.email])
+            # msg.html = render_template(
+            #     "mails/reset-password.html", user=user, token=token
+            # )
+            # mail.send(msg)
 
         return render_template("auth/forgot_password_email_sent.html", email=form.email.data)
 
@@ -165,11 +165,10 @@ def reset_password():
     )
 
     if reset_request is not None and reset_request.expiration > datetime.now():
-        # Is this okay to log them in and then redirect?
         login_user(reset_request.user, force=True)
+        reset_request.expiration = datetime.now()
         return redirect(url_for("auth.change_password"))
 
-    # Is this the best place to redirect them too?
     return redirect(url_for("home.index"))
 
 

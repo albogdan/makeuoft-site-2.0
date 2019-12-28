@@ -249,13 +249,6 @@ class ChangePasswordForm(FlaskForm):
     Form takes a two passwords and uses it to update the user's password
     """
 
-    # def validate_currentPassword(self, currentPassword):
-    #     print("VALIDATING")
-    #     user = User.query.filter_by(id=current_user.id).first()
-    #     if not user.check_password(currentPassword.data):
-    #         raise ValidationError("Please check your current password and try again.")
-
-    currentPassword = PasswordField("Current Password", validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired()])
     password2 = PasswordField(
         "Repeat Password",
