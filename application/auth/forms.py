@@ -125,13 +125,7 @@ class ApplicationForm(FlaskForm):
 
     tshirt_size = SelectField(
         "What is your T-shirt size?",
-        choices=[
-            ("", ""),
-            ("s", "S"),
-            ("m", "M"),
-            ("l", "L"),
-            ("xl", "XL"),
-        ],
+        choices=[("", ""), ("s", "S"), ("m", "M"), ("l", "L"), ("xl", "XL"),],
         validators=[DataRequired()],
     )
 
@@ -249,10 +243,12 @@ class ForgotPasswordEmailForm(FlaskForm):
 
     email = StringField("Email", validators=[DataRequired(), Email()])
 
+
 class ChangePasswordForm(FlaskForm):
     """
     Form takes a two passwords and uses it to update the user's password
     """
+
     # def validate_currentPassword(self, currentPassword):
     #     print("VALIDATING")
     #     user = User.query.filter_by(id=current_user.id).first()
