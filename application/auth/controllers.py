@@ -127,6 +127,11 @@ def forgot_password():
         user = User.query.filter_by(email=form.email.data).first()
         if user is not None:
             token = secrets.token_urlsafe(32)  # Generate token
+            conflicting_token = PasswordResets.query.filter_by(token=token).first()
+            while conflicting_token is not None:
+                token = secrets.token_urlsafe(32)
+                conflicting_token = PasswordResets.query.filter_by(token=token).first()
+
             reset_request = PasswordResets(
                 user=user,
                 token=token,
@@ -160,6 +165,9 @@ def reset_password():
     reset_request = PasswordResets.query.filter_by(token=token).first_or_404(
         "Invalid token"
     )
+
+    if reset_request.expiration <= datetime.now():
+        return "Invalid token", 404
 
     if reset_request is not None and reset_request.expiration > datetime.now():
         login_user(reset_request.user, force=True)
