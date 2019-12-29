@@ -10,6 +10,7 @@ from application import login_manager
 # Import class to create and check password hashes
 from werkzeug.security import generate_password_hash, check_password_hash
 
+from datetime import timedelta
 
 def _generate_uuid():
     return uuid.uuid4().hex
@@ -79,6 +80,15 @@ class User(UserMixin, db.Model):
                 if page_role == available_role.name:
                     return True
         return False
+
+
+class PasswordResets(db.Model):
+    __tablename__ = "password_resets"
+    id = db.Column(db.Integer, primary_key=True)
+    user = db.relationship("User", backref="reset_token")
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id", ondelete="CASCADE"))
+    token = db.Column(db.String(32), index=True, nullable=False)
+    expiration = db.Column(DateTime(), server_default=func.now())
 
 
 class UserRoles(db.Model):
