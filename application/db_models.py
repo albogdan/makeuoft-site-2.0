@@ -87,7 +87,7 @@ class PasswordResets(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user = db.relationship("User", backref="reset_token")
     user_id = db.Column(db.Integer, db.ForeignKey("users.id", ondelete="CASCADE"))
-    token = db.Column(db.String(32), index=True, nullable=False)
+    token = db.Column(db.String(255), index=True, nullable=False)
     expiration = db.Column(DateTime(), server_default=func.now())
 
 
