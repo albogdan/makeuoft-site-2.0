@@ -29,7 +29,7 @@ import os
 db = SQLAlchemy()
 
 # Initialize the database migrate instance
-migrate = Migrate(compare_type=True)
+migrate = Migrate()
 
 # Initialize the login instance
 login_manager = LoginManager()
