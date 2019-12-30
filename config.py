@@ -11,7 +11,7 @@ load_dotenv(os.path.join(BASE_DIR, ".flaskenv"))
 # DevelopmentConfig
 class DevelopmentConfig(object):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root@localhost:3306/makeuoft"
+    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root@127.0.0.1:3306/makeuoft"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     DATABASE_CONNECT_OPTIONS = {}
     THREADS_PER_PAGE = 2
