@@ -4,7 +4,7 @@ services:
     image: mysql:5.7
     environment:
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
-      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD:-}
+      - MYSQL_ROOT_PASSWORD=
       - MYSQL_DATABASE=makeuoft
     ports:
       - 3306:3306
