@@ -4,13 +4,105 @@ from application.db_models import *
 from application.api import api
 from application import db
 import json
-from flask_login import login_required
+from flask_login import login_required, current_user
 
 from application import roles_required
 
 from flask_cors import cross_origin
 
 
+# === API routes in use by the main site ===
+@api.route("/teams/", methods=["GET", "POST"])
+@cross_origin()
+@login_required
+def teams():
+    if not current_user.is_active:
+        return "User not activated", 401
+
+    if request.method == "GET":
+        if not current_user.is_allowed(["admin"]):
+            return "Not allowed", 403
+
+        return jsonify([t.serialize() for t in Team.query.all()])
+
+    if request.method == "POST":
+        if current_user.team is not None:
+            return "Already on a team", 409
+
+        team = Team()
+        team.team_members.append(current_user)
+        db.session.add(team)
+        db.session.commit()
+
+        return team.json(), 201
+
+
+@api.route("/teams/<team_code>/", methods=["GET", "POST"])
+@cross_origin()
+@login_required
+def teams_detail(team_code):
+    if not current_user.is_active:
+        return "User not activated", 401
+
+    if request.method == "GET":
+        if current_user.team.team_code == team_code or current_user.is_admin:
+            return Team.query.filter_by(team_code=team_code).first().json()
+        else:
+            return "Not allowed", 403
+
+
+@api.route("/users/", methods=["GET"])
+@cross_origin()
+@login_required
+@roles_required(["admin"])
+def users():
+    if request.method == "GET":
+        return jsonify([u.serialize() for u in User.query.filter(is_active=True)])
+
+
+@api.route("/users/<uuid>/", methods=["PATCH"])
+@cross_origin()
+@login_required
+def users_detail(uuid):
+    if not (current_user.uuid == uuid or current_user.is_admin):
+        return "Not allowed", 403
+
+    if request.method == "PATCH":
+        # We may be able to work with the current_user object directly, but just in case
+        user = User.query.filter_by(id=current_user.id).first()
+
+        data = json.loads(request.data)
+
+        try:
+            team_code = data["team_code"]
+
+            if team_code is not None:
+                team = Team.query.filter_by(team_code=team_code).first()
+                if not team:
+                    return f"Team {team_code} not found", 404
+
+                if user.team_code != team_code:
+                    # Remove the user from their current team, and add them to the new one
+                    if len(team.team_members) >= Team.max_members:
+                        return f"Team {team_code} is full", 400
+
+                    user.team = team
+                    db.session.commit()
+                    return "Team changed", 200
+
+                return "No change", 200
+            else:
+                # team_code is null, remove the user from their team
+                user.team = None
+                db.session.commit()
+
+        except KeyError:
+            pass
+
+        return "", 200
+
+
+# === API routes in use by the hardware signout site ===
 @api.route("/test", methods=["GET", "POST"])
 @login_required
 @roles_required(["admin"])

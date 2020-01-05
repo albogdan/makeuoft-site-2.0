@@ -1,6 +1,6 @@
 body {
   background: linear-gradient(130.14deg, #48A0AF 9.68%, #3386BA 87.5%);
-  font-family: "Nunito";
+  font-family: "Nunito", sans-serif;
 }
 
 header {
@@ -15,7 +15,17 @@ header {
 h1 {
   font-family: "Montserrat", sans-serif !important;
   text-align: center;
-  font-weight: bold;
+  font-weight: 600;
+}
+
+h2 {
+  font-family: "Nunito", sans-serif !important;
+  font-size: 1.75rem;
+}
+
+h3 {
+  font-family: "Nunito", sans-serif !important;
+  font-size: 1.5rem;
 }
 
 h4 {
@@ -118,6 +128,22 @@ label {
   background-color:inherit;
 }
 
+.submit-btn {
+    padding: 0.75em 2.5em;
+    line-height: 18px;
+    text-align: center;
+    color: #FFFFFF;
+    background-color: #388DB7;
+    border-radius: 1.25em;
+    border: none;
+    transition: all 0.3s;
+}
+
+.submit-btn:hover {
+  background-color: #256B8E;
+  cursor: pointer;
+}
+
 @media screen and (max-width: 1024px) {
   .top-bar ul {
     background: linear-gradient(351.94deg, #3F95B4 -11.6%, #479FB0 17.52%, #48A0AF 65.87%, #3386BA 95.18%);
@@ -197,4 +223,23 @@ label {
 
 @media screen and (min-width: 64em) {
   .top-bar-left { display: block !important; }
+}
+
+.team-form-label {
+  font-size: 18px;
+  text-align: left;
+  font-weight: normal;
+}
+
+@media screen and (min-width: 40em) {
+  .team-form-label { text-align: right; }
+}
+
+.action {
+  color: #E8850C;
+  text-decoration: underline;
+}
+
+#leave-team-modal {
+  padding: 2em 3em;
 }

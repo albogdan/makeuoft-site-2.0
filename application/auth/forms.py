@@ -260,3 +260,18 @@ class ChangePasswordForm(FlaskForm):
         ],
     )
     submit = SubmitField("Update Password")
+
+
+class JoinTeamForm(FlaskForm):
+    """
+    Form that takes a team code to join
+    """
+    team_code = StringField("Enter team code:", validators=[DataRequired()])
+    submit = SubmitField("Submit", render_kw={"class": "submit-btn"})
+
+
+class LeaveTeamForm(FlaskForm):
+    """
+    Form to handle leaving the team - just a button
+    """
+    leave_team = SubmitField("Leave Team", render_kw={"class": "submit-btn"})

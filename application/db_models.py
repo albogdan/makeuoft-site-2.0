@@ -2,6 +2,8 @@ from application import db
 import uuid
 from sqlalchemy import DateTime
 from sqlalchemy.sql import func
+from sqlalchemy.inspection import inspect
+from flask import jsonify
 
 # Import class to provide functions for login of admins
 from flask_login import UserMixin
@@ -10,10 +12,18 @@ from application import login_manager
 # Import class to create and check password hashes
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from datetime import timedelta
 
 def _generate_uuid():
     return uuid.uuid4().hex
+
+
+class SerializerMixin:
+    def serialize(self):
+        column_attrs = inspect(self).mapper.column_attrs.keys()
+        return {attr: getattr(self, attr) for attr in column_attrs}
+
+    def json(self):
+        return jsonify(self.serialize())
 
 
 class MailingList(db.Model):
@@ -34,7 +44,7 @@ class Role(db.Model):
         return "<Role {} | {}>".format(self.id, self.name)
 
 
-class User(UserMixin, db.Model):
+class User(SerializerMixin, UserMixin, db.Model):
     # Define the columns of the table, including primary keys, unique, and
     # indexed fields, which makes searching faster
     __tablename__ = "users"
@@ -81,6 +91,21 @@ class User(UserMixin, db.Model):
                     return True
         return False
 
+    @property
+    def is_admin(self):
+        return "admin" in [role.name for role in self.roles]
+
+    def serialize(self):
+        return {
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "email": self.email,
+            "created_date": self.created_date,
+            "updated_date": self.updated_date,
+            "id_provided": self.id_provided,
+            "team": self.team.team_code,
+        }
+
 
 class PasswordResets(db.Model):
     __tablename__ = "password_resets"
@@ -107,7 +132,7 @@ def _generate_team_code():
     return team_code
 
 
-class Team(db.Model):
+class Team(SerializerMixin, db.Model):
     __tablename__ = "teams"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -123,8 +148,16 @@ class Team(db.Model):
     def __repr__(self):
         return "<Team {} | {}>".format(self.id, self.team_code)
 
+    def serialize(self):
+        obj = super().serialize()
+        obj["members"] = [
+            {"id": user.id, "first_name": user.first_name, "last_name": user.last_name}
+            for user in self.team_members
+        ]
+        return obj
 
-class Application(db.Model):
+
+class Application(SerializerMixin, db.Model):
     __tablename__ = "applications"
 
     id = db.Column(db.Integer, primary_key=True)
