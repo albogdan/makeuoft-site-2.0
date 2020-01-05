@@ -60,14 +60,14 @@ def users():
         return jsonify([u.serialize() for u in User.query.filter(is_active=True)])
 
 
-@api.route("/users/<uuid>/", methods=["POST"])
+@api.route("/users/<uuid>/", methods=["PATCH"])
 @cross_origin()
 @login_required
 def users_detail(uuid):
     if not (current_user.uuid == uuid or current_user.is_admin):
         return "Not allowed", 403
 
-    if request.method == "POST":
+    if request.method == "PATCH":
         # We may be able to work with the current_user object directly, but just in case
         user = User.query.filter_by(id=current_user.id).first()
 

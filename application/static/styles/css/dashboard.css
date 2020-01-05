@@ -20,6 +20,7 @@ h1 {
 
 h2 {
   font-family: "Nunito", sans-serif !important;
+  font-size: 1.75rem;
 }
 
 h3 {
@@ -237,4 +238,8 @@ label {
 .action {
   color: #E8850C;
   text-decoration: underline;
+}
+
+#leave-team-modal {
+  padding: 2em 3em;
 }

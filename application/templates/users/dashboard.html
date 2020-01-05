@@ -6,43 +6,60 @@
 {% endblock %}
 
 {% block content %}
+    {% if user.team and leave_team_form %}
+        <div class="reveal" id="leave-team-modal" data-reveal>
+            <h2>Are you sure you want to leave this team?</h2>
+            <p>If you change your mind, you can rejoin again by entering the team code, as long as the team isn't full.</p>
+            <button class="close-button" data-close aria-label="Close modal" type="button">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <form method="POST" enctype="multipart/form-data" novalidate>
+                {{ leave_team_form.hidden_tag() }}
+                {{ leave_team_form.leave_team }}
+            </form>
+        </div>
+    {% endif %}
+
     <div class="grid-container" id="wrapper">
         <h1>Thanks for Applying!</h1>
         <p>Thanks for submitting an application! We have received it, and will be processing them in the order they are received. Keep an eye on your email, our <a href="https://ieee.utoronto.ca/makeuoft">website</a>, and our <a href="https://www.facebook.com/makeuoft/">Facebook page</a> for more details as they come out!</p>
         <p>Within the coming weeks, you'll be able to form teams with fellow applicants on this page. Teams are not required in advance - you're welcome to pair up with other hackers on the first day of the event! However, we will be processing applications by team, so we recommend you get a group of friends (or partners-in-crime) to apply with you. We'll notify you via email when team creation is open.</p>
         <p>If you have any questions or concerns, please <a href="mailto:makeuoft@gmail.com">contact us</a>.</p>
 
-        {% if not user.team %}
-        <h2>Apply as a Team</h2>
-        <p>Have friends you want to work with? Create a team with up to 4 people and we'll review your applications together. Enter your team code or make a new one and share with your teammates.</p>
-        <form>
-            <div class="grid-x grid-padding-x">
-                <div class="cell small-12 medium-4 large-3 large-offset-2">
-                    <label class="team-form-label">Enter team code:</label>
+        {% if not user.team and join_team_form %}
+            <h2>Apply as a Team</h2>
+            <p>Have friends you want to work with? Create a team with up to 4 people and we'll review your applications together. Enter your team code or make a new one and share with your teammates.</p>
+            <form method="POST" enctype="multipart/form-data" novalidate>
+                {{ join_team_form.hidden_tag() }}
+                <div class="grid-x grid-padding-x">
+                    <div class="cell small-12 medium-4 large-3 large-offset-2">
+                        {{ join_team_form.team_code.label(class="team-form-label") }}
+                    </div>
+                    <div class="cell small-12 medium-4 large-3">
+                        {{ join_team_form.team_code }}
+                        {{ render_errors(join_team_form.team_code) }}
+                    </div>
+                    <div class="cell small-12 medium-4 large-3">
+                        {{ join_team_form.submit }}
+                    </div>
+                    <div class="cell small-12" style="text-align: center;">
+                        Don't have a code yet? <a class="action" id="create-team">Create a team</a>.
+                    </div>
                 </div>
-                <div class="cell small-12 medium-4 large-3">
-                    <input type="text" name="team-code">
-                </div>
-                <div class="cell small-12 medium-4 large-3">
-                    <button type="submit" class="submit-btn">Submit</button>
-                </div>
-                <div class="cell small-12" style="text-align: center;">
-                    Don't have a code yet? <a class="action" id="create-team">Create a team</a>.
-                </div>
-            </div>
-        </form>
+            </form>
         {% else %}
-        <h2>Your Team</h2>
-        <p>Your team code is: <span style="font-weight: bold">{{ user.team.team_code }}</span>.</p>
-        {% if user.team.team_members|length < 4 %}
-        <p>Spots remaining on your team: <span style="font-weight: bold">{{ 4 - user.team.team_members|length }}</span>. Share your team code with your friends so they can join your team!</p>
-        {% endif %}
-        <h3>Team Members</h3>
-        <ul>
-            {% for member in user.team.team_members %}
-            <li>{{ member.first_name }} {{ member.last_name }}</li>
-            {% endfor %}
-        </ul>
+            <h2>Your Team</h2>
+            <p>Your team code is: <span style="font-weight: bold">{{ user.team.team_code }}</span>.</p>
+            {% if user.team.team_members|length < 4 %}
+            <p>Spots remaining on your team: <span style="font-weight: bold">{{ 4 - user.team.team_members|length }}</span>. Share your team code with your friends so they can join your team!</p>
+            {% endif %}
+            <h3>Team Members</h3>
+            <ul>
+                {% for member in user.team.team_members %}
+                <li>{{ member.first_name }} {{ member.last_name }}</li>
+                {% endfor %}
+            </ul>
+            <button class="submit-btn" data-open="leave-team-modal">Leave Team</button>
         {% endif %}
     </div>
 

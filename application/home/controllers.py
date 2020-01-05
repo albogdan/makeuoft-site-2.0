@@ -7,12 +7,12 @@ from flask import (
     redirect,
     url_for,
     jsonify,
-    current_app
+    current_app,
 )
 from flask_login import login_required, current_user
 
 from application.db_models import *
-from application.auth.forms import ApplicationForm
+from application.auth.forms import ApplicationForm, JoinTeamForm, LeaveTeamForm
 
 import re
 import os
@@ -110,7 +110,7 @@ def apply():
     return render_template("users/application.html", form=form)
 
 
-@home.route("/dashboard", methods=("GET",))
+@home.route("/dashboard", methods=("GET", "POST"))
 @login_required
 def dashboard():
     if not current_user.is_active:
@@ -120,4 +120,33 @@ def dashboard():
     if not application:
         return redirect(url_for("home.apply"))
 
-    return render_template("users/dashboard.html", user=current_user)
+    user = User.query.filter_by(id=current_user.id).first()
+
+    if not current_user.team:
+        # If the user is not on a team, setup the form to join one
+        join_team_form = JoinTeamForm()
+        if join_team_form.validate_on_submit():
+            team = Team.query.filter_by(team_code=join_team_form.team_code.data).first()
+
+            if not team:
+                join_team_form.team_code.errors.append(f"Team {join_team_form.team_code.data} does not exist")
+            elif len(team.team_members) >= Team.max_members:
+                join_team_form.team_code.errors.append(f"Team {team.team_code} is full")
+            else:
+                user.team = team
+                db.session.commit()
+
+                return redirect(url_for("home.dashboard"))
+
+        return render_template("users/dashboard.html", user=current_user, join_team_form=join_team_form)
+
+    else:
+        # If the user is on a team, setup the form to leave one
+        leave_team_form = LeaveTeamForm()
+        if leave_team_form.validate_on_submit():
+            user.team = None
+            db.session.commit()
+
+            return redirect(url_for("home.dashboard"))
+
+        return render_template("users/dashboard.html", user=current_user, leave_team_form=leave_team_form)

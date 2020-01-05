@@ -1,35 +1,5 @@
 {% extends "users/base.html" %}
 
-{% macro render_errors(field) %}
-    {% if field.errors %}
-        <span class="form-error" id="{{ field.id }}-error" style="display: inherit">
-        {% if field.errors|length == 1 %}
-            {{ field.errors[0] }}
-        {% else %}
-            <ul>
-                {% for error in field.errors %}
-                <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    {% else %}
-        <span class="form-error" id="{{ field.id }}-error">
-    {% endif %}
-    </span>
-{% endmacro %}
-
-{% macro render_field(field) %}
-    {% if field.errors %}
-        {{ field.label(class="is-invalid-label") }}
-        {{ render_errors(field) }}
-        {{ field(class="is-invalid-input") }}
-    {% else %}
-        {{ field.label }}
-        {{ render_errors(field) }}
-        {{ field }}
-    {% endif %}
-{% endmacro %}
-
 {% macro render_consent_field(field) %}
     <div class="cell small-1">
         {% if field.errors %}
