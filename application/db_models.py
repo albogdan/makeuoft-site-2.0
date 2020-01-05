@@ -91,6 +91,10 @@ class User(SerializerMixin, UserMixin, db.Model):
                     return True
         return False
 
+    @property
+    def is_admin(self):
+        return "admin" in [role.name for role in self.roles]
+
     def serialize(self):
         return {
             "first_name": self.first_name,
