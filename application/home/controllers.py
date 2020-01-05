@@ -25,13 +25,16 @@ from application.home import home
 
 from datetime import datetime
 
+
 @home.route("/")
 @home.route("/index", methods=["GET", "POST"])
 def index():
     logged_in = not current_user.is_anonymous
     registration_starts = datetime(2019, 12, 20, 9, 0, 0)
     registration_open = datetime.now() > registration_starts
-    return render_template("home/index.html", logged_in=logged_in, registration_open=registration_open)
+    return render_template(
+        "home/index.html", logged_in=logged_in, registration_open=registration_open
+    )
 
 
 @home.route("mailinglist", methods=["POST"])
@@ -63,7 +66,9 @@ def apply():
     if not current_user.is_active:
         return render_template("users/activation_required.html")
 
-    has_submitted = db.session.query(Application.id).filter_by(user_id=current_user.id).count() > 0
+    has_submitted = (
+        db.session.query(Application.id).filter_by(user_id=current_user.id).count() > 0
+    )
     if has_submitted:
         return redirect(url_for("home.dashboard"))
 
@@ -84,7 +89,11 @@ def apply():
             preferred_name=form.preferred_name.data,
             birthday=form.birthday.data,
             gender=form.gender.data,
-            ethnicity=(form.ethnicity_other.data if form.ethnicity.data == "other" else form.ethnicity.data),
+            ethnicity=(
+                form.ethnicity_other.data
+                if form.ethnicity.data == "other"
+                else form.ethnicity.data
+            ),
             tshirt_size=form.tshirt_size.data,
             dietary_restrictions=form.dietary_restrictions.data,
             phone_number=re.sub(r"[^0-9]", "", form.phone_number.data),
@@ -116,7 +125,9 @@ def dashboard():
     if not current_user.is_active:
         return render_template("users/activation_required.html")
 
-    application = db.session.query(Application).filter_by(user_id=current_user.id).first()
+    application = (
+        db.session.query(Application).filter_by(user_id=current_user.id).first()
+    )
     if not application:
         return redirect(url_for("home.apply"))
 
@@ -129,7 +140,9 @@ def dashboard():
             team = Team.query.filter_by(team_code=join_team_form.team_code.data).first()
 
             if not team:
-                join_team_form.team_code.errors.append(f"Team {join_team_form.team_code.data} does not exist")
+                join_team_form.team_code.errors.append(
+                    f"Team {join_team_form.team_code.data} does not exist"
+                )
             elif len(team.team_members) >= Team.max_members:
                 join_team_form.team_code.errors.append(f"Team {team.team_code} is full")
             else:
@@ -138,7 +151,9 @@ def dashboard():
 
                 return redirect(url_for("home.dashboard"))
 
-        return render_template("users/dashboard.html", user=current_user, join_team_form=join_team_form)
+        return render_template(
+            "users/dashboard.html", user=current_user, join_team_form=join_team_form
+        )
 
     else:
         # If the user is on a team, setup the form to leave one
@@ -149,4 +164,6 @@ def dashboard():
 
             return redirect(url_for("home.dashboard"))
 
-        return render_template("users/dashboard.html", user=current_user, leave_team_form=leave_team_form)
+        return render_template(
+            "users/dashboard.html", user=current_user, leave_team_form=leave_team_form
+        )
