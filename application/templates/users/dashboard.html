@@ -12,23 +12,51 @@
         <p>Within the coming weeks, you'll be able to form teams with fellow applicants on this page. Teams are not required in advance - you're welcome to pair up with other hackers on the first day of the event! However, we will be processing applications by team, so we recommend you get a group of friends (or partners-in-crime) to apply with you. We'll notify you via email when team creation is open.</p>
         <p>If you have any questions or concerns, please <a href="mailto:makeuoft@gmail.com">contact us</a>.</p>
 
+        {% if not user.team %}
         <h2>Apply as a Team</h2>
-            <p>Have friends you want to work with? Create a team with up to 4 people and we'll review your applications together. Enter your team code or make a new one and share with your teammates.</p>
-            <form>
-                <div class="grid-x grid-padding-x">
-                    <div class="cell small-12 medium-4 large-3 large-offset-2">
-                        <label class="team-form-label">Enter team code:</label>
-                    </div>
-                    <div class="cell small-12 medium-4 large-3">
-                        <input type="text" name="team-code">
-                    </div>
-                    <div class="cell small-12 medium-4 large-3">
-                        <button type="submit" class="submit-btn">Submit</button>
-                    </div>
-                    <div class="cell small-12" style="text-align: center;">
-                        Don't have a code yet? <a class="action">Create a team</a>.
-                    </div>
+        <p>Have friends you want to work with? Create a team with up to 4 people and we'll review your applications together. Enter your team code or make a new one and share with your teammates.</p>
+        <form>
+            <div class="grid-x grid-padding-x">
+                <div class="cell small-12 medium-4 large-3 large-offset-2">
+                    <label class="team-form-label">Enter team code:</label>
                 </div>
-            </form>
+                <div class="cell small-12 medium-4 large-3">
+                    <input type="text" name="team-code">
+                </div>
+                <div class="cell small-12 medium-4 large-3">
+                    <button type="submit" class="submit-btn">Submit</button>
+                </div>
+                <div class="cell small-12" style="text-align: center;">
+                    Don't have a code yet? <a class="action" id="create-team">Create a team</a>.
+                </div>
+            </div>
+        </form>
+        {% else %}
+        <h2>Your Team</h2>
+        <p>Your team code is: <span style="font-weight: bold">{{ user.team.team_code }}</span>.</p>
+        {% if user.team.team_members|length < 4 %}
+        <p>Spots remaining on your team: <span style="font-weight: bold">{{ 4 - user.team.team_members|length }}</span>. Share your team code with your friends so they can join your team!</p>
+        {% endif %}
+        <h3>Team Members</h3>
+        <ul>
+            {% for member in user.team.team_members %}
+            <li>{{ member.first_name }} {{ member.last_name }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
     </div>
+
+    <script>
+        $(document).ready(function() {
+            $("#create-team").click(function() {
+                $.post("{{ url_for("api.teams") }}")
+                .done(function() {
+                    window.location.reload();
+                })
+                .fail(function(data) {
+                    alert(data.responseText);
+                });
+            });
+        });
+    </script>
 {% endblock %}

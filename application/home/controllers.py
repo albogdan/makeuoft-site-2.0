@@ -120,4 +120,4 @@ def dashboard():
     if not application:
         return redirect(url_for("home.apply"))
 
-    return render_template("users/dashboard.html")
+    return render_template("users/dashboard.html", user=current_user)

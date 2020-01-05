@@ -4,13 +4,39 @@ from application.db_models import *
 from application.api import api
 from application import db
 import json
-from flask_login import login_required
+from flask_login import login_required, current_user
 
 from application import roles_required
 
 from flask_cors import cross_origin
 
 
+# === API routes in use by the main site ===
+@api.route("/teams/", methods=["GET", "POST"])
+@login_required
+def teams():
+    if not current_user.is_active:
+        return "User not activated", 401
+
+    if request.method == "GET":
+        if not current_user.is_allowed(["admin"]):
+            return "Not allowed", 403
+
+        return jsonify([t.serialize() for t in Team.query.all()])
+
+    if request.method == "POST":
+        if current_user.team is not None:
+            return "Already on a team", 409
+
+        team = Team()
+        team.team_members.append(current_user)
+        db.session.add(team)
+        db.session.commit()
+
+        return team.json(), 201
+
+
+# === API routes in use by the hardware signout site ===
 @api.route("/test", methods=["GET", "POST"])
 @login_required
 @roles_required(["admin"])
