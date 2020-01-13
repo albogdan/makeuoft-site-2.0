@@ -147,6 +147,7 @@ def create_app():
 
     from application.hardware_signout import hardware_signout as hs_module
     from application.api import api as api_module
+    from application.review import review as review_module
 
     # Register blueprint(s) - connects each module to the main flask application
     # app.register_blueprint(xyz_module)
@@ -155,8 +156,7 @@ def create_app():
     flask_app.register_blueprint(auth_module)
     flask_app.register_blueprint(hs_module)
     flask_app.register_blueprint(api_module)
-
-
+    flask_app.register_blueprint(review_module)
 
     # Add views for the admin site
     admin.add_view(ModelView(db_models.User, db.session))
