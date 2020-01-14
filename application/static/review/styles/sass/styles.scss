@@ -88,7 +88,8 @@
 .container {
     width: 100vw;
     height: calc(100vh - 64px);
-    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .info-table {
@@ -140,6 +141,10 @@
             margin-left: 1em; 
         }
     }
+}
+
+.team-body {
+    overflow: auto;
 }
 
 // Classes to denote an individual's status

@@ -73,7 +73,8 @@
 .container {
   width: 100vw;
   height: calc(100vh - 64px);
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .info-table {
@@ -114,6 +115,10 @@
 }
 .team-title .reviewer-actions .add-button {
   margin-left: 1em;
+}
+
+.team-body {
+  overflow: auto;
 }
 
 .status {
