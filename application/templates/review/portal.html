@@ -145,8 +145,10 @@
         </nav>
     </div>
     <div class="container">
-        {% for team in teams %}
+        {% for submitted_time, user, team in teams_and_users %}
+            {% if team is not none %}
             {{ generate_team_table(team) }}
+            {% endif %}
         {% endfor %}
     </div>
 

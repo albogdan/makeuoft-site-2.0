@@ -156,6 +156,20 @@ class Team(SerializerMixin, db.Model):
         ]
         return obj
 
+    @property
+    def submitted_time(self):
+        submitted_time = (
+            Team.query.join(User)
+            .join(Application, Application.user_id == User.id)
+            .group_by(Team.id)
+            .having(Team.id == self.id)
+            .with_entities(func.max(Application.submitted_time).label("submitted_time"))
+            .first()
+            .submitted_time
+        )
+
+        return submitted_time
+
 
 class Application(SerializerMixin, db.Model):
     __tablename__ = "applications"
