@@ -140,6 +140,10 @@
         .add-button {
             margin-left: 1em; 
         }
+
+        form {
+            display: inline-block;
+        }
     }
 }
 
@@ -153,44 +157,24 @@
     padding: 0.75em;
 }
 
-.acceptedRound1 {
+.accepted {
     background-color: #2A7100;
     color: #fefefe;
 }
 
-.consideredRound1 {
+.waitlisted {
     background-color: #FFC81A;
     color: #0a0a0a;
 }
 
-.skippedRound1 {
+.skipped {
     background-color: #e9e9e9;
     color: #0a0a0a;
 }
 
-.rejectedRound1 {
+.rejected {
     background-color: #E0292D;
     color: #0a0a0a;
-}
-
-.acceptedRound2 {
-    background-color: #77BE3D;
-    color: #0a0a0a;
-}
-
-.consideredRound2 {
-    background-color: #ffae00;
-    color: #0a0a0a;
-}
-
-.skippedRound2 {
-    background-color: #e9e9e9;
-    color: #0a0a0a;
-}
-
-.rejectedRound2 {
-    background-color: #c60f13;
-    color: #fefefe;
 }
 
 .waiting {

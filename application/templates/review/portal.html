@@ -39,13 +39,13 @@
         <td>{{ application.program }}</td>
         <td>{{ application.birthday }}</td>
         <td>{{ application.referral_source }}</td>
-        <td><a onclick="acceptIndividual(this, '{{ user.uuid }}')">Accept</a></td>
+        <td><a onclick="update('{{ user.uuid }}', 'user', {status: 'accepted'})">Accept</a></td>
     </tr>
 {% endmacro %}
 
-{% macro generate_scoring_dropdown(selected=1) %}
+{% macro generate_scoring_dropdown(name, selected=1) %}
     {% set selected = selected or 1 %}
-    <select>
+    <select name="{{ name }}">
     {% for i in range(1, 11) %}
         {% if i == selected %}
             <option selected="selected">{{ i }}</option>
@@ -68,27 +68,28 @@
                 </button>
                 <p>Team Code: {{ team.team_code }}</p>
                 <div class="reviewer-actions">
-                    <a class="button success" onclick="acceptTeam(this)">Accept</a>
-                    <a class="button warning" onclick="considerTeam(this)">Consider</a>
-                    <a class="button alert" onclick="rejectTeam(this)">Reject</a>
-                    <span>Reviewer comments:</span>
-                    <textarea>
-                        {{ common_application.reviewer_comments }}
-                    </textarea>
-                    <span>Experience:</span>
-                    {{ generate_scoring_dropdown(common_application.experience) }}
-                    <span>Interest:</span>
-                    {{ generate_scoring_dropdown(common_application.interest) }}
-                    <span>Quality:</span>
-                    {{ generate_scoring_dropdown(common_application.quality) }}
-                    <button class="button primary add-button" onclick="addTeamFeedback(this);">Add</button>
+                    <a class="button success" onclick="update('{{ team.team_code }}', 'team', {status: 'accepted'})">Accept</a>
+                    <a class="button warning" onclick="update('{{ team.team_code }}', 'team', {status: 'waitlisted'})">Waitlist</a>
+                    <a class="button alert" onclick="update('{{ team.team_code }}', 'team', {status: 'rejected'})">Reject</a>
+                    <form id="feedback-{{ team.team_code }}">
+                        <span>Reviewer comments:</span>
+                        <textarea name="reviewer_comments">{{ common_application.reviewer_comments }}</textarea>
+                        <span>Experience:</span>
+                        {{ generate_scoring_dropdown("experience", common_application.experience) }}
+                        <span>Interest:</span>
+                        {{ generate_scoring_dropdown("interest", common_application.interest) }}
+                        <span>Quality:</span>
+                        {{ generate_scoring_dropdown("quality", common_application.quality) }}
+                        <button class="button primary add-button" onclick="addFeedback('{{ team.team_code}}', 'team');">Add</button>
+                    </form>
+
                 </div>
             </div>
         </div>
         <div class="cell small-12 team-body" name="{{ team.id }}">
             <table class="info-table scroll">
                 {{ generate_table_head() }}
-                <tbody>
+                <tbody data-team="{{ team.team_code }}">
                     {% for user in team.team_members %}
                         {{ generate_table_row(user) }}
                     {% endfor %}
@@ -109,27 +110,27 @@
                 </button>
                 <p>User ID: {{ user.uuid }}</p>
                 <div class="reviewer-actions">
-                    <a class="button success" onclick="acceptTeam(this)">Accept</a>
-                    <a class="button warning" onclick="considerTeam(this)">Consider</a>
-                    <a class="button alert" onclick="rejectTeam(this)">Reject</a>
-                    <span>Reviewer comments:</span>
-                    <textarea>
-                        {{ application.reviewer_comments }}
-                    </textarea>
-                    <span>Experience:</span>
-                    {{ generate_scoring_dropdown(application.experience) }}
-                    <span>Interest:</span>
-                    {{ generate_scoring_dropdown(application.interest) }}
-                    <span>Quality:</span>
-                    {{ generate_scoring_dropdown(application.quality) }}
-                    <button class="button primary add-button" onclick="addIndividualFeedback(this);">Add</button>
+                    <a class="button success" onclick="update('{{ user.uuid }}', 'user', {status: 'accepted'})">Accept</a>
+                    <a class="button warning" onclick="update('{{ user.uuid }}', 'user', {status: 'waitlisted'})">Waitlist</a>
+                    <a class="button alert" onclick="update('{{ user.uuid }}', 'user', {status: 'rejected'})">Reject</a>
+                    <form id="feedback-{{ user.uuid }}">
+                        <span>Reviewer comments:</span>
+                        <textarea name="reviewer_comments">{{ application.reviewer_comments }}</textarea>
+                        <span>Experience:</span>
+                        {{ generate_scoring_dropdown("experience", application.experience) }}
+                        <span>Interest:</span>
+                        {{ generate_scoring_dropdown("intereste", application.interest) }}
+                        <span>Quality:</span>
+                        {{ generate_scoring_dropdown("quality", application.quality) }}
+                        <button class="button primary add-button" onclick="addFeedback('{{ user.uuid }}', 'user');">Add</button>
+                    </form>
                 </div>
             </div>
         </div>
         <div class="cell small-12 team-body" name="{{ user.uuid }}">
             <table class="info-table scroll">
                 {{ generate_table_head() }}
-                <tbody>
+                <tbody data-uid="{{ user.uuid }}">
                     {{ generate_table_row(user) }}
                 </tbody>
             </table>
@@ -197,6 +198,12 @@
 
     <script>
         $(document).foundation();
+
+        $(document).ready(function() {
+            $(".reviewer-actions form").submit(function(e) {
+                e.preventDefault();
+            });
+        });
     </script>
 </body>
 </html>
