@@ -1,3 +1,5 @@
+from datetime import date
+
 import sqlalchemy as sa
 from sqlalchemy.sql.expression import func
 
@@ -117,9 +119,11 @@ def get_user(uuid):
     return models.User.query.filter(models.User.uuid == uuid).first()
 
 
-def set_user_application_attribute(uuid, attr, val):
+def set_user_application_attribute(uuid, attr, val, evaluator_id=None):
     user = get_user(uuid)
     setattr(user.application[0], attr, val)
+    user.application[0].date_reviewed = date.today()
+    user.application[0].evaluator_id = evaluator_id
     db.session.commit()
 
 
@@ -127,8 +131,10 @@ def get_team(team_code):
     return models.Team.query.filter(models.Team.team_code == team_code).first()
 
 
-def set_team_application_attribute(team_code, attr, val):
+def set_team_application_attribute(team_code, attr, val, evaluator_id=None):
     team = get_team(team_code)
     for user in team.team_members:
         setattr(user.application[0], attr, val)
+        user.application[0].date_reviewed = date.today()
+        user.application[0].evaluator_id = evaluator_id
     db.session.commit()

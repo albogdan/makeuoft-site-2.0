@@ -20,10 +20,6 @@ def index():
 
     offset = (page - 1) * page_size
 
-    # teams_query = manager.get_teams()
-    # num_pages = math.ceil(teams_query.count() / page_size)
-    # teams = teams_query.offset(offset).limit(page_size).all()
-
     teams_and_users_query = manager.get_teams_and_users()
     num_pages = math.ceil(teams_and_users_query.count() / page_size)
     teams_and_users = teams_and_users_query.limit(page_size).offset(offset).all()

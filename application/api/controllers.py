@@ -58,7 +58,9 @@ def teams_detail(team_code):
 
         for field in manager.reviewer_fields:
             if field in request.json:
-                manager.set_team_application_attribute(team_code, field, request.json[field])
+                manager.set_team_application_attribute(
+                    team_code, field, request.json[field], evaluator_id=current_user.id
+                )
 
         return manager.get_team(team_code).json()
 
@@ -82,7 +84,9 @@ def users_detail(uuid):
 
         for field in manager.reviewer_fields:
             if field in request.json:
-                manager.set_user_application_attribute(uuid, field, request.json[field])
+                manager.set_user_application_attribute(
+                    uuid, field, request.json[field], evaluator_id=current_user.id
+                )
 
         return manager.get_user(uuid).json()
 

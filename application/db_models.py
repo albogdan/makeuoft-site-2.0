@@ -230,6 +230,7 @@ class Application(SerializerMixin, db.Model):
     experience = db.Column(db.Integer, nullable=True)
     interest = db.Column(db.Integer, nullable=True)
     quality = db.Column(db.Integer, nullable=True)
+    date_reviewed = db.Column(db.Date(), nullable=True)
 
     def __repr__(self):
         return "<Application {} | {} {}>".format(
