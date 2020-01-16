@@ -1,7 +1,9 @@
 import math
 
 from flask import render_template, request
+from flask_login import login_required
 
+from application import roles_required
 from application.review import review, manager
 
 # Number of teams to display on one page
@@ -9,6 +11,8 @@ page_size = 10
 
 
 @review.route("/")
+@login_required
+@roles_required(["staff"])
 def index():
     page = int(request.args.get("page", 1))
     # status = request.args.get("status", "all")

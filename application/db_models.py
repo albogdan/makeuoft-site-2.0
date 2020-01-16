@@ -12,15 +12,24 @@ from application import login_manager
 # Import class to create and check password hashes
 from werkzeug.security import generate_password_hash, check_password_hash
 
+import datetime
+
 
 def _generate_uuid():
     return uuid.uuid4().hex
 
 
 class SerializerMixin:
+    @staticmethod
+    def _parse(val):
+        if isinstance(val, datetime.datetime):
+            return val.strftime("%Y-%m-%d %H:%M:%S")
+
+        return val
+
     def serialize(self):
         column_attrs = inspect(self).mapper.column_attrs.keys()
-        return {attr: getattr(self, attr) for attr in column_attrs}
+        return {attr: self._parse(getattr(self, attr)) for attr in column_attrs}
 
     def json(self):
         return jsonify(self.serialize())
@@ -96,15 +105,18 @@ class User(SerializerMixin, UserMixin, db.Model):
         return "admin" in [role.name for role in self.roles]
 
     def serialize(self):
-        return {
+        obj = {
             "first_name": self.first_name,
             "last_name": self.last_name,
-            "email": self.email,
-            "created_date": self.created_date,
-            "updated_date": self.updated_date,
             "id_provided": self.id_provided,
-            "team": self.team.team_code,
+            "uuid": self.uuid,
+            "status": self.application[0].status,
         }
+
+        if self.team_id:
+            obj["team_code"] = self.team.team_code
+
+        return obj
 
 
 class PasswordResets(db.Model):
@@ -151,7 +163,10 @@ class Team(SerializerMixin, db.Model):
     def serialize(self):
         obj = super().serialize()
         obj["members"] = [
-            {"id": user.id, "first_name": user.first_name, "last_name": user.last_name}
+            {"uuid": user.uuid,
+             "first_name": user.first_name,
+             "last_name": user.last_name,
+             "status": user.application[0].status}
             for user in self.team_members
         ]
         return obj

@@ -4,6 +4,8 @@ from sqlalchemy.sql.expression import func
 from application import db
 import application.db_models as models
 
+reviewer_fields = {"status", "evaluator_comments", "experience", "interest", "quality"}
+
 
 def get_teams():
     """
@@ -109,3 +111,24 @@ def get_teams_and_users(limit=None, offset=None):
             results = results.offset(offset)
 
     return results
+
+
+def get_user(uuid):
+    return models.User.query.filter(models.User.uuid == uuid).first()
+
+
+def set_user_application_attribute(uuid, attr, val):
+    user = get_user(uuid)
+    setattr(user.application[0], attr, val)
+    db.session.commit()
+
+
+def get_team(team_code):
+    return models.Team.query.filter(models.Team.team_code == team_code).first()
+
+
+def set_team_application_attribute(team_code, attr, val):
+    team = get_team(team_code)
+    for user in team.team_members:
+        setattr(user.application[0], attr, val)
+    db.session.commit()

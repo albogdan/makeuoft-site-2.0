@@ -22,9 +22,10 @@
 
 {% macro generate_table_row(user) %}
     {% set application = user.application[0] %}
+    {% set status = application.status if application.status else "waiting" %}
     <tr data-uid="{{ user.uuid }}">
         <td>
-            <span class="status {{ application.status }}">{{ application.status }}</span>
+            <span class="status {{ status }}">{{ status }}</span>
         </td>
         <td>{{ user.first_name }}</td>
         <td>{{ user.last_name }}</td>
@@ -61,7 +62,7 @@
     {% set common_application = team.team_members[0].application[0] %}
     <div class="grid-x">
         {#set data-processed="true" to start minimized#}
-        <div class="cell small-12 team-title" team-code="{{ team.team_code }}" data-processed="false">
+        <div class="cell small-12 team-title">
             <div class="callout">
                 <button class="close-button" aria-label="Close alert" type="button" toggle="{{ team.team_code }}" toggle-closed="false" onclick="toggleTable(this);">
                     <span aria-hidden="true">&#8211;</span>
@@ -73,7 +74,7 @@
                     <a class="button alert" onclick="update('{{ team.team_code }}', 'team', {status: 'rejected'})">Reject</a>
                     <form id="feedback-{{ team.team_code }}">
                         <span>Reviewer comments:</span>
-                        <textarea name="reviewer_comments">{{ common_application.reviewer_comments }}</textarea>
+                        <textarea name="evaluator_comments">{{ common_application.evaluator_comments if common_application.evaluator_comments }}</textarea>
                         <span>Experience:</span>
                         {{ generate_scoring_dropdown("experience", common_application.experience) }}
                         <span>Interest:</span>
@@ -102,8 +103,7 @@
 {% macro generate_individual_table(user) %}
     {% set application = user.application[0] %}
     <div class="grid-x">
-        {#set data-processed="true" to start minimized#}
-        <div class="cell small-12 team-title" user-id="{{ user.uuid }}" data-processed="false">
+        <div class="cell small-12 team-title">
             <div class="callout">
                 <button class="close-button" aria-label="Close alert" type="button" toggle="{{ user.uuid }}" toggle-closed="false" onclick="toggleTable(this);">
                     <span aria-hidden="true">&#8211;</span>
@@ -115,11 +115,11 @@
                     <a class="button alert" onclick="update('{{ user.uuid }}', 'user', {status: 'rejected'})">Reject</a>
                     <form id="feedback-{{ user.uuid }}">
                         <span>Reviewer comments:</span>
-                        <textarea name="reviewer_comments">{{ application.reviewer_comments }}</textarea>
+                        <textarea name="evaluator_comments">{{ application.evaluator_comments if application.evaluator_comments }}</textarea>
                         <span>Experience:</span>
                         {{ generate_scoring_dropdown("experience", application.experience) }}
                         <span>Interest:</span>
-                        {{ generate_scoring_dropdown("intereste", application.interest) }}
+                        {{ generate_scoring_dropdown("interest", application.interest) }}
                         <span>Quality:</span>
                         {{ generate_scoring_dropdown("quality", application.quality) }}
                         <button class="button primary add-button" onclick="addFeedback('{{ user.uuid }}', 'user');">Add</button>
@@ -127,7 +127,7 @@
                 </div>
             </div>
         </div>
-        <div class="cell small-12 team-body" name="{{ user.uuid }}">
+        <div class="cell small-12 team-body" data-id="{{ user.uuid }}">
             <table class="info-table scroll">
                 {{ generate_table_head() }}
                 <tbody data-uid="{{ user.uuid }}">

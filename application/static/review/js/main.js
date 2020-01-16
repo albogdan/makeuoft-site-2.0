@@ -1,6 +1,6 @@
 function toggleTable(e) {
     const id = $(e).attr('toggle');
-    $(`.team-body[name=${id}]`).slideToggle('fast');
+    $(`.team-body[data-id=${id}]`).slideToggle('fast');
     $(e).parent().children('.reviewer-actions').fadeToggle('fast');
     if ($(e).attr('toggle-closed') === 'true') {
         $(e).children('span').text('–');
@@ -11,8 +11,14 @@ function toggleTable(e) {
     }
 }
 
-
-
+function setUserStatus(uuid, status) {
+    $(`tr[data-uid=${uuid}]`)
+        .find(".status")
+        .html(status)
+        .removeClass()
+        .addClass("status")
+        .addClass(status);
+}
 
 function update(id, type, data) {
     /*
@@ -31,24 +37,40 @@ function update(id, type, data) {
     */
     console.log(id, type, data);
 
-    if (data.hasOwnProperty("status")) {
-        if (type === "user") {
-            $(`tr[data-uid=${id}]`)
-                .find(".status")
-                .html(data.status)
-                .removeClass()
-                .addClass("status")
-                .addClass(data.status);
-        } else if (type === "team") {
-            $(`tbody[data-team=${id}]`)
-                .find(".status")
-                .html(data.status)
-                .removeClass()
-                .addClass("status")
-                .addClass(data.status);
-        }
+    //TODO: Make URL dynamic depending on environment
+    if (type === "team") {
+        $.ajax({
+            method: "PATCH",
+            url: `/api/teams/${id}/`,
+            contentType: "application/json",
+            data: JSON.stringify(data),
+        })
+            .done(response => {
+                for (let user of response.members) {
+                    setUserStatus(user.uuid, user.status);
+                }
+            })
+            .fail((jqXHR, textStatus) => {
+                alert("Something went wrong. Let the webmasters know.");
+                console.log(jqXHR);
+                console.log(textStatus);
+            });
+    } else if (type === "user") {
+        $.ajax({
+            method: "PATCH",
+            url: `/api/users/${id}/`,
+            contentType: "application/json",
+            data: JSON.stringify(data),
+        })
+            .done(response => {
+                setUserStatus(response.uuid, response.status)
+            })
+            .fail((jqXHR, textStatus) => {
+                alert("Something went wrong. Let the webmasters know.");
+                console.log(jqXHR);
+                console.log(textStatus);
+            });
     }
-
 }
 
 function addFeedback(id, type) {
