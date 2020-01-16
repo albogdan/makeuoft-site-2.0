@@ -33,7 +33,7 @@
         <td>{{ application.q1_prev_hackathon }}</td>
         <td>{{ application.q2_why_participate }}</td>
         <td>{{ application.q3_hardware_exp }}</td>
-        <td>{{ application.resume_path }}</td>
+        <td><a href="resumes/{{ user.uuid }}/" target="_blank">Open</a></td>
         <td>{{ application.study_level }}</td>
         <td>{{ application.school }}</td>
         <td>{{ application.graduation_year }}</td>
@@ -143,6 +143,10 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8">
     <title>MakeUofT Review Portal</title>
+    <script>
+        const apiUrl = "{{ api_url }}";
+    </script>
+
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <!-- Foundation JS -->

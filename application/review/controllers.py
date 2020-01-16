@@ -1,6 +1,7 @@
 import math
+import os
 
-from flask import render_template, request
+from flask import render_template, request, send_file, current_app
 from flask_login import login_required
 
 from application import roles_required
@@ -27,9 +28,31 @@ def index():
     num_pages = math.ceil(teams_and_users_query.count() / page_size)
     teams_and_users = teams_and_users_query.limit(page_size).offset(offset).all()
 
+    api_url = (
+        "/api"
+        if "ENV" in current_app.config and current_app.config["ENV"] == "development"
+        else "/makeuoft/api"
+    )
+
     return render_template(
         "review/portal.html",
         teams_and_users=teams_and_users,
         page=page,
         num_pages=num_pages,
+        api_url=api_url,
     )
+
+
+@review.route("/resumes/<uuid>/")
+@login_required
+@roles_required(["staff"])
+def resumes(uuid):
+    user = manager.get_user(uuid)
+    resume_filename = user.application[0].resume_path.split("/")[-1]
+    resume_path = os.path.abspath(
+        os.path.join(current_app.config["UPLOAD_FOLDER"], resume_filename)
+    )
+    if not os.path.isfile(resume_path):
+        return "Resume not found", 404
+
+    return send_file(resume_path)

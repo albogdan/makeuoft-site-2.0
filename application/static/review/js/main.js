@@ -37,11 +37,10 @@ function update(id, type, data) {
     */
     console.log(id, type, data);
 
-    //TODO: Make URL dynamic depending on environment
     if (type === "team") {
         $.ajax({
             method: "PATCH",
-            url: `/api/teams/${id}/`,
+            url: `${apiUrl}/teams/${id}/`,
             contentType: "application/json",
             data: JSON.stringify(data),
         })
@@ -58,7 +57,7 @@ function update(id, type, data) {
     } else if (type === "user") {
         $.ajax({
             method: "PATCH",
-            url: `/api/users/${id}/`,
+            url: `${apiUrl}/users/${id}/`,
             contentType: "application/json",
             data: JSON.stringify(data),
         })
