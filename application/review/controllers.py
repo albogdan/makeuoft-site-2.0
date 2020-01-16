@@ -16,11 +16,18 @@ page_size = 10
 @roles_required(["staff"])
 def index():
     page = int(request.args.get("page", 1))
-    # status = request.args.get("status", "all")
+    status = request.args.get("status", "all").lower()
+    statuses = [
+        ("All", "all", status == "all"),
+        ("Waiting", "waiting", status == "waiting"),
+        ("Waitlisted", "waitlisted", status == "waitlisted"),
+        ("Accepted", "accepted", status == "accepted"),
+        ("Rejected", "rejected", status == "rejected"),
+    ]
 
     offset = (page - 1) * page_size
 
-    teams_and_users_query = manager.get_teams_and_users()
+    teams_and_users_query = manager.get_teams_and_users(status=status)
     num_pages = math.ceil(teams_and_users_query.count() / page_size)
     teams_and_users = teams_and_users_query.limit(page_size).offset(offset).all()
 
@@ -36,6 +43,7 @@ def index():
         page=page,
         num_pages=num_pages,
         api_url=api_url,
+        statuses=statuses,
     )
 
 

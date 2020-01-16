@@ -177,8 +177,14 @@
                             {% endif %}
                         {% endfor %}
                     </select>
-                    <select name="status">
-                        <option>All</option>
+                    <select name="status" style="width: 150px;">
+                        {% for name, value, selected in statuses %}
+                            {% if selected %}
+                                <option value="{{ value }}" selected="selected">{{ name }}</option>
+                            {% else %}
+                                <option value="{{ value }}">{{ name }}</option>
+                            {% endif %}
+                        {% endfor %}
                     </select>
                     <button class="button primary" style="display: inline-block;" type="submit">Go</button>
                 </form>
