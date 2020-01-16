@@ -102,8 +102,6 @@ def get_teams_and_users(limit=None, offset=None):
         .outerjoin(models.User, orderings.c.user_id == models.User.id)
         .outerjoin(models.Team, orderings.c.team_id == models.Team.id)
         .order_by(orderings.c.submitted_time.asc())
-        .limit(limit)
-        .offset(offset)
     )
 
     if limit:
