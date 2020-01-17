@@ -115,6 +115,11 @@
 }
 .team-title .reviewer-actions .add-button {
   margin-left: 1em;
+  transition: background-color 500ms ease-in-out;
+}
+.team-title .reviewer-actions .add-button:focus {
+  background-color: green;
+  transition: background-color 500ms ease-in-out;
 }
 .team-title .reviewer-actions form {
   display: inline-block;
