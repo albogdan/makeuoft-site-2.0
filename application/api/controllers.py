@@ -1,8 +1,10 @@
 from flask import request, jsonify
 from application.db_models import *
 
-from application.api import api
 from application import db
+from application.api import api
+from application.review import manager as review_manager
+
 import json
 from flask_login import login_required, current_user
 
@@ -37,7 +39,7 @@ def teams():
         return team.json(), 201
 
 
-@api.route("/teams/<team_code>/", methods=["GET", "POST"])
+@api.route("/teams/<team_code>/", methods=["GET", "PATCH"])
 @cross_origin()
 @login_required
 def teams_detail(team_code):
@@ -49,6 +51,18 @@ def teams_detail(team_code):
             return Team.query.filter_by(team_code=team_code).first().json()
         else:
             return "Not allowed", 403
+
+    elif request.method == "PATCH":
+        if not current_user.is_allowed(["admin", "staff"]):
+            return "Not allowed", 403
+
+        for field in review_manager.reviewer_fields:
+            if field in request.json:
+                review_manager.set_team_application_attribute(
+                    team_code, field, request.json[field], evaluator_id=current_user.id
+                )
+
+        return review_manager.get_team(team_code).json()
 
 
 @api.route("/users/", methods=["GET"])
@@ -64,42 +78,17 @@ def users():
 @cross_origin()
 @login_required
 def users_detail(uuid):
-    if not (current_user.uuid == uuid or current_user.is_admin):
-        return "Not allowed", 403
-
     if request.method == "PATCH":
-        # We may be able to work with the current_user object directly, but just in case
-        user = User.query.filter_by(id=current_user.id).first()
+        if not current_user.is_allowed(["admin", "staff"]):
+            return "Not allowed", 403
 
-        data = json.loads(request.data)
+        for field in review_manager.reviewer_fields:
+            if field in request.json:
+                review_manager.set_user_application_attribute(
+                    uuid, field, request.json[field], evaluator_id=current_user.id
+                )
 
-        try:
-            team_code = data["team_code"]
-
-            if team_code is not None:
-                team = Team.query.filter_by(team_code=team_code).first()
-                if not team:
-                    return f"Team {team_code} not found", 404
-
-                if user.team_code != team_code:
-                    # Remove the user from their current team, and add them to the new one
-                    if len(team.team_members) >= Team.max_members:
-                        return f"Team {team_code} is full", 400
-
-                    user.team = team
-                    db.session.commit()
-                    return "Team changed", 200
-
-                return "No change", 200
-            else:
-                # team_code is null, remove the user from their team
-                user.team = None
-                db.session.commit()
-
-        except KeyError:
-            pass
-
-        return "", 200
+        return review_manager.get_user(uuid).json()
 
 
 # === API routes in use by the hardware signout site ===

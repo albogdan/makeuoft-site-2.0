@@ -1,0 +1,219 @@
+{% macro generate_table_head() %}
+    <thead>
+        <tr>
+            <th width="100">Status</th>
+            <th width="150">First name</th>
+            <th width="150">Last name</th>
+            <th width="200">Preferred name</th>
+            <th width="400">Question 1: Past Hackathons</th>
+            <th width="400">Question 2: Interest</th>
+            <th width="400">Question 3: Hardware Experience</th>
+            <th width="100">Resume</th>
+            <th width="140">Study level</th>
+            <th width="200">School</th>
+            <th width="150">Graduation Year</th>
+            <th width="180">Program</th>
+            <th width="125">Birthday</th>
+            <th width="175">Referral source</th>
+            <th width="100">Actions</th>
+        </tr>
+    </thead>
+{% endmacro %}
+
+{% macro generate_table_row(user) %}
+    {% set application = user.application[0] %}
+    {% set status = application.status if application.status else "waiting" %}
+    <tr data-uid="{{ user.uuid }}">
+        <td>
+            <span class="status {{ status }}">{{ status }}</span>
+        </td>
+        <td>{{ user.first_name }}</td>
+        <td>{{ user.last_name }}</td>
+        <td>{{ application.preferred_name }}</td>
+        <td>{{ application.q1_prev_hackathon }}</td>
+        <td>{{ application.q2_why_participate }}</td>
+        <td>{{ application.q3_hardware_exp }}</td>
+        <td><a href="resumes/{{ user.uuid }}/" target="_blank">Open</a></td>
+        <td>{{ application.study_level }}</td>
+        <td>{{ application.school }}</td>
+        <td>{{ application.graduation_year }}</td>
+        <td>{{ application.program }}</td>
+        <td>{{ application.birthday }}</td>
+        <td>{{ application.referral_source }}</td>
+        <td><a onclick="update('{{ user.uuid }}', 'user', {status: 'accepted'})">Accept</a></td>
+    </tr>
+{% endmacro %}
+
+{% macro generate_scoring_dropdown(name, selected=1) %}
+    {% set selected = selected or 1 %}
+    <select name="{{ name }}">
+    {% for i in range(1, 11) %}
+        {% if i == selected %}
+            <option selected="selected">{{ i }}</option>
+        {% else %}
+            <option>{{ i }}</option>
+        {% endif %}
+    {% endfor %}
+    </select>
+{% endmacro %}
+
+{% macro generate_team_table(team) %}
+    {# Some things like comments and scores are common to the team. Use the first application for them #}
+    {% set common_application = team.team_members[0].application[0] %}
+    <div class="grid-x">
+        {#set data-processed="true" to start minimized#}
+        <div class="cell small-12 team-title">
+            <div class="callout">
+                <button class="close-button" aria-label="Close alert" type="button" toggle="{{ team.team_code }}" toggle-closed="false" onclick="toggleTable(this);">
+                    <span aria-hidden="true">&#8211;</span>
+                </button>
+                <p>Team Code: {{ team.team_code }}</p>
+                <div class="reviewer-actions">
+                    <a class="button success" onclick="update('{{ team.team_code }}', 'team', {status: 'accepted'})">Accept</a>
+                    <a class="button warning" onclick="update('{{ team.team_code }}', 'team', {status: 'waitlisted'})">Waitlist</a>
+                    <a class="button alert" onclick="update('{{ team.team_code }}', 'team', {status: 'rejected'})">Reject</a>
+                    <form id="feedback-{{ team.team_code }}">
+                        <span>Reviewer comments:</span>
+                        <textarea name="evaluator_comments">{{ common_application.evaluator_comments if common_application.evaluator_comments }}</textarea>
+                        <span>Experience:</span>
+                        {{ generate_scoring_dropdown("experience", common_application.experience) }}
+                        <span>Interest:</span>
+                        {{ generate_scoring_dropdown("interest", common_application.interest) }}
+                        <span>Quality:</span>
+                        {{ generate_scoring_dropdown("quality", common_application.quality) }}
+                        <button class="button primary add-button" onclick="addFeedback('{{ team.team_code}}', 'team');">Add</button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+        <div class="cell small-12 team-body" name="{{ team.id }}">
+            <table class="info-table scroll">
+                {{ generate_table_head() }}
+                <tbody data-team="{{ team.team_code }}">
+                    {% for user in team.team_members %}
+                        {{ generate_table_row(user) }}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro generate_individual_table(user) %}
+    {% set application = user.application[0] %}
+    <div class="grid-x">
+        <div class="cell small-12 team-title">
+            <div class="callout">
+                <button class="close-button" aria-label="Close alert" type="button" toggle="{{ user.uuid }}" toggle-closed="false" onclick="toggleTable(this);">
+                    <span aria-hidden="true">&#8211;</span>
+                </button>
+                <p>User ID: {{ user.uuid }}</p>
+                <div class="reviewer-actions">
+                    <a class="button success" onclick="update('{{ user.uuid }}', 'user', {status: 'accepted'})">Accept</a>
+                    <a class="button warning" onclick="update('{{ user.uuid }}', 'user', {status: 'waitlisted'})">Waitlist</a>
+                    <a class="button alert" onclick="update('{{ user.uuid }}', 'user', {status: 'rejected'})">Reject</a>
+                    <form id="feedback-{{ user.uuid }}">
+                        <span>Reviewer comments:</span>
+                        <textarea name="evaluator_comments">{{ application.evaluator_comments if application.evaluator_comments }}</textarea>
+                        <span>Experience:</span>
+                        {{ generate_scoring_dropdown("experience", application.experience) }}
+                        <span>Interest:</span>
+                        {{ generate_scoring_dropdown("interest", application.interest) }}
+                        <span>Quality:</span>
+                        {{ generate_scoring_dropdown("quality", application.quality) }}
+                        <button class="button primary add-button" onclick="addFeedback('{{ user.uuid }}', 'user');">Add</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="cell small-12 team-body" data-id="{{ user.uuid }}">
+            <table class="info-table scroll">
+                {{ generate_table_head() }}
+                <tbody data-uid="{{ user.uuid }}">
+                    {{ generate_table_row(user) }}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endmacro %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8">
+    <title>MakeUofT Review Portal</title>
+    <script>
+        const apiUrl = "{{ api_url }}";
+    </script>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <!-- Foundation JS -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/foundation.min.js') }}" ></script>
+    <!-- Site JS -->
+    <script type="text/javascript" src="{{ url_for('static', filename='review/js/main.js') }}"></script>
+
+    <!-- Foundation CSS -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/css/foundation.min.css') }}" />
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <!-- Site CSS -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='review/styles/css/styles.css') }}" />
+</head>
+<body>
+    <div class="top-bar">
+        <div class="top-bar-left">
+            <ul class="menu">
+                <li class="menu-text">MakeUofT Application Review</li>
+                <form method="GET">
+                    <label for="page" style="display: inline-block; font-size: 16px;">Page:</label>
+                    <select name="page" id="page">
+                        {% for i in range(1, num_pages + 1) %}
+                            {% if i == page %}
+                                <option selected="selected">{{ i }}</option>
+                            {% else %}
+                                <option>{{ i }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    <select name="status" style="width: 150px;">
+                        {% for name, value, selected in statuses %}
+                            {% if selected %}
+                                <option value="{{ value }}" selected="selected">{{ name }}</option>
+                            {% else %}
+                                <option value="{{ value }}">{{ name }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    <button class="button primary" style="display: inline-block;" type="submit">Go</button>
+                </form>
+            </ul>
+        </div>
+        <nav class="top-bar-right">
+            <ul class="menu">
+                <li id="logout-a"><a href="{{ url_for('auth.logout') }}">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div class="container">
+        {% for submitted_time, user, team in teams_and_users %}
+            {% if team is not none %}
+                {{ generate_team_table(team)}}
+            {% elif user is not none %}
+                {{ generate_individual_table(user) }}
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    <script>
+        $(document).foundation();
+
+        $(document).ready(function() {
+            $(".reviewer-actions form").submit(function(e) {
+                e.preventDefault();
+            });
+        });
+    </script>
+</body>
+</html>
