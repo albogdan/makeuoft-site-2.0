@@ -138,7 +138,13 @@
         }
 
         .add-button {
-            margin-left: 1em; 
+            margin-left: 1em;
+            transition: background-color 500ms ease-in-out;
+        }
+
+        .add-button:focus {
+            background-color: green;
+            transition: background-color 500ms ease-in-out;
         }
 
         form {

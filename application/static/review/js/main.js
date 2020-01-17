@@ -20,7 +20,7 @@ function setUserStatus(uuid, status) {
         .addClass(status);
 }
 
-function update(id, type, data) {
+function update(id, type, data, callback) {
     /*
     `id` is the identifier for either a team (team code) or user (uuid)
     `type` is one of "team" or "user"
@@ -35,7 +35,6 @@ function update(id, type, data) {
         }
     Not all database columns need to be set
     */
-    console.log(id, type, data);
 
     if (type === "team") {
         $.ajax({
@@ -48,6 +47,7 @@ function update(id, type, data) {
                 for (let user of response.members) {
                     setUserStatus(user.uuid, user.status);
                 }
+                if (callback) callback();
             })
             .fail((jqXHR, textStatus) => {
                 alert("Something went wrong. Let the webmasters know.");
@@ -62,7 +62,8 @@ function update(id, type, data) {
             data: JSON.stringify(data),
         })
             .done(response => {
-                setUserStatus(response.uuid, response.status)
+                setUserStatus(response.uuid, response.status);
+                if (callback) callback();
             })
             .fail((jqXHR, textStatus) => {
                 alert("Something went wrong. Let the webmasters know.");
@@ -82,6 +83,8 @@ function addFeedback(id, type) {
     for (let i of serializedForm) {
         data[i.name] = i.value;
     }
-    update(id, type, data);
+    update(id, type, data, () => {
+        $(`button[toggle=${id}]`).click();
+    });
 }
 

@@ -61,7 +61,6 @@
     {# Some things like comments and scores are common to the team. Use the first application for them #}
     {% set common_application = team.team_members[0].application[0] %}
     <div class="grid-x">
-        {#set data-processed="true" to start minimized#}
         <div class="cell small-12 team-title">
             <div class="callout">
                 <button class="close-button" aria-label="Close alert" type="button" toggle="{{ team.team_code }}" toggle-closed="false" onclick="toggleTable(this);">
@@ -87,7 +86,7 @@
                 </div>
             </div>
         </div>
-        <div class="cell small-12 team-body" name="{{ team.id }}">
+        <div class="cell small-12 team-body" data-id="{{ team.team_code }}">
             <table class="info-table scroll">
                 {{ generate_table_head() }}
                 <tbody data-team="{{ team.team_code }}">
