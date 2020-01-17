@@ -3,7 +3,7 @@ from application.db_models import *
 
 from application import db
 from application.api import api
-from application.review import manager
+from application.review import manager as review_manager
 
 import json
 from flask_login import login_required, current_user
@@ -56,13 +56,13 @@ def teams_detail(team_code):
         if not current_user.is_allowed(["admin", "staff"]):
             return "Not allowed", 403
 
-        for field in manager.reviewer_fields:
+        for field in review_manager.reviewer_fields:
             if field in request.json:
-                manager.set_team_application_attribute(
+                review_manager.set_team_application_attribute(
                     team_code, field, request.json[field], evaluator_id=current_user.id
                 )
 
-        return manager.get_team(team_code).json()
+        return review_manager.get_team(team_code).json()
 
 
 @api.route("/users/", methods=["GET"])
@@ -82,13 +82,13 @@ def users_detail(uuid):
         if not current_user.is_allowed(["admin", "staff"]):
             return "Not allowed", 403
 
-        for field in manager.reviewer_fields:
+        for field in review_manager.reviewer_fields:
             if field in request.json:
-                manager.set_user_application_attribute(
+                review_manager.set_user_application_attribute(
                     uuid, field, request.json[field], evaluator_id=current_user.id
                 )
 
-        return manager.get_user(uuid).json()
+        return review_manager.get_user(uuid).json()
 
 
 # === API routes in use by the hardware signout site ===
