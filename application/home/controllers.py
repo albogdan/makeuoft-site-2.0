@@ -147,11 +147,59 @@ def dashboard():
             rsvp_form = RSVPForm()
 
             if rsvp_form.validate_on_submit():
-                return "Nice"
+                user.application[0].rsvp_accepted = True
+                db.session.commit()
+
+                return render_template("users/accepted.html", user=user)
 
             return render_template(
                 "users/rsvp.html", user=current_user, rsvp_form=rsvp_form
             )
+
+        elif user.application[0].status == "accepted" and user.application[0].rsvp_accepted:
+            return render_template("users/accepted.html", user=user)
+
+        elif user.application[0].status == "rejected":
+            return render_template("users/rejected.html")
+
+        elif user.application[0].status == "waitlisted":
+            # Waitlisted users are still allowed to make and join a team
+            if not current_user.team:
+                join_team_form = JoinTeamForm()
+                if join_team_form.validate_on_submit():
+                    team = Team.query.filter_by(team_code=join_team_form.team_code.data).first()
+
+                    if not team:
+                        join_team_form.team_code.errors.append(
+                            f"Team {join_team_form.team_code.data} does not exist"
+                        )
+                    elif len(team.team_members) >= Team.max_members:
+                        join_team_form.team_code.errors.append(f"Team {team.team_code} is full")
+                    else:
+                        user.team = team
+                        db.session.commit()
+
+                        return redirect(url_for("home.dashboard"))
+
+                return render_template(
+                    "users/waitlisted.html",
+                    user=current_user,
+                    join_team_form=join_team_form,
+                )
+            else:
+                # If the user is on a team, setup the form to leave one
+                leave_team_form = LeaveTeamForm()
+                if leave_team_form.validate_on_submit():
+                    user.team = None
+                    db.session.commit()
+
+                    return redirect(url_for("home.dashboard"))
+
+                return render_template(
+                    "users/waitlisted.html",
+                    user=current_user,
+                    leave_team_form=leave_team_form,
+                )
 
     if not current_user.team:
         # If the user is not on a team, setup the form to join one
