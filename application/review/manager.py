@@ -131,20 +131,29 @@ def get_user(uuid):
     return models.User.query.filter(models.User.uuid == uuid).first()
 
 
-def set_user_application_attribute(uuid, attr, val, evaluator_id=None):
-    user = get_user(uuid)
+def _modify_user(user, attr, val, evaluator_id=None):
     if (
         attr == "status"
-        and user.application[0].status == "accpeted"
+        and user.application[0].status in {"accepted", "rejected"}
         and user.application[0].decision_sent
     ):
-        # Status can't be changed for accepted users
+        # Status can't be changed for accepted or rejected users after notifying them
         return
+
+    if attr == "status" and user.application[0].status != val:
+        # When the user is waitlisted, allow their application status to be changed,
+        # and allow emails to be sent to them again
+        user.application[0].decision_sent = False
 
     setattr(user.application[0], attr, val)
     user.application[0].date_reviewed = date.today()
     user.application[0].evaluator_id = evaluator_id
     db.session.commit()
+
+
+def set_user_application_attribute(uuid, attr, val, evaluator_id=None):
+    user = get_user(uuid)
+    _modify_user(user, attr, val, evaluator_id)
 
 
 def get_team(team_code):
@@ -154,21 +163,20 @@ def get_team(team_code):
 def set_team_application_attribute(team_code, attr, val, evaluator_id=None):
     team = get_team(team_code)
     for user in team.team_members:
-        if (
-            attr == "status"
-            and user.application[0].status == "accpeted"
-            and user.application[0].decision_sent
-        ):
-            # Status can't be changed for accepted users
-            continue
-
-        setattr(user.application[0], attr, val)
-        user.application[0].date_reviewed = date.today()
-        user.application[0].evaluator_id = evaluator_id
-    db.session.commit()
+        _modify_user(user, attr, val, evaluator_id)
 
 
 def send_emails_by_status(status, date_start, date_end):
+    """
+    Send emails informing applicants of the decision on their application
+
+    Sending emails will set the `decision_sent` flag to True on the user's application,
+    after which no further decision emails can be sent to them. This flag also prevents
+    the user's status from being changed if it was accepted or rejected, but it can be
+    changed if they were waitlisted. Doing so will set the `decision_sent` flag back to
+    False, allowing them to be notified again. (This happens above in _modify_user)
+
+    """
     status_to_template = {
         "accepted": (
             "Congratulations, you’ve been accepted to MakeUofT 2020! ",
@@ -185,15 +193,12 @@ def send_emails_by_status(status, date_start, date_end):
         .filter(models.Application.status == status)
         .filter(models.Application.date_reviewed >= date_start)
         .filter(models.Application.date_reviewed <= date_end)
+        .filter(models.Application.decision_sent.is_(False))
     ).all()
 
     num_sent = 0
 
     for user in users:
-        if user.application[0].status in {"accepted", "rejected"} and user.application[0].decision_sent:
-            # Don't resend accepted or rejected emails, but allow for waitlisted to be resent
-            continue
-
         msg = Message(status_to_template[status][0], recipients=[user.email])
         msg.html = render_template(status_to_template[status][1], user=user)
         if current_app.config["DEBUG"]:
