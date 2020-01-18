@@ -6,6 +6,7 @@ from flask_login import login_required
 
 from application import roles_required
 from application.review import review, manager
+from application.review.forms import MailerForm
 
 # Number of teams to display on one page
 page_size = 10
@@ -60,3 +61,30 @@ def resumes(uuid):
         return "Resume not found", 404
 
     return send_file(resume_path)
+
+
+@review.route("/mailer/", methods=["GET", "POST"])
+@login_required
+@roles_required(["admin"])
+def mailer():
+    """
+    View to manage sending of emails to applicants by status
+    """
+
+    status_to_template = {
+        "accepted": "mails/accepted.html",
+        "rejected": "mails/rejected.html",
+        "waitlisted": "mails/waitlisted.html",
+    }
+
+    form = MailerForm()
+
+    if form.validate_on_submit():
+        try:
+            template = status_to_template[form.mailer.data]
+        except KeyError:
+            return "Invalid applicant status", 400
+
+        return render_template(template)
+
+    return render_template("review/mailer.html", form=form)

@@ -6,6 +6,11 @@ from sqlalchemy.sql.expression import func
 from application import db
 import application.db_models as models
 
+from application import mail
+from flask_mail import Message
+
+from flask import render_template
+
 reviewer_fields = {"status", "evaluator_comments", "experience", "interest", "quality"}
 
 
@@ -24,12 +29,13 @@ def get_teams(status="all"):
     submission time of a member of the team
     """
 
-    q = (
-        models.Team.query.join(models.User)
-        .join(models.Application, models.Application.user_id == models.User.id)
+    q = models.Team.query.join(models.User).join(
+        models.Application, models.Application.user_id == models.User.id
     )
     q = filter_by_application_status(q, status)
-    q = q.group_by(models.User.team_id).order_by(func.max(models.Application.submitted_time).asc())
+    q = q.group_by(models.User.team_id).order_by(
+        func.max(models.Application.submitted_time).asc()
+    )
 
     return q
 
@@ -46,12 +52,9 @@ def get_teamless_users(status="all"):
     time.
     """
 
-    q = (
-        models.User.query.join(
-            models.Application, models.Application.user_id == models.User.id
-        )
-        .filter(models.User.team_id.is_(None))
-    )
+    q = models.User.query.join(
+        models.Application, models.Application.user_id == models.User.id
+    ).filter(models.User.team_id.is_(None))
     q = filter_by_application_status(q, status)
     q = q.order_by(models.Application.submitted_time.asc())
 
@@ -147,3 +150,30 @@ def set_team_application_attribute(team_code, attr, val, evaluator_id=None):
         user.application[0].date_reviewed = date.today()
         user.application[0].evaluator_id = evaluator_id
     db.session.commit()
+
+
+def send_emails_by_status(status):
+    status_to_template = {
+        "accepted": ("You've been accepted to MakeUofT 2020!", "mails/accepted.html"),
+        "rejected": (
+            "We couldn't accept you into MakeUofT 2020",
+            "mails/rejected.html",
+        ),
+        "waitlisted": (
+            "You're on the waitlist to MakeUofT 2020",
+            "mails/waitlisted.html",
+        ),
+    }
+
+    users = models.User.query.join(
+        models.Application, models.Application.user_id == models.User.id
+    ).filter(models.Application.status == status)
+
+    for user in users:
+        # Send the verification email
+        msg = Message(status_to_template[status][0], recipients=[user.email])
+        msg.html = render_template(
+            status_to_template[status][1],
+            preferred_name=user.application[0].preferred_name,
+        )
+        mail.send(msg)
