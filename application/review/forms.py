@@ -31,9 +31,9 @@ class MailerForm(FlaskForm):
         "Applicant statuses to send to",
         choices=[
             ("", ""),
-            ("Accepted", "accepted"),
-            ("Waitlisted", "waitlisted"),
-            ("Rejected", "rejected"),
+            ("accepted", "Accepted"),
+            ("waitlisted", "Waitlisted"),
+            ("rejected", "Rejected"),
         ],
         validators=[DataRequired(),],
     )

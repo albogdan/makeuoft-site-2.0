@@ -70,10 +70,11 @@ def mailer():
     """
     View to manage sending of emails to applicants by status
     """
+    num_sent = None
 
     form = MailerForm()
 
     if form.validate_on_submit():
-        manager.send_emails_by_status(form.mailer.data, form.date_start.data, form.date_end.data)
+        num_sent = manager.send_emails_by_status(form.mailer.data, form.date_start.data, form.date_end.data)
 
-    return render_template("review/mailer.html", form=form)
+    return render_template("review/mailer.html", form=form, num_sent=num_sent)

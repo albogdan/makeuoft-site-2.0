@@ -187,12 +187,23 @@ def send_emails_by_status(status, date_start, date_end):
         .filter(models.Application.date_reviewed <= date_end)
     ).all()
 
+    num_sent = 0
+
     for user in users:
-        # Send the verification email
+        if user.application[0].status in {"accepted", "rejected"} and user.application[0].decision_sent:
+            # Don't resend accepted or rejected emails, but allow for waitlisted to be resent
+            continue
+
         msg = Message(status_to_template[status][0], recipients=[user.email])
         msg.html = render_template(status_to_template[status][1], user=user)
         if current_app.config["DEBUG"]:
             print(msg)
         else:
             pass
-            # mail.send(msg)
+            mail.send(msg)
+        user.application[0].decision_sent = True
+        num_sent += 1
+
+    db.session.commit()
+
+    return num_sent

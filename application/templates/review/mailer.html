@@ -42,6 +42,10 @@
     <h1>Send Emails to Applicants</h1>
     <p>Sends the email from the corresponding template to applicants with the selected status, between the selected date range (inclusive).</p>
 
+    {% if num_sent is not none %}
+        <h4>Sent {{ num_sent }} messages</h4>
+    {% endif %}
+
     <form method="POST" novalidate>
         {{ form.hidden_tag() }}
 
