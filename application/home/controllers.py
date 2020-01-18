@@ -152,7 +152,7 @@ def dashboard():
                 return redirect(url_for("home.dashboard"))
 
         return render_template(
-            "users/dashboard.html", user=current_user, join_team_form=join_team_form
+            "users/post_application.html", user=current_user, join_team_form=join_team_form
         )
 
     else:
@@ -165,5 +165,5 @@ def dashboard():
             return redirect(url_for("home.dashboard"))
 
         return render_template(
-            "users/dashboard.html", user=current_user, leave_team_form=leave_team_form
+            "users/post_application.html", user=current_user, leave_team_form=leave_team_form
         )
