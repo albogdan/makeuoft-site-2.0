@@ -12,7 +12,12 @@ from flask import (
 from flask_login import login_required, current_user
 
 from application.db_models import *
-from application.auth.forms import ApplicationForm, JoinTeamForm, LeaveTeamForm
+from application.auth.forms import (
+    ApplicationForm,
+    JoinTeamForm,
+    LeaveTeamForm,
+    RSVPForm,
+)
 
 import re
 import os
@@ -133,6 +138,21 @@ def dashboard():
 
     user = User.query.filter_by(id=current_user.id).first()
 
+    if user.application[0].status:
+        if (
+            user.application[0].status == "accepted"
+            and user.application[0].rsvp_sent
+            and not user.application[0].rsvp_accepted
+        ):
+            rsvp_form = RSVPForm()
+
+            if rsvp_form.validate_on_submit():
+                return "Nice"
+
+            return render_template(
+                "users/rsvp.html", user=current_user, rsvp_form=rsvp_form
+            )
+
     if not current_user.team:
         # If the user is not on a team, setup the form to join one
         join_team_form = JoinTeamForm()
@@ -152,7 +172,9 @@ def dashboard():
                 return redirect(url_for("home.dashboard"))
 
         return render_template(
-            "users/post_application.html", user=current_user, join_team_form=join_team_form
+            "users/post_application.html",
+            user=current_user,
+            join_team_form=join_team_form,
         )
 
     else:
@@ -165,5 +187,7 @@ def dashboard():
             return redirect(url_for("home.dashboard"))
 
         return render_template(
-            "users/post_application.html", user=current_user, leave_team_form=leave_team_form
+            "users/post_application.html",
+            user=current_user,
+            leave_team_form=leave_team_form,
         )
