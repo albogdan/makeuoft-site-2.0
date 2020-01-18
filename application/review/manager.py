@@ -14,6 +14,17 @@ from flask import render_template, current_app
 reviewer_fields = {"status", "evaluator_comments", "experience", "interest", "quality"}
 
 
+def get_num_applications_with_status(status):
+    if status == "all":
+        q = models.Application.query
+    elif status == "waiting":
+        q = models.Application.query.filter(models.Application.status.is_(None))
+    else:
+        q = models.Application.query.filter(models.Application.status == status)
+
+    return q.count()
+
+
 def filter_by_application_status(q, status):
     if status == "all":
         return q

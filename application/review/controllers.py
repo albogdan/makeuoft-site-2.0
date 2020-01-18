@@ -31,6 +31,7 @@ def index():
     teams_and_users_query = manager.get_teams_and_users(status=status)
     num_pages = math.ceil(teams_and_users_query.count() / page_size)
     teams_and_users = teams_and_users_query.limit(page_size).offset(offset).all()
+    num_with_status = manager.get_num_applications_with_status(status)
 
     api_url = (
         "/api"
@@ -45,6 +46,7 @@ def index():
         num_pages=num_pages,
         api_url=api_url,
         statuses=statuses,
+        num_applications_with_status=num_with_status,
     )
 
 
