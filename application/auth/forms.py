@@ -127,7 +127,7 @@ class ApplicationForm(FlaskForm):
 
     tshirt_size = SelectField(
         "What is your T-shirt size?",
-        choices=[("", ""), ("s", "S"), ("m", "M"), ("l", "L"), ("xl", "XL"),],
+        choices=[("", ""), ("s", "S"), ("m", "M"), ("l", "L"), ("xl", "XL")],
         validators=[DataRequired()],
     )
 
@@ -266,6 +266,7 @@ class JoinTeamForm(FlaskForm):
     """
     Form that takes a team code to join
     """
+
     team_code = StringField("Enter team code:", validators=[DataRequired()])
     submit = SubmitField("Submit", render_kw={"class": "submit-btn"})
 
@@ -274,4 +275,15 @@ class LeaveTeamForm(FlaskForm):
     """
     Form to handle leaving the team - just a button
     """
+
     leave_team = SubmitField("Leave Team", render_kw={"class": "submit-btn"})
+
+
+class RSVPForm(FlaskForm):
+    """
+    From to handle RSVPing - just a button
+    """
+
+    rsvp = SubmitField(
+        "RSVP for MakeUofT!", render_kw={"class": "submit-btn", "style": "width: 100%;"}
+    )

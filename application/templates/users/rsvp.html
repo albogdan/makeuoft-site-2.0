@@ -1,0 +1,27 @@
+{% extends "users/base.html" %}
+
+{% block title %}RSVP for MakeUofT{% endblock %}
+
+{% block head_extends %}
+{% endblock %}
+
+{% block content %}
+    <div class="grid-container" id="wrapper">
+        <h1>RSVP for MakeUofT! &#x1F389;</h1>
+        <p>The MakeUofT team has reviewed your application, and we're excited to welcome you to MakeUofT 2020! To confirm your attendance, please RSVP below by <b>January 30 (11:59 PM EST)</b>, otherwise your spot will be given to other applicants.</p>
+        <p>Read our <a href="https://docs.google.com/document/d/1ycL-jpaXSTnz_VnXnR4OI7zTQDD3wLMQZlRmobNMMBg/edit?usp=sharing">participant package</a> for all the info regarding the event, and join our <a href="https://makeuoft2020.slack.com/join/shared_invite/enQtOTA2NTY0NzUxMDU2LTcxZGUxNDJhZjBmYzY2MzI1ZTk2MDhhODE1ZTM4NDE3MDEzMjgxNjliOTQ1Y2U2MDhmMDc0ZjNkNDFlM2M1MzQ">Slack channel</a> to get the latest updates leading up to and during the event! Stay tuned for more updates regarding detailed event logistics, and we hope to see you soon!</p>
+        {% if user.team_id is not none %}
+            <p>Note: If not all members of your team were accepted, we'll be considering them for Round 2.</p>
+        {% endif %}
+        <p>If you have any questions or concerns, please <a href="mailto:makeuoft@gmail.com">contact us</a>.</p>
+
+        <form method="POST">
+            {{ rsvp_form.hidden_tag() }}
+            <div class="grid-x">
+                <div class="small-12 medium-6 medium-offset-3 large-4 large-offset-4">
+                {{ rsvp_form.rsvp }}
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

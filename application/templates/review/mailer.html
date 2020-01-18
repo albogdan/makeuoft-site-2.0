@@ -1,0 +1,77 @@
+{% macro render_errors(field) %}
+    {% if field.errors %}
+        <span class="form-error" id="{{ field.id }}-error" style="display: inherit">
+        {% if field.errors|length == 1 %}
+            {{ field.errors[0] }}
+        {% else %}
+            <ul>
+                {% for error in field.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% else %}
+        <span class="form-error" id="{{ field.id }}-error">
+    {% endif %}
+    </span>
+{% endmacro %}
+
+{% macro render_field(field) %}
+    {% if field.errors %}
+        {{ field.label(class="is-invalid-label") }}
+        {{ render_errors(field) }}
+        {{ field(class="is-invalid-input") }}
+    {% else %}
+        {{ field.label }}
+        {{ render_errors(field) }}
+        {{ field }}
+    {% endif %}
+{% endmacro %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mailer</title>
+    <!-- Foundation CSS -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/css/foundation.min.css') }}" />
+</head>
+<body>
+
+<div class="grid-container">
+    <h1>Send Emails to Applicants</h1>
+    <p>Sends the email from the corresponding template to applicants with the selected status, between the selected date range (inclusive).</p>
+
+    {% if num_sent is not none %}
+        <h4>Sent {{ num_sent }} messages</h4>
+    {% endif %}
+
+    <form method="POST" novalidate>
+        {{ form.hidden_tag() }}
+
+        <div class="grid-x grid-padding-y">
+            <div class="cell small-12 medium-2">
+                {{ render_field(form.date_start) }}
+            </div>
+        </div>
+        <div class="grid-x grid-padding-y">
+            <div class="cell small-12 medium-2">
+                {{ render_field(form.date_end) }}
+            </div>
+        </div>
+        <div class="grid-x grid-padding-y">
+            <div class="cell small-12 medium-2">
+                {{ render_field(form.mailer) }}
+            </div>
+        </div>
+        <div class="grid-x grid-padding-y">
+            <div class="cell small-12 medium-2">
+                {{ form.submit }}
+            </div>
+        </div>
+    </form>
+</div>
+
+
+</body>
+</html>

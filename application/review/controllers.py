@@ -6,6 +6,7 @@ from flask_login import login_required
 
 from application import roles_required
 from application.review import review, manager
+from application.review.forms import MailerForm
 
 # Number of teams to display on one page
 page_size = 10
@@ -30,6 +31,7 @@ def index():
     teams_and_users_query = manager.get_teams_and_users(status=status)
     num_pages = math.ceil(teams_and_users_query.count() / page_size)
     teams_and_users = teams_and_users_query.limit(page_size).offset(offset).all()
+    num_with_status = manager.get_num_applications_with_status(status)
 
     api_url = (
         "/api"
@@ -44,6 +46,7 @@ def index():
         num_pages=num_pages,
         api_url=api_url,
         statuses=statuses,
+        num_applications_with_status=num_with_status,
     )
 
 
@@ -60,3 +63,20 @@ def resumes(uuid):
         return "Resume not found", 404
 
     return send_file(resume_path)
+
+
+@review.route("/mailer/", methods=["GET", "POST"])
+@login_required
+@roles_required(["admin"])
+def mailer():
+    """
+    View to manage sending of emails to applicants by status
+    """
+    num_sent = None
+
+    form = MailerForm()
+
+    if form.validate_on_submit():
+        num_sent = manager.send_emails_by_status(form.mailer.data, form.date_start.data, form.date_end.data)
+
+    return render_template("review/mailer.html", form=form, num_sent=num_sent)
