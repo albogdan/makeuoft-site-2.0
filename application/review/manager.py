@@ -198,16 +198,16 @@ def send_emails_by_status(status, date_start, date_end):
 
     num_sent = 0
 
-    for user in users:
-        msg = Message(status_to_template[status][0], recipients=[user.email])
-        msg.html = render_template(status_to_template[status][1], user=user)
-        if current_app.config["DEBUG"]:
-            print(msg)
-        else:
-            pass
-            mail.send(msg)
-        user.application[0].decision_sent = True
-        num_sent += 1
+    with mail.connect() as conn:
+        for user in users:
+            msg = Message(status_to_template[status][0], recipients=[user.email])
+            msg.html = render_template(status_to_template[status][1], user=user)
+            if current_app.config["DEBUG"]:
+                print(msg)
+            else:
+                conn.send(msg)
+            user.application[0].decision_sent = True
+            num_sent += 1
 
     db.session.commit()
 
