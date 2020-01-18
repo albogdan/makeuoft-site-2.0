@@ -162,13 +162,13 @@ def set_team_application_attribute(team_code, attr, val, evaluator_id=None):
 
 def send_emails_by_status(status):
     status_to_template = {
-        "accepted": ("You've been accepted to MakeUofT 2020!", "mails/accepted.html"),
+        "accepted": ("Congratulations, you’ve been accepted to MakeUofT 2020! ", "mails/accepted.html"),
         "rejected": (
-            "We couldn't accept you into MakeUofT 2020",
+            "MakeUofT 2020 Application Decision",
             "mails/rejected.html",
         ),
         "waitlisted": (
-            "You're on the waitlist to MakeUofT 2020",
+            "MakeUofT 2020 Application Decision",
             "mails/waitlisted.html",
         ),
     }
