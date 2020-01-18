@@ -141,7 +141,7 @@ def dashboard():
     if user.application[0].status:
         if (
             user.application[0].status == "accepted"
-            and user.application[0].rsvp_sent
+            and user.application[0].decision_sent
             and not user.application[0].rsvp_accepted
         ):
             rsvp_form = RSVPForm()
@@ -159,10 +159,10 @@ def dashboard():
         elif user.application[0].status == "accepted" and user.application[0].rsvp_accepted:
             return render_template("users/accepted.html", user=user)
 
-        elif user.application[0].status == "rejected":
+        elif user.application[0].status == "rejected" and user.application[0].decision_sent:
             return render_template("users/rejected.html")
 
-        elif user.application[0].status == "waitlisted":
+        elif user.application[0].status == "waitlisted" and user.application[0].decision_sent:
             # Waitlisted users are still allowed to make and join a team
             if not current_user.team:
                 join_team_form = JoinTeamForm()

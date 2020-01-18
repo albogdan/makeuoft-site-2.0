@@ -71,20 +71,9 @@ def mailer():
     View to manage sending of emails to applicants by status
     """
 
-    status_to_template = {
-        "accepted": "mails/accepted.html",
-        "rejected": "mails/rejected.html",
-        "waitlisted": "mails/waitlisted.html",
-    }
-
     form = MailerForm()
 
     if form.validate_on_submit():
-        try:
-            template = status_to_template[form.mailer.data]
-        except KeyError:
-            return "Invalid applicant status", 400
-
-        return render_template(template)
+        manager.send_emails_by_status(form.mailer.data, form.date_start.data, form.date_end.data)
 
     return render_template("review/mailer.html", form=form)

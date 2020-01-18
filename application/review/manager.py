@@ -9,7 +9,7 @@ import application.db_models as models
 from application import mail
 from flask_mail import Message
 
-from flask import render_template
+from flask import render_template, current_app
 
 reviewer_fields = {"status", "evaluator_comments", "experience", "interest", "quality"}
 
@@ -133,7 +133,11 @@ def get_user(uuid):
 
 def set_user_application_attribute(uuid, attr, val, evaluator_id=None):
     user = get_user(uuid)
-    if attr == "status" and user.application[0].rsvp_sent:
+    if (
+        attr == "status"
+        and user.application[0].status == "accpeted"
+        and user.application[0].decision_sent
+    ):
         # Status can't be changed for accepted users
         return
 
@@ -150,7 +154,11 @@ def get_team(team_code):
 def set_team_application_attribute(team_code, attr, val, evaluator_id=None):
     team = get_team(team_code)
     for user in team.team_members:
-        if attr == "status" and user.application[0].rsvp_sent:
+        if (
+            attr == "status"
+            and user.application[0].status == "accpeted"
+            and user.application[0].decision_sent
+        ):
             # Status can't be changed for accepted users
             continue
 
@@ -160,28 +168,31 @@ def set_team_application_attribute(team_code, attr, val, evaluator_id=None):
     db.session.commit()
 
 
-def send_emails_by_status(status):
+def send_emails_by_status(status, date_start, date_end):
     status_to_template = {
-        "accepted": ("Congratulations, you’ve been accepted to MakeUofT 2020! ", "mails/accepted.html"),
-        "rejected": (
-            "MakeUofT 2020 Application Decision",
-            "mails/rejected.html",
+        "accepted": (
+            "Congratulations, you’ve been accepted to MakeUofT 2020! ",
+            "mails/accepted.html",
         ),
-        "waitlisted": (
-            "MakeUofT 2020 Application Decision",
-            "mails/waitlisted.html",
-        ),
+        "rejected": ("MakeUofT 2020 Application Decision", "mails/rejected.html"),
+        "waitlisted": ("MakeUofT 2020 Application Decision", "mails/waitlisted.html"),
     }
 
-    users = models.User.query.join(
-        models.Application, models.Application.user_id == models.User.id
-    ).filter(models.Application.status == status)
+    users = (
+        models.User.query.join(
+            models.Application, models.Application.user_id == models.User.id
+        )
+        .filter(models.Application.status == status)
+        .filter(models.Application.date_reviewed >= date_start)
+        .filter(models.Application.date_reviewed <= date_end)
+    ).all()
 
     for user in users:
         # Send the verification email
         msg = Message(status_to_template[status][0], recipients=[user.email])
-        msg.html = render_template(
-            status_to_template[status][1],
-            preferred_name=user.application[0].preferred_name,
-        )
-        mail.send(msg)
+        msg.html = render_template(status_to_template[status][1], user=user)
+        if current_app.config["DEBUG"]:
+            print(msg)
+        else:
+            pass
+            # mail.send(msg)
