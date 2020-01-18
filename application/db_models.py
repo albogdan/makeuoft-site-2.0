@@ -232,6 +232,10 @@ class Application(SerializerMixin, db.Model):
     quality = db.Column(db.Integer, nullable=True)
     date_reviewed = db.Column(db.Date(), nullable=True)
 
+    # Once an RSVP has been sent, the status of the application is final
+    rsvp_sent = db.Column(db.Boolean(), nullable=False, default=False)
+    rsvp_accepted = db.Column(db.Boolean(), nullable=False, default=False)
+
     def __repr__(self):
         return "<Application {} | {} {}>".format(
             self.id, self.user.first_name, self.user.last_name

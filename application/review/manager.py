@@ -133,6 +133,10 @@ def get_user(uuid):
 
 def set_user_application_attribute(uuid, attr, val, evaluator_id=None):
     user = get_user(uuid)
+    if attr == "status" and user.application[0].rsvp_sent:
+        # Status can't be changed for accepted users
+        return
+
     setattr(user.application[0], attr, val)
     user.application[0].date_reviewed = date.today()
     user.application[0].evaluator_id = evaluator_id
@@ -146,6 +150,10 @@ def get_team(team_code):
 def set_team_application_attribute(team_code, attr, val, evaluator_id=None):
     team = get_team(team_code)
     for user in team.team_members:
+        if attr == "status" and user.application[0].rsvp_sent:
+            # Status can't be changed for accepted users
+            continue
+
         setattr(user.application[0], attr, val)
         user.application[0].date_reviewed = date.today()
         user.application[0].evaluator_id = evaluator_id
