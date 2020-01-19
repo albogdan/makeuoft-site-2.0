@@ -218,8 +218,8 @@ def send_emails_by_status(status, date_start, date_end):
             else:
                 conn.send(msg)
             user.application[0].decision_sent = True
+            db.session.commit()
+            
             num_sent += 1
-
-    db.session.commit()
 
     return num_sent
