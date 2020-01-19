@@ -6,7 +6,7 @@ services:
           context: ..
           dockerfile: ./deployment/Dockerfile
       image: makeuoft-site:latest
-      command: gunicorn main:flask_app --bind 0.0.0.0:8181
+      command: gunicorn main:flask_app --bind 0.0.0.0:8181 --timeout 600 --workers 5
       ports:
          - "8181:8181"
       volumes:
