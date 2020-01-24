@@ -270,6 +270,41 @@ a.anchor {
 }
 /* End of COUNTDOWN */
 
+/* Schedule */
+
+#schedule {
+  margin: auto;
+}
+
+#schedule table {
+  margin: auto;
+  table-layout: fixed; 
+  width: 80%;
+  max-width: 700px;
+}
+
+.table-title {
+  background-color: #388DB7;
+  color: white;
+  font-family: "Montserrat";
+}
+@media only screen and (max-width: 800px) {
+  #schedule table {
+    width: 90%;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  #schedule table {
+    width: 100%;
+  }
+}
+.colspan-3 {
+  background-color:#FFAE49;
+  /* color: white; */
+  font-weight: 600;
+  font-family: "Montserrat";
+}
 /* Start of WANT TO SPONSOR US? */
 
 #section-sponsorus {
@@ -313,7 +348,6 @@ a.anchor {
     display: none;
   }
 }
-
 #section-sponsorbtn {
   width: 100%;
   height: auto;

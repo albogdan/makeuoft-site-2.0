@@ -3,7 +3,7 @@ let skipScrollUpdate = false;
 $(document).ready(function() {
 
     // Countdown to registration opening
-    var makeathonDate = new Date("Dec 20, 2019 09:00:00").getTime();
+    var makeathonDate = new Date("Jan 30, 2020 23:59:99").getTime();
     setInterval(function() {
         var now = new Date().getTime();
         var remaining = makeathonDate - now;
