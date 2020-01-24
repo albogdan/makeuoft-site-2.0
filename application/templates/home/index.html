@@ -120,7 +120,133 @@
             <h2 class="section-headings">Registration is Open!</h2>
             <a href="{{ url_for('auth.register') }}" class="apply-button" style="margin: 0.5rem 0 1.5rem;">Apply Now!</a>
         </section>
+
+        <section class="section" id="section-countdown">
+            <h2 class="section-headings">Registration Closes In</h2>
+            <div class="cell small-12">
+                <div class="grid-x align-center countdown-padding" id="countdown-banner">
+                    <div class="cell auto">
+                        <div class="countdown-digit" id="countdown-days">&infin;</div>
+                    </div>
+                    <div class="cell auto">
+                        <div class="countdown-digit" id="countdown-hours">&infin;</div>
+                    </div>
+                    <div class="cell auto">
+                        <div class="countdown-digit" id="countdown-minutes">&infin;</div>
+                    </div>
+                    <div class="cell auto">
+                        <div class="countdown-digit" id="countdown-seconds">&infin;</div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell small-12">
+                <div class="grid-x align-center countdown-padding">
+                    <div class="cell auto"><h2>Days</h2></div>
+                    <div class="cell auto"><h2>Hours</h2></div>
+                    <div class="cell auto"><h2>Minutes</h2></div>
+                    <div class="cell auto"><h2>Seconds</h2></div>
+                </div>
+            </div>
+        </section>
+
         {% endif %}
+
+        <section class="section max-width" id="schedule">
+            <h2 class="section-headings">Schedule</h2>
+            <table class="table">
+                <colgroup>
+                    <col style="width: 20%; min-width: 200px;">
+                    <col style="width: 50%; min-width: 200px;">
+                    <col style="width: 30%; min-width: 200px;">
+                </colgroup>
+                <tr>
+                    <th class="table-title">Event</th>
+                    <th class="table-title">Time</th>
+                    <th class="table-title">Location</th>
+                </tr>
+                <tr>
+                    <td class="colspan-3" colspan="3">Saturday, February 15, 2020<br></td>
+                </tr>
+                <tr>
+                    <td>8:30am</td>
+                    <td>Participant Registration</td>
+                    <td>MY 1st Floor Lobby</td>
+                </tr>
+                <tr>
+                    <td>10:00am</td>
+                    <td>Waitlisted Potential Registration</td>
+                    <td>MY 1st Floor Lobby</td>
+                </tr>
+                <tr>
+                    <td>10:30am</td>
+                    <td>Opening Ceremonies</td>
+                    <td>MY 150</td>
+                </tr>
+                <tr>
+                    <td>11:30am</td>
+                    <td>Team Formation <br><br>Component Distribution</td>
+                    <td>MY 1st Floor Lobby<br><br>MY 2nd Floor Lobby</td>
+                </tr>
+                <tr>
+                    <td>12:00pm</td>
+                    <td>Making Begins!</td>
+                    <td>MY 1st — 3rd floor</td>
+                </tr>
+                <tr>
+                    <td>1:00pm</td>
+                    <td>Lunch</td>
+                    <td>MY 1st Floor Lobby</td>
+                </tr>
+                <tr>
+                    <td>2:00pm</td>
+                    <td>Workshop 1 (Intro to Hardware)</td>
+                    <td>MY 350</td>
+                </tr>
+                <tr>
+                    <td>3:00pm</td>
+                    <td>LFF Safety Training Time Slot 1</td>
+                    <td>MY 4th Floor</td>
+                </tr>
+                <tr>
+                    <td>4:00pm</td>
+                    <td>LFF Safety Training Time Slot 2<br></td>
+                    <td>MY 4th Floor</td>
+                </tr>
+                <tr>
+                    <td>7:00pm</td>
+                    <td>Dinner</td>
+                    <td>MY 1st Floor Lobby</td>
+                </tr>
+                <tr>
+                    <td>11:00pm</td>
+                    <td>MLH Slideshow Karaoke</td>
+                    <td>MY 350</td>
+                </tr>
+                <tr>
+                    <td class="colspan-3" colspan="3">Sunday, February 16, 2020<br></td>
+                </tr>
+                <tr>
+                    <td>8:00am</td>
+                    <td>Breakfast</td>
+                    <td>MY 1st Floor Lobby</td>
+                </tr>
+                <tr>
+                    <td>12:00pm</td>
+                    <td>Making Ends!<br><br>Lunch<br></td>
+                    <td>MY 1st Floor Lobby</td>
+                </tr>
+                <tr>
+                    <td>1:00pm<br></td>
+                    <td>Design Showcase / Judging</td>
+                    <td>MY 150</td>
+                </tr>
+                <tr>
+                    <td>3:30pm</td>
+                    <td>Participant Awards / Closing Ceremonies</td>
+                    <td>MY 150<br></td>
+                </tr>
+            </table>    
+        </section>
 
         <a name="become-sponsor" class="anchor"></a>
         <section class="section" id="section-sponsorus">
