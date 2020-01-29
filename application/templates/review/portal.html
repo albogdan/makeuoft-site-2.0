@@ -2,6 +2,7 @@
     <thead>
         <tr>
             <th width="100">Status</th>
+            <td width="150">Date reviewed</td>
             <th width="150">First name</th>
             <th width="150">Last name</th>
             <th width="200">Preferred name</th>
@@ -27,6 +28,7 @@
         <td>
             <span class="status {{ status }}">{{ status }}</span>
         </td>
+        <td>{{ application.date_reviewed or ""}}</td>
         <td>{{ user.first_name }}</td>
         <td>{{ user.last_name }}</td>
         <td>{{ application.preferred_name }}</td>
