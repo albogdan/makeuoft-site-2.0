@@ -238,6 +238,19 @@ a.anchor {
   #section-countdown #countdown-banner .countdown-digit {
     font-size: 1rem; }
 }
+@media screen and (max-width: 400px) {
+  .countdown-padding h2 {
+    font-size: 1rem; }
+  #section-countdown #countdown-banner .countdown-digit {
+    font-size: 2.5rem; }
+
+  #schedule td {
+    font-size: .75rem; }
+  tbody td, tbody th {
+    padding: 0.625rem 0.2rem .625rem 0.3rem;
+  }
+  
+}
 
 
 
@@ -306,7 +319,21 @@ a.anchor {
   font-family: "Montserrat";
 }
 /* Start of WANT TO SPONSOR US? */
+.mlh-logo {
+  /* width: 50%; */
+  /* max-height: 150px; */
+  width: auto;
+  margin: 10px 30px;
+  height: 100px;
+}
 
+.mlh-logo img {
+  height: 100%;
+}
+
+.partners {
+  display: flex;
+}
 #section-sponsorus {
   width: 100%;
   height: auto;
