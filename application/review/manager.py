@@ -2,6 +2,7 @@ from datetime import date
 
 import sqlalchemy as sa
 from sqlalchemy.sql.expression import func
+from sqlalchemy import or_
 
 from application import db
 import application.db_models as models
@@ -34,7 +35,12 @@ def filter_by_application_status(q, status):
     return q.filter(models.Application.status == status)
 
 
-def get_teams(status="all"):
+def _search(q, search=None):
+    if not search:
+        return q
+
+
+def get_teams(status="all", search=None):
     """
     Return a query of teams, ordered by the last application
     submission time of a member of the team
@@ -44,6 +50,15 @@ def get_teams(status="all"):
         models.Application, models.Application.user_id == models.User.id
     )
     q = filter_by_application_status(q, status)
+
+    if search:
+        q = q.filter(or_(
+            models.User.first_name.like(f"%{search}%"),
+            models.User.last_name.like(f"%{search}%"),
+            models.User.uuid.like(f"{search}"),
+            models.Team.team_code == search
+        ))
+
     q = q.group_by(models.User.team_id).order_by(
         func.max(models.Application.submitted_time).asc()
     )
@@ -51,7 +66,7 @@ def get_teams(status="all"):
     return q
 
 
-def get_teamless_users(status="all"):
+def get_teamless_users(status="all", search=None):
     """
     The review site deals with two groupings: Users on a team, and
     users not on a team. These get interleaved together in order
@@ -67,12 +82,20 @@ def get_teamless_users(status="all"):
         models.Application, models.Application.user_id == models.User.id
     ).filter(models.User.team_id.is_(None))
     q = filter_by_application_status(q, status)
+
+    if search:
+        q = q.filter(or_(
+            models.User.first_name.like(f"%{search}%"),
+            models.User.last_name.like(f"%{search}%"),
+            models.User.uuid.like(f"{search}"),
+        ))
+
     q = q.order_by(models.Application.submitted_time.asc())
 
     return q
 
 
-def get_ordering_of_teams_and_users(status="all"):
+def get_ordering_of_teams_and_users(status="all", search=None):
     """
     The order teams or teamless users appear in the review portal
     is by their respective submission dates. This function
@@ -86,13 +109,13 @@ def get_ordering_of_teams_and_users(status="all"):
     ...     | ...     | ...
     """
 
-    teams_query = get_teams(status=status).with_entities(
+    teams_query = get_teams(status=status, search=search).with_entities(
         sa.null().label("user_id"),
         models.Team.id.label("team_id"),
         func.max(models.Application.submitted_time).label("submitted_time"),
     )
 
-    users_query = get_teamless_users(status=status).with_entities(
+    users_query = get_teamless_users(status=status, search=search).with_entities(
         models.User.id.label("user_id"),
         sa.null().label("team_id"),
         models.Application.submitted_time.label("submitted_time"),
@@ -105,7 +128,7 @@ def get_ordering_of_teams_and_users(status="all"):
     return combined
 
 
-def get_teams_and_users(limit=None, offset=None, status="all"):
+def get_teams_and_users(limit=None, offset=None, status="all", search=None):
     """
     Returns a list of tuples (actually sqlalchemy result collections) of
         (
@@ -120,7 +143,7 @@ def get_teams_and_users(limit=None, offset=None, status="all"):
 
     Tuple elements can be accessed by .submitted_time, .User, and .Team
     """
-    orderings = get_ordering_of_teams_and_users(status=status).subquery()
+    orderings = get_ordering_of_teams_and_users(status=status, search=search).subquery()
 
     results = (
         db.session.query(orderings.c.submitted_time, models.User, models.Team)

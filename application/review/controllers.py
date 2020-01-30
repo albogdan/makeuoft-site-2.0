@@ -18,6 +18,8 @@ page_size = 10
 def index():
     page = int(request.args.get("page", 1))
     status = request.args.get("status", "all").lower()
+    search = request.args.get("search", "").lower().strip() or None
+
     statuses = [
         ("All", "all", status == "all"),
         ("Waiting", "waiting", status == "waiting"),
@@ -26,10 +28,12 @@ def index():
         ("Rejected", "rejected", status == "rejected"),
     ]
 
+    teams_and_users_query = manager.get_teams_and_users(status=status, search=search)
+
+    num_pages = math.ceil(teams_and_users_query.count() / page_size)
+    page = min(page, num_pages)
     offset = (page - 1) * page_size
 
-    teams_and_users_query = manager.get_teams_and_users(status=status)
-    num_pages = math.ceil(teams_and_users_query.count() / page_size)
     teams_and_users = teams_and_users_query.limit(page_size).offset(offset).all()
     num_with_status = manager.get_num_applications_with_status(status)
 
@@ -47,6 +51,7 @@ def index():
         api_url=api_url,
         statuses=statuses,
         num_applications_with_status=num_with_status,
+        search=search
     )
 
 
