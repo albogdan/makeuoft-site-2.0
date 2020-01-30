@@ -32,8 +32,8 @@ def index():
     teams_and_users_query = manager.get_teams_and_users(status=status, search=search)
 
     num_pages = math.ceil(teams_and_users_query.count() / page_size)
-    page = min(page - 1, num_pages, 0)
-    offset = page * page_size
+    page = max(min(page, num_pages), 1)
+    offset = (page - 1) * page_size
 
     teams_and_users = teams_and_users_query.limit(page_size).offset(offset).all()
     num_with_status = manager.get_num_applications_with_status(status)
