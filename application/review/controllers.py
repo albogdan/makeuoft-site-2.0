@@ -26,6 +26,7 @@ def index():
         ("Waitlisted", "waitlisted", status == "waitlisted"),
         ("Accepted", "accepted", status == "accepted"),
         ("Rejected", "rejected", status == "rejected"),
+        ("Attending", "attending", status == "attending")
     ]
 
     teams_and_users_query = manager.get_teams_and_users(status=status, search=search)

@@ -51,7 +51,7 @@
 .top-bar .top-bar-right p, .top-bar .top-bar-left p {
   font-size: 16px;
   display: inline-block;
-  margin: 0 1em;
+  margin: 0.4em 1em 0 1em;
   padding-top: 8px;
 }
 .top-bar .top-bar-right select, .top-bar .top-bar-left select {

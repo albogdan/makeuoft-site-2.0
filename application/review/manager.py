@@ -20,6 +20,11 @@ def get_num_applications_with_status(status):
         q = models.Application.query
     elif status == "waiting":
         q = models.Application.query.filter(models.Application.status.is_(None))
+    elif status == "attending":
+        q = models.Application.query.filter(
+            models.Application.status == "accepted",
+            models.Application.rsvp_accepted.is_(True),
+        )
     else:
         q = models.Application.query.filter(models.Application.status == status)
 
@@ -31,6 +36,11 @@ def filter_by_application_status(q, status):
         return q
     elif status == "waiting":
         return q.filter(models.Application.status.is_(None))
+    elif status == "attending":
+        return q.filter(
+            models.Application.status == "accepted",
+            models.Application.rsvp_accepted.is_(True),
+        )
 
     return q.filter(models.Application.status == status)
 
@@ -52,12 +62,14 @@ def get_teams(status="all", search=None):
     q = filter_by_application_status(q, status)
 
     if search:
-        q = q.filter(or_(
-            models.User.first_name.like(f"%{search}%"),
-            models.User.last_name.like(f"%{search}%"),
-            models.User.uuid.like(f"{search}"),
-            models.Team.team_code == search
-        ))
+        q = q.filter(
+            or_(
+                models.User.first_name.like(f"%{search}%"),
+                models.User.last_name.like(f"%{search}%"),
+                models.User.uuid.like(f"{search}"),
+                models.Team.team_code == search,
+            )
+        )
 
     q = q.group_by(models.User.team_id).order_by(
         func.max(models.Application.submitted_time).asc()
@@ -84,11 +96,13 @@ def get_teamless_users(status="all", search=None):
     q = filter_by_application_status(q, status)
 
     if search:
-        q = q.filter(or_(
-            models.User.first_name.like(f"%{search}%"),
-            models.User.last_name.like(f"%{search}%"),
-            models.User.uuid.like(f"{search}"),
-        ))
+        q = q.filter(
+            or_(
+                models.User.first_name.like(f"%{search}%"),
+                models.User.last_name.like(f"%{search}%"),
+                models.User.uuid.like(f"{search}"),
+            )
+        )
 
     q = q.order_by(models.Application.submitted_time.asc())
 
@@ -242,7 +256,7 @@ def send_emails_by_status(status, date_start, date_end):
                 conn.send(msg)
             user.application[0].decision_sent = True
             db.session.commit()
-            
+
             num_sent += 1
 
     return num_sent
