@@ -16,7 +16,7 @@ page_size = 10
 @login_required
 @roles_required(["staff"])
 def index():
-    page = int(request.args.get("page", 1))
+    page = int(request.args.get("page", 1))  # Page is 1-indexed
     status = request.args.get("status", "all").lower()
     search = request.args.get("search", "").lower().strip() or None
 
@@ -32,8 +32,8 @@ def index():
     teams_and_users_query = manager.get_teams_and_users(status=status, search=search)
 
     num_pages = math.ceil(teams_and_users_query.count() / page_size)
-    page = min(page, num_pages)
-    offset = (page - 1) * page_size
+    page = min(page - 1, num_pages, 0)
+    offset = page * page_size
 
     teams_and_users = teams_and_users_query.limit(page_size).offset(offset).all()
     num_with_status = manager.get_num_applications_with_status(status)
@@ -51,8 +51,9 @@ def index():
         num_pages=num_pages,
         api_url=api_url,
         statuses=statuses,
+        status=status,
         num_applications_with_status=num_with_status,
-        search=search
+        search=search,
     )
 
 

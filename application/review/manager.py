@@ -66,7 +66,8 @@ def get_teams(status="all", search=None):
             or_(
                 models.User.first_name.like(f"%{search}%"),
                 models.User.last_name.like(f"%{search}%"),
-                models.User.uuid.like(f"{search}"),
+                models.User.uuid.like(f"%{search}%"),
+                models.User.email.like(f"%{search}%"),
                 models.Team.team_code == search,
             )
         )
@@ -100,7 +101,8 @@ def get_teamless_users(status="all", search=None):
             or_(
                 models.User.first_name.like(f"%{search}%"),
                 models.User.last_name.like(f"%{search}%"),
-                models.User.uuid.like(f"{search}"),
+                models.User.uuid.like(f"%{search}%"),
+                models.User.email.like(f"%{search}%"),
             )
         )
 
