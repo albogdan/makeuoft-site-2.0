@@ -1,0 +1,15 @@
+{% extends "users/base.html" %}
+
+{% block title %}MakeUofT 2020{% endblock %}
+
+{% block head_extends %}
+{% endblock %}
+
+{% block content %}
+    <div class="grid-container" id="wrapper">
+        <h1>RSVP Window Closed</h1>
+        <p>Unfortunately, your deadline to RSVP for MakeUofT 2020 was {{ rsvp_deadline }}. Since you did not respond in time, your spot has been given to other applicants.</p>
+        <p>Follow <a href="https://www.facebook.com/makeuoft/">our Facebook page</a> for future updates from us, we hope that you will be able to attend MakeUofT next year.</p>
+        <p>If you have any questions or concerns, please <a href="mailto:makeuoft@gmail.com">contact us</a>.</p>
+    </div>
+{% endblock %}

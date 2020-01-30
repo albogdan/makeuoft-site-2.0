@@ -28,7 +28,7 @@ from validate_email import validate_email
 # Import the homepage Blueprint from home/__init__.py
 from application.home import home
 
-from datetime import datetime
+from datetime import datetime, date
 
 
 @home.route("/")
@@ -127,6 +127,21 @@ def apply():
 @home.route("/dashboard", methods=("GET", "POST"))
 @login_required
 def dashboard():
+    def has_rsvp_expired(date_reviewed):
+        """
+        Checks if an RSVP has expired
+        :param date_reviewed: Date the application was reviewed
+        :return: (expired, expired date)
+        """
+        if date_reviewed < date(2020, 1, 20) and date.today() >= date(2020, 1, 31):
+            # Round 1 deadline is Jan 30 23:59:59
+            return True, date(2020, 1, 30).strftime("%B %-d, %Y")
+        elif date.today() >= date(2020, 2, 10):
+            # Final date for RSVPs
+            return True, date(2020, 2, 9).strftime("%B %-d, %Y")
+
+        return False, date(2020, 2, 9).strftime("%B %-d, %Y")
+
     if not current_user.is_active:
         return render_template("users/activation_required.html")
 
@@ -144,6 +159,11 @@ def dashboard():
             and user.application[0].decision_sent
             and not user.application[0].rsvp_accepted
         ):
+
+            expired, expired_date = has_rsvp_expired(user.application[0].date_reviewed)
+            if expired:
+                return render_template("users/rsvp_missed.html", rsvp_deadline=expired_date)
+
             rsvp_form = RSVPForm()
 
             if rsvp_form.validate_on_submit():
