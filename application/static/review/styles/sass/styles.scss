@@ -26,7 +26,11 @@
         min-width: 136px;
     }
 
-    .top-bar-right {
+    form label, button, select {
+        display: inline-block !important;
+    }
+
+    .top-bar-right, .top-bar-left {
         margin: auto;
 
         li {
@@ -52,35 +56,19 @@
             margin-bottom: 0;
         }
 
-        .section-active {
-            color: red;
-        }
-
-        .apply-button {
-            background-color: $base0;
-            color: #fff;
-            border-radius: 10px;
-            padding-left: 1em;
-            padding-right: 1em;
-        }
-
-        .apply-button:hover {
-            border-bottom: none;
-            background-color: $base1;
-            color: #fff;
-        }
-    }
-
-    .top-bar-left {
         p {
             font-size: 16px;
             display: inline-block;
-            margin: 0 1em;
+            margin: 0.4em 1em 0 1em;
             padding-top: 8px;
         }
 
         select {
             width: 80px;
+        }
+
+        form {
+            margin-top: 0.35em;
         }
     }
 }

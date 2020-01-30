@@ -21,53 +21,44 @@
   height: 3em;
   min-width: 136px;
 }
-.top-bar .top-bar-right {
+.top-bar form label, .top-bar button, .top-bar select {
+  display: inline-block !important;
+}
+.top-bar .top-bar-right, .top-bar .top-bar-left {
   margin: auto;
 }
-.top-bar .top-bar-right li {
+.top-bar .top-bar-right li, .top-bar .top-bar-left li {
   margin: 0.5em;
 }
 @media screen and (max-width: 64em) {
-  .top-bar .top-bar-right li {
+  .top-bar .top-bar-right li, .top-bar .top-bar-left li {
     width: 100%;
     text-align: center;
   }
 }
-.top-bar .top-bar-right a {
+.top-bar .top-bar-right a, .top-bar .top-bar-left a {
   padding: 0.75em 0.75em;
   font-size: 18px;
   font-weight: 500;
   margin-bottom: 3px;
   color: inherit;
 }
-.top-bar .top-bar-right a:hover {
+.top-bar .top-bar-right a:hover, .top-bar .top-bar-left a:hover {
   border-bottom: 3px solid #2CA0AF;
   color: #2CA0AF;
   margin-bottom: 0;
 }
-.top-bar .top-bar-right .section-active {
-  color: red;
-}
-.top-bar .top-bar-right .apply-button {
-  background-color: #00639c;
-  color: #fff;
-  border-radius: 10px;
-  padding-left: 1em;
-  padding-right: 1em;
-}
-.top-bar .top-bar-right .apply-button:hover {
-  border-bottom: none;
-  background-color: #0485Ba;
-  color: #fff;
-}
-.top-bar .top-bar-left p {
+.top-bar .top-bar-right p, .top-bar .top-bar-left p {
   font-size: 16px;
   display: inline-block;
-  margin: 0 1em;
+  margin: 0.4em 1em 0 1em;
   padding-top: 8px;
 }
-.top-bar .top-bar-left select {
+.top-bar .top-bar-right select, .top-bar .top-bar-left select {
   width: 80px;
+}
+.top-bar .top-bar-right form, .top-bar .top-bar-left form {
+  margin-top: 0.35em;
 }
 
 .container {

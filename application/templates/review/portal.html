@@ -1,7 +1,8 @@
 {% macro generate_table_head() %}
     <thead>
         <tr>
-            <th width="100">Status</th>
+            <th width="150">Status</th>
+            <td width="150">Date reviewed</td>
             <th width="150">First name</th>
             <th width="150">Last name</th>
             <th width="200">Preferred name</th>
@@ -25,8 +26,13 @@
     {% set status = application.status if application.status else "waiting" %}
     <tr data-uid="{{ user.uuid }}">
         <td>
-            <span class="status {{ status }}">{{ status }}</span>
+            {% if application.status != "accepted" %}
+                <span class="status {{ status }}">{{ status }}</span>
+            {% else %}
+                <span class="status {{ status }}">{{ status }} {{ "&#10004;"|safe if application.rsvp_accepted else "&#10060;"|safe }}</span>
+            {% endif %}
         </td>
+        <td>{{ application.date_reviewed or ""}}</td>
         <td>{{ user.first_name }}</td>
         <td>{{ user.last_name }}</td>
         <td>{{ application.preferred_name }}</td>
@@ -185,9 +191,12 @@
                             {% endif %}
                         {% endfor %}
                     </select>
-                    <button class="button primary" style="display: inline-block;" type="submit">Go</button>
+                    <label>
+                        <input type="text" name="search" placeholder="search" value="{{ search or "" }}"/>
+                    </label>
+                    <button class="button primary"type="submit">Go</button>
                 </form>
-                <p>Number of applications: {{ num_applications_with_status }}</p>
+                <p>Number of {{ status }} applications: {{ num_applications_with_status }}</p>
             </ul>
         </div>
         <nav class="top-bar-right">
