@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 
 import sqlalchemy as sa
 from sqlalchemy.sql.expression import func
@@ -13,6 +13,13 @@ from flask_mail import Message
 from flask import render_template, current_app
 
 reviewer_fields = {"status", "evaluator_comments", "experience", "interest", "quality"}
+
+REGISTRATIONS_OPEN = datetime(2019, 12, 20, 9, 0, 0)
+ROUND_1_CUTOFF = date(2020, 1, 20)
+ROUND_1_RSVP_DEADLINE = date(2020, 1, 30)  # Last day to RSVP for round 1
+APPLICATIONS_END_DATE = date(2020, 1, 30)  # Last day to apply
+ROUND_2_RSVP_DEADLINE = date(2020, 2, 9)  # Last day to RSVP for round 2
+RELEASE_DAY_OF_WAITLIST = date(2020, 2, 2)  # When the final waitlist should be revealed
 
 
 def get_num_applications_with_status(status):
