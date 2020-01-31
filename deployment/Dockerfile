@@ -3,11 +3,13 @@ FROM python:3.7.3-alpine
 WORKDIR /usr/src/app/
 
 COPY ./requirements.txt requirements.txt
-RUN apk --update add --virtual build-dependencies libffi-dev openssl-dev python-dev py-pip build-base \
+RUN apk --update add --virtual build-dependencies libffi-dev openssl-dev python-dev py-pip build-base tzdata \
   && pip install --upgrade pip \
   && pip install -r requirements.txt \
   && pip install gunicorn \
-  && apk del build-dependencies
+  && apk del build-dependencies \
+  && cp /usr/share/zoneinfo/Canada/Eastern /etc/localtime \
+  && echo "America/Toronto" > /etc/timezone
 
 RUN pip install pymysql
 COPY ./application application
