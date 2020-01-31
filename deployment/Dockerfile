@@ -7,9 +7,7 @@ RUN apk --update add --virtual build-dependencies libffi-dev openssl-dev python-
   && pip install --upgrade pip \
   && pip install -r requirements.txt \
   && pip install gunicorn \
-  && apk del build-dependencies \
-  && cp /usr/share/zoneinfo/Canada/Eastern /etc/localtime \
-  && echo "America/Toronto" > /etc/timezone
+  && apk del build-dependencies
 
 RUN apk add tzdata \
   && cp /usr/share/zoneinfo/Canada/Eastern /etc/localtime \
