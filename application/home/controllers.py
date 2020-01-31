@@ -28,6 +28,8 @@ from validate_email import validate_email
 # Import the homepage Blueprint from home/__init__.py
 from application.home import home
 
+from application.review import manager as review_manager
+
 from datetime import datetime, date
 
 
@@ -35,8 +37,11 @@ from datetime import datetime, date
 @home.route("/index", methods=["GET", "POST"])
 def index():
     logged_in = not current_user.is_anonymous
-    registration_starts = datetime(2019, 12, 20, 9, 0, 0)
-    registration_open = datetime.now() > registration_starts
+    registration_open = (
+        datetime.now() > review_manager.REGISTRATIONS_OPEN
+        and date.today() <= review_manager.APPLICATIONS_END_DATE
+    )
+
     return render_template(
         "home/index.html", logged_in=logged_in, registration_open=registration_open
     )
@@ -76,6 +81,12 @@ def apply():
     )
     if has_submitted:
         return redirect(url_for("home.dashboard"))
+
+    if date.today() > review_manager.APPLICATIONS_END_DATE:
+        return render_template(
+            "users/applications_closed.html",
+            apply_deadline=review_manager.APPLICATIONS_END_DATE.strftime("%B %-d, %Y"),
+        )
 
     form = ApplicationForm()
 
@@ -127,20 +138,28 @@ def apply():
 @home.route("/dashboard", methods=("GET", "POST"))
 @login_required
 def dashboard():
+    registration_open = (
+        datetime.now() > review_manager.REGISTRATIONS_OPEN
+        and date.today() <= review_manager.APPLICATIONS_END_DATE
+    )
+
     def has_rsvp_expired(date_reviewed):
         """
         Checks if an RSVP has expired
         :param date_reviewed: Date the application was reviewed
         :return: (expired, expired date)
         """
-        if date_reviewed < date(2020, 1, 20) and date.today() >= date(2020, 1, 31):
+        if (
+            date_reviewed < review_manager.ROUND_1_CUTOFF
+            and date.today() > review_manager.ROUND_1_RSVP_DEADLINE
+        ):
             # Round 1 deadline is Jan 30 23:59:59
-            return True, date(2020, 1, 30).strftime("%B %-d, %Y")
-        elif date.today() >= date(2020, 2, 10):
+            return True, review_manager.ROUND_1_RSVP_DEADLINE.strftime("%B %-d, %Y")
+        elif date.today() > review_manager.ROUND_2_RSVP_DEADLINE:
             # Final date for RSVPs
-            return True, date(2020, 2, 9).strftime("%B %-d, %Y")
+            return True, review_manager.ROUND_2_RSVP_DEADLINE.strftime("%B %-d, %Y")
 
-        return False, date(2020, 2, 9).strftime("%B %-d, %Y")
+        return False, review_manager.ROUND_2_RSVP_DEADLINE.strftime("%B %-d, %Y")
 
     if not current_user.is_active:
         return render_template("users/activation_required.html")
@@ -162,7 +181,9 @@ def dashboard():
 
             expired, expired_date = has_rsvp_expired(user.application[0].date_reviewed)
             if expired:
-                return render_template("users/rsvp_missed.html", rsvp_deadline=expired_date)
+                return render_template(
+                    "users/rsvp_missed.html", rsvp_deadline=expired_date
+                )
 
             rsvp_form = RSVPForm()
 
@@ -176,25 +197,49 @@ def dashboard():
                 "users/rsvp.html", user=current_user, rsvp_form=rsvp_form
             )
 
-        elif user.application[0].status == "accepted" and user.application[0].rsvp_accepted:
+        elif (
+            user.application[0].status == "accepted"
+            and user.application[0].rsvp_accepted
+        ):
             return render_template("users/accepted.html", user=user)
 
-        elif user.application[0].status == "rejected" and user.application[0].decision_sent:
+        elif (
+            user.application[0].status == "rejected"
+            and user.application[0].decision_sent
+        ):
             return render_template("users/rejected.html")
 
-        elif user.application[0].status == "waitlisted" and user.application[0].decision_sent:
+        elif (
+            user.application[0].status == "waitlisted"
+            and user.application[0].decision_sent
+        ):
+            if not registration_open:
+                if date.today() > review_manager.RELEASE_DAY_OF_WAITLIST:
+                    # If registration has closed and the notification period has ended,
+                    # tell them they're on the final waitlist
+                    return render_template(
+                        "users/waitlisted_final_round.html", user=current_user
+                    )
+
+                # If registration has closed, users can no longer edit their team
+                return render_template("users/waitlisted.html", user=current_user)
+
             # Waitlisted users are still allowed to make and join a team
             if not current_user.team:
                 join_team_form = JoinTeamForm()
                 if join_team_form.validate_on_submit():
-                    team = Team.query.filter_by(team_code=join_team_form.team_code.data).first()
+                    team = Team.query.filter_by(
+                        team_code=join_team_form.team_code.data
+                    ).first()
 
                     if not team:
                         join_team_form.team_code.errors.append(
                             f"Team {join_team_form.team_code.data} does not exist"
                         )
                     elif len(team.team_members) >= Team.max_members:
-                        join_team_form.team_code.errors.append(f"Team {team.team_code} is full")
+                        join_team_form.team_code.errors.append(
+                            f"Team {team.team_code} is full"
+                        )
                     else:
                         user.team = team
                         db.session.commit()

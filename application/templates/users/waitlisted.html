@@ -22,7 +22,7 @@
 
     <div class="grid-container" id="wrapper">
         <h1>MakeUofT 2020 Application Decision</h1>
-        <p>The MakeUofT team has reviewed your application, and due to both the high caliber and high volume of applications, we have decided to defer your application to the next round. You will hear back from us by <b>February 10th</b> regarding a final decision on your application. Below, you may still join or make changes to your team, and we will re-consider your application with your teammates at that time.</p>
+        <p>The MakeUofT team has reviewed your application, and due to both the high caliber and high volume of applications, we have decided to defer your application to the next round. You will hear back from us by <b>February 10th</b> regarding a final decision on your application.{% if join_team_form or leave_team_form %} Below, you may still join or make changes to your team, and we will re-consider your application with your teammates at that time.{% endif %}</p>
         <p>If you have any questions or concerns, please <a href="mailto:makeuoft@gmail.com">contact us</a>.</p>
 
         {% if not user.team and join_team_form %}
@@ -46,7 +46,7 @@
                     </div>
                 </div>
             </form>
-        {% else %}
+        {% elif user.team %}
             <h2>Your Team</h2>
             <p>Your team code is: <span style="font-weight: bold">{{ user.team.team_code }}</span></p>
             {% if user.team.team_members|length < 4 %}
