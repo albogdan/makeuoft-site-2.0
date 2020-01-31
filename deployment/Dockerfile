@@ -9,6 +9,10 @@ RUN apk --update add --virtual build-dependencies libffi-dev openssl-dev python-
   && pip install gunicorn \
   && apk del build-dependencies
 
+RUN apk add tzdata \
+  && cp /usr/share/zoneinfo/Canada/Eastern /etc/localtime \
+  && echo "America/Toronto" > /etc/timezone
+
 RUN pip install pymysql
 COPY ./application application
 COPY ./migrations migrations
