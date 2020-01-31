@@ -194,7 +194,11 @@ def dashboard():
                 return render_template("users/accepted.html", user=user)
 
             return render_template(
-                "users/rsvp.html", user=current_user, rsvp_form=rsvp_form
+                "users/rsvp.html",
+                user=current_user,
+                rsvp_form=rsvp_form,
+                rsvp_deadline=expired_date,
+                registration_open=registration_open,
             )
 
         elif (

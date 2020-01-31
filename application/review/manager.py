@@ -234,6 +234,8 @@ def send_emails_by_status(status, date_start, date_end):
     False, allowing them to be notified again. (This happens above in _modify_user)
 
     """
+    rsvp_deadline = ROUND_1_RSVP_DEADLINE if date.today() <= ROUND_1_RSVP_DEADLINE else ROUND_2_RSVP_DEADLINE
+
     status_to_template = {
         "accepted": (
             "Congratulations, you’ve been accepted to MakeUofT 2020! ",
@@ -258,7 +260,7 @@ def send_emails_by_status(status, date_start, date_end):
     with mail.connect() as conn:
         for user in users:
             msg = Message(status_to_template[status][0], recipients=[user.email])
-            msg.html = render_template(status_to_template[status][1], user=user)
+            msg.html = render_template(status_to_template[status][1], user=user, rsvp_deadline=rsvp_deadline)
             if current_app.config["DEBUG"]:
                 print(msg)
             else:
