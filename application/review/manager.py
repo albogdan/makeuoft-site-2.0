@@ -234,6 +234,9 @@ def send_emails_by_status(status, date_start, date_end):
     False, allowing them to be notified again. (This happens above in _modify_user)
 
     """
+    rsvp_deadline = ROUND_1_RSVP_DEADLINE if date.today() <= ROUND_1_RSVP_DEADLINE else ROUND_2_RSVP_DEADLINE
+    rsvp_deadline = rsvp_deadline.strftime("%B %-d, %Y")
+
     status_to_template = {
         "accepted": (
             "Congratulations, you’ve been accepted to MakeUofT 2020! ",
@@ -243,6 +246,11 @@ def send_emails_by_status(status, date_start, date_end):
         "waitlisted": ("MakeUofT 2020 Application Decision", "mails/waitlisted.html"),
     }
 
+    if date.today() <= ROUND_1_RSVP_DEADLINE:
+        status_to_template["waitlisted"] = ("MakeUofT 2020 Application Decision", "mails/waitlisted.html")
+    else:
+        status_to_template["waitlisted"] = ("MakeUofT 2020 Application Decision", "mails/waitlisted_final_round.html")
+
     users = (
         models.User.query.join(
             models.Application, models.Application.user_id == models.User.id
@@ -250,7 +258,7 @@ def send_emails_by_status(status, date_start, date_end):
         .filter(models.Application.status == status)
         .filter(models.Application.date_reviewed >= date_start)
         .filter(models.Application.date_reviewed <= date_end)
-        .filter(models.Application.decision_sent.is_(False))
+        .filter(or_(models.Application.decision_sent.is_(False), models.Application.status == "waitlisted"))
     ).all()
 
     num_sent = 0
@@ -258,7 +266,7 @@ def send_emails_by_status(status, date_start, date_end):
     with mail.connect() as conn:
         for user in users:
             msg = Message(status_to_template[status][0], recipients=[user.email])
-            msg.html = render_template(status_to_template[status][1], user=user)
+            msg.html = render_template(status_to_template[status][1], user=user, rsvp_deadline=rsvp_deadline)
             if current_app.config["DEBUG"]:
                 print(msg)
             else:
