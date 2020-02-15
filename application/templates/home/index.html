@@ -66,6 +66,8 @@
                         {% endif %}
                         {% if registration_open and not logged_in%}
                         <li id="apply-a"><a href="{{ url_for('auth.register') }}" class="apply-button">Apply!</a></li>
+                        {% elif not registration_open %}
+                        <li id="printing-a"><a href="https://forms.gle/YTygbh2TWihBQuiv9" target="_blank" class="apply-button">3D Printing</a></li>
                         {% endif %}
 
                     </ul>
